@@ -14,7 +14,8 @@
 library("ape", quietly=T)  #taj D
 library("pegas",quietly=T)
 source("/mnt/sequencedb/PopGen/barbara/simulations/msms_sims/NCV/NCV5.r")
-source("/home/cesare_filippo/scripts/R_scr/tools/ms_tools.R")
+#source("/home/cesare_filippo/scripts/R_scr/tools/ms_tools.R")
+source("/mnt/sequencedb/PopGen/barbara/simulations/scripts/ms_tools.R")
 source("/mnt/sequencedb/PopGen/barbara/simulations/msms_sims/NCV/my_functions.r")
 library(ggplot2)  #density plots
 library(ROCR)  #ROC curves
@@ -139,22 +140,22 @@ m1f04 <- paste(msms, "-N 7310 -ms 181", nsims," -t",THETA, "-r", RHO, Length, "-
 
 #run all simulations:
 
-#system(mN)
-#system(m3f01)
-#system(m3f02)
-#system(m3f03)
-#system(m3f04)
-#system(m3f05)
+system(mN)
+system(m3f01)
+system(m3f02)
+system(m3f03)
+system(m3f04)
+system(m3f05)
 
-#system(m1f01)
-#system(m1f02)
-#system(m1f03)
-#system(m1f04)
-#system(m1f05)
+system(m1f01)
+system(m1f02)
+system(m1f03)
+system(m1f04)
+system(m1f05)
 
 ##
 ##Read in DATA
-## much better now
+##(this might take a while...)
 
 SIMS<-list(MN=vector('list', nsims), M3f01=vector('list', nsims),M3f02=vector('list', nsims),M3f03=vector('list', nsims),M3f04=vector('list', nsims), M3f05=vector('list', nsims), M1f01=vector('list',nsims),M1f02=vector('list',nsims),M1f03=vector('list',nsims),M1f04=vector('list',nsims),M1f05=vector('list',nsims))
 
@@ -240,6 +241,6 @@ sfs.ms("ms3f05.out",popN=60, show.plot=T, fold=F)
 dev.off()
 
 #
-
-
-#######################################################################
+#
+####################################################################################################################################
+####################################################################################################################################
