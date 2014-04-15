@@ -13,7 +13,7 @@
 #load packages and functions
 library("ape", quietly=T)  #taj D
 library("pegas",quietly=T)
-source("/home/barbara_domingues/sims/NCV/NCV5.r")
+source("/mnt/sequencedb/PopGen/barbara/simulations/msms_sims/NCV/NCV5.r")
 #source("/home/cesare_filippo/scripts/R_scr/tools/ms_tools.R")
 source("/mnt/sequencedb/PopGen/barbara/simulations/scripts/ms_tools.R")
 source("/mnt/sequencedb/PopGen/barbara/simulations/msms_sims/NCV/my_functions.r")
