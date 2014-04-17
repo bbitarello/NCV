@@ -1,5 +1,17 @@
 ###ROC curves
 
+
+
+##############################
+# Barbara Bitarello
+# Last modifiedÇ 17.04.2014
+
+library(ggplot2) #density plots
+library(ROCR) #ROC curves
+library(multicore)
+msms <- "java -Xmx800M -jar ~/apps/msms/lib/msms.jar"
+library(SOAR) #speed up workspace loading.
+Sys.setenv(R_LOCAL_CACHE="gigantic_datasets_stored_here") #already created.
 #1my, 3my, taj D, feq=0.5
 
 ###############################AFRICA#######################################
