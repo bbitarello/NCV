@@ -5,7 +5,7 @@
 ####### Script for MSMS simulations and reading them in ###################
 #######	Author: Barbara Bitarello (with parts of Cee's codes) #############
 #######	Creation:16.09.2013  ##############################################
-#######	Last Modified: 06.11.2013  ########################################
+#######	Last Modified: 17.04.2014  ########################################
 ###########################################################################
 ###########################################################################
 ###########################################################################
@@ -14,7 +14,8 @@
 library("ape", quietly=T)  #taj D
 library("pegas",quietly=T)
 source("/mnt/sequencedb/PopGen/barbara/simulations/msms_sims/NCV/NCV5.r")
-source("/home/cesare_filippo/scripts/R_scr/tools/ms_tools.R")
+#source("/home/cesare_filippo/scripts/R_scr/tools/ms_tools.R")
+source("/mnt/sequencedb/PopGen/barbara/simulations/scripts/ms_tools.R")
 source("/mnt/sequencedb/PopGen/barbara/simulations/msms_sims/NCV/my_functions.r")
 library(ggplot2)  #density plots
 library(ROCR)  #ROC curves
