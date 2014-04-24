@@ -5,7 +5,7 @@
 ####### Script for MSMS simulations and reading them in ###################
 #######	Author: Barbara Bitarello (with parts of Cee's codes) #############
 #######	Creation:16.09.2013  ##############################################
-#######	Last Modified: 16.10.2013  ########################################
+#######	Last Modified: 24.04.2014  ########################################
 ###########################################################################
 ###########################################################################
 ###########################################################################
@@ -140,18 +140,18 @@ m1f04 <- paste(msms, "-N 7310 -ms 181", nsims," -t",THETA, "-r", RHO, Length, "-
 
 #run all simulations:
 
-#system(mN)
-#system(m3f01)
-#system(m3f02)
-#system(m3f03)
-#system(m3f04)
-#system(m3f05)
+system(mN)
+system(m3f01)
+system(m3f02)
+system(m3f03)
+system(m3f04)
+system(m3f05)
 
-#system(m1f01)
-#system(m1f02)
-#system(m1f03)
-#system(m1f04)
-#system(m1f05)
+system(m1f01)
+system(m1f02)
+system(m1f03)
+system(m1f04)
+system(m1f05)
 
 ##
 ##Read in DATA
@@ -193,7 +193,7 @@ SIMS$M1f05<-read.ms("ms1f05.out", Npop=4, Nchr=c(rep(nchr,3),1))
 
 pdf("sfs_neut.pdf")
 #par(mfrow=c())
-sfs.ms("mN.out",popN=c(60,60,60,1), show.plot=T)
+sfs.ms("mN.out",popN=60, show.plot=T)
 dev.off()
 
 
