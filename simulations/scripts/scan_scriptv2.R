@@ -1,0 +1,128 @@
+#################################################
+#	Run NCV per window			#
+#	Author: Barbara Bitarello		#
+#	Date of creation:05.11.2013		#
+#	Last modified: 26.11.2013		#
+#						#
+#################################################
+
+
+#read in NCV function:
+
+source("/mnt/sequencedb/PopGen/barbara/simulations/scripts/NCV.scanv3.r")
+source("/mnt/sequencedb/PopGen/barbara/simulations/scripts/take.snps.r")
+library(multicore)
+library(SOAR)  #speed up workspace loading.
+#library(ggplot2)
+Sys.setenv(R_LOCAL_CACHE="store_data_here")#already created.
+
+################################################
+
+#res<-list(chr1=NA,chr2=NA, chr2=NA,chr4=NA, chr5=NA, chr6=NA,chr7=NA, chr7=NA, chr8=NA, chr9=NA, chr10=NA, chr11=NA, chr12=NA, chr13=NA, chr14=NA, chr15=NA, chr16=NA, chr17=NA, chr18=NA, chr19=NA, chr20=NA, chr21=NA, chr22=NA, chrx=NA)
+
+#n<-100 #number of chromosomes per population, except PUR which is 88 but I'm not using (probably)
+
+
+#############################################################################################################
+#############################################################################################################
+################################################################################
+#n<-100 #number of chromosomes per population, except PUR (Puerto Rico) which is 88 but I'm not using (probably)
+W<-3000 #window size #10000 
+S<-W/2  #stsep size #5000
+#
+#load('/mnt/sequencedb/PopGen/barbara/vcf_practice/DATA/chr21/x21.Map.TRF.SDsR.RData')
+#test.21<-read.table('/mnt/sequencedb/PopGen/barbara/vcf_practice/DATA/chr21/tmp.ac',sep="\t",stringsAsFactors=FALSE,as.is=TRUE)
+#bed1<-read.table('/mnt/sequencedb/PopGen/cesare/bs_genomescan/Map50_100.TRF.SDs.hg19_pantro2.21.bed',sep="\t",stringsAsFactors=FALSE,as.is=TRUE)
+#fd1<-read.table('/mnt/sequencedb/PopGen/cesare/bs_genomescan/fds.hg19_pantro2.21.tsv',sep="\t",stringsAsFactors=FALSE,as.is=TRUE)
+headr<-c("CHROM" ,"POS", "ID" ,"REF","ALT","Anc","AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "CLM","PUR")
+headr2<-c('chr', 'pos', 'human', 'chimp')
+headr3<-c('chr', 'beg.pos', 'end.pos')
+
+colnames(INPUT)<-headr
+colnames(BED)<-headr3
+colnames(FD)<-headr2
+###############################################################################
+
+my.function<-function(input.file=x1,fd.file=fd1, bed.file=bed1, tag='chr21'){
+s <- seq(x1[1,2],x1[nrow(x1),2], S)
+s <- s[-length(s)] # remove last step because it's always a mess.
+
+#this is the command that takes a long time
+system.time(lapply(1:length(s), function(i) subset(input.file, POS >= s[i] & POS <= s[i]+W)[,seq(3:21)])->chwin) #SNPs oper window.
+
+
+system.time(lapply(1:length(s),function(i) subset(fd.file, pos >= s[i] & pos <= s[i]+W)[,])->chwinfd)  #FDs per window
+
+
+system.time(lapply(1:length(s),function(i) subset(bed.file, beg.pos >= s[i] & end.pos <= s[i]+W)[,])->chwinbed)
+
+
+
+
+
+lapply(chwin, function(z) as.matrix(z))-> chwinV2  
+lapply(chwinfd, function(z) as.matrix(z))-> chwinV3
+lapply(chwinbed, function(z) as.matrix(z))-> chwinV4
+
+
+input.list<-list(INPUT=chwinV2, FD=chwinV3, BED=chwinV4)
+#remember: at this poitn I could try using something like mapply
+
+
+chNCV<-vector('list',length(input.list$INPUT))
+for (i in 1: length(input.list$INPUT)){
+
+NCV.scan3(INPUT=input.list$INPUT[[i]], FD=input.list$FD[[i]], BED=input.list$BED[[i]])->chNCV[[i]]
+
+}
+
+#for testing
+
+#x<-chwinV2[[4171]]
+#z<-chwinV3[[4171]]
+#g<-chwinV4[[4171]]  #problem: how to do it for all windows in the list?
+
+
+f5<-cbind(rep(NA, length(s)), rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)))
+f5[,1]<-rep(tag, length(s))  #chromosome
+f5[,2]<-s
+f5[,3]<-s+W
+f5[,4]<-unlist(lapply(chNCV, function(x) x$NCVf5))
+f5[,5]<-unlist(lapply(chNCV, function(x) x$NCVf5FD))
+
+f5[,6]<-unlist(lapply(chNCV, function(x) x$NCVf4))
+f5[,7]<-unlist(lapply(chNCV, function(x) x$NCVf4FD))
+
+f5[,8]<-unlist(lapply(chNCV, function(x) x$NCVf3))
+f5[,9]<-unlist(lapply(chNCV, function(x) x$NCVf3FD))
+
+f5[,10]<-unlist(lapply(chNCV, function(x) x$NCVf2))
+f5[,11]<-unlist(lapply(chNCV, function(x) x$NCVf2FD))
+
+f5[,12]<-unlist(lapply(chNCV, function(x) x$NCVf1))
+f5[,13]<-unlist(lapply(chNCV, function(x) x$NCVf1FD))
+
+f5[,14]<-unlist(lapply(chNCV, function(x) x$Nr.SNPs.1))
+f5[,15]<-unlist(lapply(chNCV, function(x) x$Nr.SNPs.2))
+f5[,16]<-unlist(lapply(chNCV, function(x) x$Nr.FDs))
+
+
+colnames(f5)<-c('chr','beg.win', 'end.win','NCVf5', 'NCV5FD','NCVf4','NCVf4FD','NCVf3','NCVf3FD','NCVf2','NCVf2FD', 'NCVf1','NCVf1FD','Nr.SNPs1','Nr.SNPs2', 'Nr.FDs')
+
+res<-list(NCVs=f5,input=chwinV2,fd=chwinV3, bed=chwinV4)
+return(res)
+}
+###
+
+#Run NCV tests
+
+#chr21 (test)
+
+system.time(my.function(test.21,bed.file=bed1,fd.file=fd1,tag='chr21')->res_chr21)
+#save(res_chr22,file='/mnt/sequencedb/PopGen/barbara/vcf_practice/DATA/chr22/res_Map.TRF.SDs.chr22.RData')
+
+
+
+###########
+#Script to plot feature maps of genes or chromosomes: featureMap.R. To demo what the script does, run it like this:
+#source("http://faculty.ucr.edu/~tgirke/Documents/R_BioCond/My_R_Scripts/featureMap.txt")
