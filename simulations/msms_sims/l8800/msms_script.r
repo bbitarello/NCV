@@ -707,242 +707,241 @@ Store(taj)
 #ATTENTION:::::::::::::::::::CHANGE TO NOW INCLUDE FD. (FD=F or FD=T). REPORT RESULTS ARE FOR FD=T.
 
 	#data MN
-	lapply(AF$MN$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AF$MN$NCVf01
-	lapply(AF$MN$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AF$MN$NCVf02
-	lapply(AF$MN$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AF$MN$NCVf03
-	lapply(AF$MN$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AF$MN$NCVf04
-	lapply(AF$MN$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AF$MN$NCVf05
+	lapply(AF$MN$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AF$MN$NCVf01
+	lapply(AF$MN$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AF$MN$NCVf02
+	lapply(AF$MN$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AF$MN$NCVf03
+	lapply(AF$MN$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AF$MN$NCVf04
+	lapply(AF$MN$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AF$MN$NCVf05
 
-	lapply(EU$MN$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->EU$MN$NCVf01
-	lapply(EU$MN$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->EU$MN$NCVf02
-	lapply(EU$MN$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->EU$MN$NCVf03
-	lapply(EU$MN$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->EU$MN$NCVf04
-	lapply(EU$MN$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->EU$MN$NCVf05
+	lapply(EU$MN$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->EU$MN$NCVf01
+	lapply(EU$MN$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->EU$MN$NCVf02
+	lapply(EU$MN$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->EU$MN$NCVf03
+	lapply(EU$MN$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->EU$MN$NCVf04
+	lapply(EU$MN$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->EU$MN$NCVf05
 	
-	lapply(AS$MN$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AS$MN$NCVf01
-	lapply(AS$MN$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AS$MN$NCVf02
-	lapply(AS$MN$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AS$MN$NCVf03
-	lapply(AS$MN$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AS$MN$NCVf04
-	lapply(AS$MN$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AS$MN$NCVf05
+	lapply(AS$MN$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AS$MN$NCVf01
+	lapply(AS$MN$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AS$MN$NCVf02
+	lapply(AS$MN$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AS$MN$NCVf03
+	lapply(AS$MN$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AS$MN$NCVf04
+	lapply(AS$MN$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AS$MN$NCVf05
 	
 	
 	#######################AFRICA######################################
 	#data f01
-	lapply(AF$M1f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AF$M1f01$NCVf01
-	lapply(AF$M1f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AF$M1f01$NCVf02
-	lapply(AF$M1f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AF$M1f01$NCVf03
-	lapply(AF$M1f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AF$M1f01$NCVf04
-	lapply(AF$M1f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AF$M1f01$NCVf05
+	lapply(AF$M1f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AF$M1f01$NCVf01
+	lapply(AF$M1f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AF$M1f01$NCVf02
+	lapply(AF$M1f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AF$M1f01$NCVf03
+	lapply(AF$M1f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AF$M1f01$NCVf04
+	lapply(AF$M1f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AF$M1f01$NCVf05
 
 	#data f02
-	lapply(AF$M1f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AF$M1f02$NCVf01
-	lapply(AF$M1f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AF$M1f02$NCVf02
-	lapply(AF$M1f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AF$M1f02$NCVf03
-	lapply(AF$M1f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AF$M1f02$NCVf04
-	lapply(AF$M1f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AF$M1f02$NCVf05
+	lapply(AF$M1f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AF$M1f02$NCVf01
+	lapply(AF$M1f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AF$M1f02$NCVf02
+	lapply(AF$M1f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AF$M1f02$NCVf03
+	lapply(AF$M1f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AF$M1f02$NCVf04
+	lapply(AF$M1f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AF$M1f02$NCVf05
 
 	#data f03
-	lapply(AF$M1f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AF$M1f03$NCVf01
-	lapply(AF$M1f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AF$M1f03$NCVf02
-	lapply(AF$M1f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AF$M1f03$NCVf03
-	lapply(AF$M1f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AF$M1f03$NCVf04
-	lapply(AF$M1f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AF$M1f03$NCVf05
+	lapply(AF$M1f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AF$M1f03$NCVf01
+	lapply(AF$M1f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AF$M1f03$NCVf02
+	lapply(AF$M1f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AF$M1f03$NCVf03
+	lapply(AF$M1f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AF$M1f03$NCVf04
+	lapply(AF$M1f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AF$M1f03$NCVf05
 	
 	#data f04
-	lapply(AF$M1f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AF$M1f04$NCVf01
-	lapply(AF$M1f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AF$M1f04$NCVf02
-	lapply(AF$M1f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AF$M1f04$NCVf03
-	lapply(AF$M1f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AF$M1f04$NCVf04
-	lapply(AF$M1f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AF$M1f04$NCVf05
+	lapply(AF$M1f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AF$M1f04$NCVf01
+	lapply(AF$M1f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AF$M1f04$NCVf02
+	lapply(AF$M1f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AF$M1f04$NCVf03
+	lapply(AF$M1f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AF$M1f04$NCVf04
+	lapply(AF$M1f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AF$M1f04$NCVf05
 
 	#data f05
-	lapply(AF$M1f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AF$M1f05$NCVf01
-	lapply(AF$M1f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AF$M1f05$NCVf02
-	lapply(AF$M1f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AF$M1f05$NCVf03
-	lapply(AF$M1f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AF$M1f05$NCVf04
-	lapply(AF$M1f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AF$M1f05$NCVf05
+	lapply(AF$M1f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AF$M1f05$NCVf01
+	lapply(AF$M1f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AF$M1f05$NCVf02
+	lapply(AF$M1f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AF$M1f05$NCVf03
+	lapply(AF$M1f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AF$M1f05$NCVf04
+	lapply(AF$M1f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AF$M1f05$NCVf05
 
 	####M3
 	#data f01
-	lapply(AF$M3f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AF$M3f01$NCVf01
-	lapply(AF$M3f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AF$M3f01$NCVf02
-	lapply(AF$M3f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AF$M3f01$NCVf03
-	lapply(AF$M3f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AF$M3f01$NCVf04
-	lapply(AF$M3f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AF$M3f01$NCVf05
+	lapply(AF$M3f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AF$M3f01$NCVf01
+	lapply(AF$M3f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AF$M3f01$NCVf02
+	lapply(AF$M3f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AF$M3f01$NCVf03
+	lapply(AF$M3f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AF$M3f01$NCVf04
+	lapply(AF$M3f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AF$M3f01$NCVf05
 
 	#data f02
-	lapply(AF$M3f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AF$M3f02$NCVf01
-	lapply(AF$M3f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AF$M3f02$NCVf02
-	lapply(AF$M3f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AF$M3f02$NCVf03
-	lapply(AF$M3f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AF$M3f02$NCVf04
-	lapply(AF$M3f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AF$M3f02$NCVf05
+	lapply(AF$M3f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AF$M3f02$NCVf01
+	lapply(AF$M3f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AF$M3f02$NCVf02
+	lapply(AF$M3f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AF$M3f02$NCVf03
+	lapply(AF$M3f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AF$M3f02$NCVf04
+	lapply(AF$M3f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AF$M3f02$NCVf05
 
 	#data f03
-	lapply(AF$M3f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AF$M3f03$NCVf01
-	lapply(AF$M3f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AF$M3f03$NCVf02
-	lapply(AF$M3f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AF$M3f03$NCVf03
-	lapply(AF$M3f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AF$M3f03$NCVf04
-	lapply(AF$M3f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AF$M3f03$NCVf05
+	lapply(AF$M3f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AF$M3f03$NCVf01
+	lapply(AF$M3f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AF$M3f03$NCVf02
+	lapply(AF$M3f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AF$M3f03$NCVf03
+	lapply(AF$M3f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AF$M3f03$NCVf04
+	lapply(AF$M3f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AF$M3f03$NCVf05
 	
 	#data f04
-	lapply(AF$M3f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AF$M3f04$NCVf01
-	lapply(AF$M3f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AF$M3f04$NCVf02
-	lapply(AF$M3f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AF$M3f04$NCVf03
-	lapply(AF$M3f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AF$M3f04$NCVf04
-	lapply(AF$M3f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AF$M3f04$NCVf05
-
+	lapply(AF$M3f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AF$M3f04$NCVf01
+	lapply(AF$M3f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AF$M3f04$NCVf02
+	lapply(AF$M3f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AF$M3f04$NCVf03
+	lapply(AF$M3f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AF$M3f04$NCVf04
+	lapply(AF$M3f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AF$M3f04$NCVf05
 	#data f05
-	lapply(AF$M3f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AF$M3f05$NCVf01
-	lapply(AF$M3f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AF$M3f05$NCVf02
-	lapply(AF$M3f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AF$M3f05$NCVf03
-	lapply(AF$M3f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AF$M3f05$NCVf04
-	lapply(AF$M3f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AF$M3f05$NCVf05
+	lapply(AF$M3f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AF$M3f05$NCVf01
+	lapply(AF$M3f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AF$M3f05$NCVf02
+	lapply(AF$M3f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AF$M3f05$NCVf03
+	lapply(AF$M3f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AF$M3f05$NCVf04
+	lapply(AF$M3f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AF$M3f05$NCVf05
 
 	Store(AF)
 	###########################EURASIA#################################
 	#data f01
-	lapply(EU$M1f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->EU$M1f01$NCVf01
-	lapply(EU$M1f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->EU$M1f01$NCVf02
-	lapply(EU$M1f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->EU$M1f01$NCVf03
-	lapply(EU$M1f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->EU$M1f01$NCVf04
-	lapply(EU$M1f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->EU$M1f01$NCVf05
+	lapply(EU$M1f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->EU$M1f01$NCVf01
+	lapply(EU$M1f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->EU$M1f01$NCVf02
+	lapply(EU$M1f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->EU$M1f01$NCVf03
+	lapply(EU$M1f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->EU$M1f01$NCVf04
+	lapply(EU$M1f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->EU$M1f01$NCVf05
 
 	#data f02
-	lapply(EU$M1f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->EU$M1f02$NCVf01
-	lapply(EU$M1f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->EU$M1f02$NCVf02
-	lapply(EU$M1f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->EU$M1f02$NCVf03
-	lapply(EU$M1f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->EU$M1f02$NCVf04
-	lapply(EU$M1f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->EU$M1f02$NCVf05
+	lapply(EU$M1f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->EU$M1f02$NCVf01
+	lapply(EU$M1f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->EU$M1f02$NCVf02
+	lapply(EU$M1f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->EU$M1f02$NCVf03
+	lapply(EU$M1f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->EU$M1f02$NCVf04
+	lapply(EU$M1f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->EU$M1f02$NCVf05
 
 	#data f03
-	lapply(EU$M1f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->EU$M1f03$NCVf01
-	lapply(EU$M1f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->EU$M1f03$NCVf02
-	lapply(EU$M1f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->EU$M1f03$NCVf03
-	lapply(EU$M1f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->EU$M1f03$NCVf04
-	lapply(EU$M1f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->EU$M1f03$NCVf05
+	lapply(EU$M1f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->EU$M1f03$NCVf01
+	lapply(EU$M1f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->EU$M1f03$NCVf02
+	lapply(EU$M1f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->EU$M1f03$NCVf03
+	lapply(EU$M1f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->EU$M1f03$NCVf04
+	lapply(EU$M1f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->EU$M1f03$NCVf05
 	
 	#data f04
-	lapply(EU$M1f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->EU$M1f04$NCVf01
-	lapply(EU$M1f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->EU$M1f04$NCVf02
-	lapply(EU$M1f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->EU$M1f04$NCVf03
-	lapply(EU$M1f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->EU$M1f04$NCVf04
-	lapply(EU$M1f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->EU$M1f04$NCVf05
+	lapply(EU$M1f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->EU$M1f04$NCVf01
+	lapply(EU$M1f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->EU$M1f04$NCVf02
+	lapply(EU$M1f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->EU$M1f04$NCVf03
+	lapply(EU$M1f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->EU$M1f04$NCVf04
+	lapply(EU$M1f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->EU$M1f04$NCVf05
 
 	#data f05
-	lapply(EU$M1f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->EU$M1f05$NCVf01	
-	lapply(EU$M1f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->EU$M1f05$NCVf02
-	lapply(EU$M1f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->EU$M1f05$NCVf03
-	lapply(EU$M1f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->EU$M1f05$NCVf04
-	lapply(EU$M1f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->EU$M1f05$NCVf05
+	lapply(EU$M1f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->EU$M1f05$NCVf01	
+	lapply(EU$M1f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->EU$M1f05$NCVf02
+	lapply(EU$M1f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->EU$M1f05$NCVf03
+	lapply(EU$M1f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->EU$M1f05$NCVf04
+	lapply(EU$M1f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->EU$M1f05$NCVf05
 
 	####M3
 	#data f01
-	lapply(EU$M3f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->EU$M3f01$NCVf01
-	lapply(EU$M3f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->EU$M3f01$NCVf02
-	lapply(EU$M3f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->EU$M3f01$NCVf03
-	lapply(EU$M3f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->EU$M3f01$NCVf04
-	lapply(EU$M3f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->EU$M3f01$NCVf05
+	lapply(EU$M3f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->EU$M3f01$NCVf01
+	lapply(EU$M3f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->EU$M3f01$NCVf02
+	lapply(EU$M3f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->EU$M3f01$NCVf03
+	lapply(EU$M3f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->EU$M3f01$NCVf04
+	lapply(EU$M3f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->EU$M3f01$NCVf05
 
 	#data f02
-	lapply(EU$M3f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->EU$M3f02$NCVf01
-	lapply(EU$M3f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->EU$M3f02$NCVf02
-	lapply(EU$M3f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->EU$M3f02$NCVf03
-	lapply(EU$M3f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->EU$M3f02$NCVf04
-	lapply(EU$M3f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->EU$M3f02$NCVf05
+	lapply(EU$M3f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->EU$M3f02$NCVf01
+	lapply(EU$M3f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->EU$M3f02$NCVf02
+	lapply(EU$M3f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->EU$M3f02$NCVf03
+	lapply(EU$M3f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->EU$M3f02$NCVf04
+	lapply(EU$M3f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->EU$M3f02$NCVf05
 
 	#data f03
-	lapply(EU$M3f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->EU$M3f03$NCVf01
-	lapply(EU$M3f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->EU$M3f03$NCVf02
-	lapply(EU$M3f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->EU$M3f03$NCVf03
-	lapply(EU$M3f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->EU$M3f03$NCVf04
-	lapply(EU$M3f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->EU$M3f03$NCVf05
+	lapply(EU$M3f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->EU$M3f03$NCVf01
+	lapply(EU$M3f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->EU$M3f03$NCVf02
+	lapply(EU$M3f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->EU$M3f03$NCVf03
+	lapply(EU$M3f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->EU$M3f03$NCVf04
+	lapply(EU$M3f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->EU$M3f03$NCVf05
 	
 	#data f04
-	lapply(EU$M3f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->EU$M3f04$NCVf01
-	lapply(EU$M3f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->EU$M3f04$NCVf02
-	lapply(EU$M3f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->EU$M3f04$NCVf03
-	lapply(EU$M3f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->EU$M3f04$NCVf04
-	lapply(EU$M3f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->EU$M3f04$NCVf05
+	lapply(EU$M3f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->EU$M3f04$NCVf01
+	lapply(EU$M3f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->EU$M3f04$NCVf02
+	lapply(EU$M3f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->EU$M3f04$NCVf03
+	lapply(EU$M3f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->EU$M3f04$NCVf04
+	lapply(EU$M3f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->EU$M3f04$NCVf05
 
 	#data f05
-	lapply(EU$M3f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->EU$M3f05$NCVf01
-	lapply(EU$M3f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->EU$M3f05$NCVf02
-	lapply(EU$M3f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->EU$M3f05$NCVf03
-	lapply(EU$M3f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->EU$M3f05$NCVf04
-	lapply(EU$M3f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->EU$M3f05$NCVf05
+	lapply(EU$M3f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->EU$M3f05$NCVf01
+	lapply(EU$M3f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->EU$M3f05$NCVf02
+	lapply(EU$M3f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->EU$M3f05$NCVf03
+	lapply(EU$M3f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->EU$M3f05$NCVf04
+	lapply(EU$M3f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->EU$M3f05$NCVf05
 
 	########################ASIA#######################################
 
 	#data f01
-	lapply(AS$M1f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AS$M1f01$NCVf01
-	lapply(AS$M1f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AS$M1f01$NCVf02
-	lapply(AS$M1f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AS$M1f01$NCVf03
-	lapply(AS$M1f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AS$M1f01$NCVf04
-	lapply(AS$M1f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AS$M1f01$NCVf05
+	lapply(AS$M1f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AS$M1f01$NCVf01
+	lapply(AS$M1f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AS$M1f01$NCVf02
+	lapply(AS$M1f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AS$M1f01$NCVf03
+	lapply(AS$M1f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AS$M1f01$NCVf04
+	lapply(AS$M1f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AS$M1f01$NCVf05
 
 	#data f02
-	lapply(AS$M1f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AS$M1f02$NCVf01
-	lapply(AS$M1f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AS$M1f02$NCVf02
-	lapply(AS$M1f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AS$M1f02$NCVf03
-	lapply(AS$M1f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AS$M1f02$NCVf04
-	lapply(AS$M1f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AS$M1f02$NCVf05
+	lapply(AS$M1f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AS$M1f02$NCVf01
+	lapply(AS$M1f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AS$M1f02$NCVf02
+	lapply(AS$M1f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AS$M1f02$NCVf03
+	lapply(AS$M1f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AS$M1f02$NCVf04
+	lapply(AS$M1f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AS$M1f02$NCVf05
 
 	#data f03
-	lapply(AS$M1f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AS$M1f03$NCVf01
-	lapply(AS$M1f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AS$M1f03$NCVf02
-	lapply(AS$M1f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AS$M1f03$NCVf03
-	lapply(AS$M1f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AS$M1f03$NCVf04
-	lapply(AS$M1f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AS$M1f03$NCVf05
+	lapply(AS$M1f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AS$M1f03$NCVf01
+	lapply(AS$M1f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AS$M1f03$NCVf02
+	lapply(AS$M1f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AS$M1f03$NCVf03
+	lapply(AS$M1f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AS$M1f03$NCVf04
+	lapply(AS$M1f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AS$M1f03$NCVf05
 	
 	#data f04
-	lapply(AS$M1f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AS$M1f04$NCVf01
-	lapply(AS$M1f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AS$M1f04$NCVf02
-	lapply(AS$M1f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AS$M1f04$NCVf03
-	lapply(AS$M1f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AS$M1f04$NCVf04
-	lapply(AS$M1f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AS$M1f04$NCVf05
+	lapply(AS$M1f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AS$M1f04$NCVf01
+	lapply(AS$M1f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AS$M1f04$NCVf02
+	lapply(AS$M1f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AS$M1f04$NCVf03
+	lapply(AS$M1f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AS$M1f04$NCVf04
+	lapply(AS$M1f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AS$M1f04$NCVf05
 
 	#data f05
-	lapply(AS$M1f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AS$M1f05$NCVf01
-	lapply(AS$M1f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AS$M1f05$NCVf02
-	lapply(AS$M1f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AS$M1f05$NCVf03
-	lapply(AS$M1f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AS$M1f05$NCVf04
-	lapply(AS$M1f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AS$M1f05$NCVf05
+	lapply(AS$M1f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AS$M1f05$NCVf01
+	lapply(AS$M1f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AS$M1f05$NCVf02
+	lapply(AS$M1f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AS$M1f05$NCVf03
+	lapply(AS$M1f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AS$M1f05$NCVf04
+	lapply(AS$M1f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AS$M1f05$NCVf05
 
 	####M3
 	#data f01
-	lapply(AS$M3f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AS$M3f01$NCVf01
-	lapply(AS$M3f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AS$M3f01$NCVf02
-	lapply(AS$M3f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AS$M3f01$NCVf03
-	lapply(AS$M3f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AS$M3f01$NCVf04
-	lapply(AS$M3f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AS$M3f01$NCVf05
+	lapply(AS$M3f01$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AS$M3f01$NCVf01
+	lapply(AS$M3f01$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AS$M3f01$NCVf02
+	lapply(AS$M3f01$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AS$M3f01$NCVf03
+	lapply(AS$M3f01$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AS$M3f01$NCVf04
+	lapply(AS$M3f01$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AS$M3f01$NCVf05
 
 	#data f02
-	lapply(AS$M3f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AS$M3f02$NCVf01
-	lapply(AS$M3f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AS$M3f02$NCVf02
-	lapply(AS$M3f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AS$M3f02$NCVf03
-	lapply(AS$M3f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AS$M3f02$NCVf04
-	lapply(AS$M3f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AS$M3f02$NCVf05
+	lapply(AS$M3f02$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AS$M3f02$NCVf01
+	lapply(AS$M3f02$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AS$M3f02$NCVf02
+	lapply(AS$M3f02$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AS$M3f02$NCVf03
+	lapply(AS$M3f02$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AS$M3f02$NCVf04
+	lapply(AS$M3f02$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AS$M3f02$NCVf05
 
 	#data f03
-	lapply(AS$M3f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AS$M3f03$NCVf01
-	lapply(AS$M3f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AS$M3f03$NCVf02
-	lapply(AS$M3f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AS$M3f03$NCVf03
-	lapply(AS$M3f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AS$M3f03$NCVf04
-	lapply(AS$M3f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AS$M3f03$NCVf05
+	lapply(AS$M3f03$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AS$M3f03$NCVf01
+	lapply(AS$M3f03$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AS$M3f03$NCVf02
+	lapply(AS$M3f03$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AS$M3f03$NCVf03
+	lapply(AS$M3f03$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AS$M3f03$NCVf04
+	lapply(AS$M3f03$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AS$M3f03$NCVf05
 	
 	#data f04
-	lapply(AS$M3f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AS$M3f04$NCVf01
-	lapply(AS$M3f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AS$M3f04$NCVf02
-	lapply(AS$M3f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AS$M3f04$NCVf03
-	lapply(AS$M3f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AS$M3f04$NCVf04
-	lapply(AS$M3f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AS$M3f04$NCVf05
+	lapply(AS$M3f04$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AS$M3f04$NCVf01
+	lapply(AS$M3f04$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AS$M3f04$NCVf02
+	lapply(AS$M3f04$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AS$M3f04$NCVf03
+	lapply(AS$M3f04$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AS$M3f04$NCVf04
+	lapply(AS$M3f04$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AS$M3f04$NCVf05
 
 	#data f05
-	lapply(AS$M3f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=F)->AS$M3f05$NCVf01
-	lapply(AS$M3f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=F)->AS$M3f05$NCVf02
-	lapply(AS$M3f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=F)->AS$M3f05$NCVf03
-	lapply(AS$M3f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=F)->AS$M3f05$NCVf04
-	lapply(AS$M3f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=F)->AS$M3f05$NCVf05
+	lapply(AS$M3f05$DATA,NCV2,feq=vec[1], show.plot=F, FD=T)->AS$M3f05$NCVf01
+	lapply(AS$M3f05$DATA,NCV2,feq=vec[2], show.plot=F, FD=T)->AS$M3f05$NCVf02
+	lapply(AS$M3f05$DATA,NCV2,feq=vec[3], show.plot=F, FD=T)->AS$M3f05$NCVf03
+	lapply(AS$M3f05$DATA,NCV2,feq=vec[4], show.plot=F, FD=T)->AS$M3f05$NCVf04
+	lapply(AS$M3f05$DATA,NCV2,feq=vec[5], show.plot=F, FD=T)->AS$M3f05$NCVf05
 	
 Store(EU)
 Store(AS)

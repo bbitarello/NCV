@@ -7,8 +7,12 @@
 ####################################
 
 
-source("simulations.r")
-source("msms_script.r")
+#open an R session within each dir (l3000, l8800, l15000) and run:
+
+
+source('simulations.r')
+source("/mnt/sequencedb/PopGen/barbara/simulations/msms_sims/l8800/msms_script.r")
+source('/mnt/sequencedb/PopGen/barbara/simulations/msms_sims/l8800/ROCR_plots.R')
 
 
 

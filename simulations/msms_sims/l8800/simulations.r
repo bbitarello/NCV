@@ -140,18 +140,18 @@ m1f04 <- paste(msms, "-N 7310 -ms 181", nsims," -t",THETA, "-r", RHO, Length, "-
 
 #run all simulations:
 
-system(mN)
-system(m3f01)
-system(m3f02)
-system(m3f03)
-system(m3f04)
-system(m3f05)
+#system(mN)
+#system(m3f01)
+#system(m3f02)
+#system(m3f03)
+#system(m3f04)
+#system(m3f05)
 
-system(m1f01)
-system(m1f02)
-system(m1f03)
-system(m1f04)
-system(m1f05)
+#system(m1f01)
+#system(m1f02)
+#system(m1f03)
+#system(m1f04)
+#system(m1f05)
 
 ##
 ##Read in DATA
