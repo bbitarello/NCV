@@ -1426,3 +1426,68 @@ dev.off()
 #abline(v=0.05, col='darkgray', lty=2)
 #dev.off()
 
+
+#Extra Plots (March 2014)
+
+pdf("ROC_AIDA_Afr_feqs_NCV_tajD.pdf")
+
+
+plot(perf_a, main='AFRICA, NCV vs Taj D; 3 my; length=3kb ', col='turquoise4', xlim=c(0,0.5), lwd=2, pch=20)
+
+plot(perf_b, add = TRUE, col='turquoise4', lty=2)
+
+plot(perf_04a, add=TRUE, col='orange', lwd=2)
+
+plot(perf_04b, add=TRUE, col='orange', lty=2)
+
+plot (perf_03a, add=T, col='darkolivegreen', lwd=2)
+
+plot(perf_03b, add=T, col='darkolivegreen', lty=2)
+
+plot (perf_02a, add=T, col='brown', lwd=2)
+
+plot(perf_02b, add=T, col='brown', lty=2)
+
+legend(0.25,0.17,c('NCV', 'TajD'), lwd=3, lty=c(1,2))
+
+
+legend(0.4,0.25,c('f=0.5','f=0.4', 'f=0.3', 'f=0.2'), col=c('turquoise4','orange','darkolivegreen','brown'),lwd=3, pch=c(18,18,18,18))
+
+#abline(coef=c(0,1), col='red', lty=1)
+#abline(v=0.01, col='gray', lty=2, lwd=1)
+abline(v=0.05, col='darkgray', lty=1)
+
+
+dev.off()
+
+
+
+###
+
+pdf("ROC_NCV0.5_vs_taj.pdf")
+
+plot(perf5, main='AFRICA, NCV feq=0.5 vs Taj D; 3 my; length=3kb ', col='turquoise4',xlim=c(0,0.5), lwd=2, pch=20)
+
+plot(perf_b, add=TRUE, col='turquoise4', lty=2)
+
+plot(perf4, add = TRUE, col='orange')
+
+plot(perf_04b, add = TRUE, col='orange', lty=2)
+
+plot(perf3, add=TRUE, col='darkolivegreen')
+
+plot(perf_03b, add=TRUE, col='darkolivegreen', lty=2)
+
+plot(perf2, add=TRUE, col='brown')
+
+plot(perf_02b, add=TRUE, col='brown', lty=2)
+
+
+legend(0.4,0.25,c('f=0.5','f=0.4', 'f=0.3', 'f=0.2'), col=c('turquoise4','orange','darkolivegreen','brown'),lwd=3, pch=c(18,18,18,18))
+
+legend(0.25,0.17,c('NCV', 'TajD'), lwd=3, lty=c(1,2))
+
+abline(v=0.05, col='darkgray', lty=1)
+
+
+dev.off()
