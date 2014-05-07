@@ -1,7 +1,7 @@
 #!/usr/bin/r
 ## Cesare de Filippo, MPI-EVA
 ## 15-01-2014
-## Last modified by Barbara Bitarello: 26.02.2014
+## Last modified by Barbara Bitarello: 05.05.2014
 ## Run NCV:
 ## example command line:
 
@@ -9,6 +9,11 @@
 
 #./run_ncv_scan_v2.r tmp.ac 3000 1500   ##NCV without FD
 #./run_ncv_4args.r '/mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr21/AC_13pops.Map50_100.TRF.SDs.tsv.gz' 3000 1500 '/mnt/sequencedb/PopGen/cesare/bs_genomescan/fds.hg19_pantro2.21.tsv'  #NCV with FD
+
+
+
+library(SOAR) #speed up workspace loading.
+Sys.setenv(R_LOCAL_CACHE="store_here")
 
 
 #then a loop should be added saying : for each tmpdir of a a given chromosome, 
@@ -69,8 +74,8 @@ colnames(TEMP.INPUT)<-c("CHROM" ,"POS", "ID" ,"REF","ALT","Anc","AWS","LWK","YRI
 TAG<-as.character(TEMP.INPUT[1,1])
 ##############################################################################################################
 #load functions and packages
-source("/mnt/scratch/cee/bs_genomescan/NCV.scanv5.r") 
-source("/mnt/sequencedb/PopGen/barbara/simulations/scripts/take.snps.r")
+source("/mnt/sequencedb/PopGen/barbara/simulations/scripts/NCV.scanv6_barbara.r") 
+#source("/mnt/sequencedb/PopGen/barbara/simulations/scripts/take.snps.r")
 ## library(multicore) ## You do not nees a multicore library for the qsub
 #############SPLIT THE INPUTS INTO 3MB WINDOWS (Cesare)###
 
@@ -86,6 +91,9 @@ lapply(1:length(s), function(i) subset(input.file, POS >= s[i] & POS < e[i])[,se
 ## lapply(chwin, function(z) as.matrix(z))-> chwinV2 # there is no need to run this second loop, because the subset already generates a matrix or better a data.frame
 chNCV<-vector('list',length(chwinV2))
 ids <- which(unlist(lapply(chwinV2, nrow)) > 0) # The window having at least one snp
+
+#input.list<-list(INPUT.NCV=chwinV2, INPUT.FD=chwinfd)
+
 if(FD==TRUE){
   FD.file <- subset(FD.file, pos >= s[1] & pos <= e[length(e)]) # subset the FD.file to speed up the following lapply
   system.time(lapply(1:length(s),function(i) subset(FD.file, pos >= s[i] & pos <= e[i])[,])->chwinfd)  #FDs per window}
@@ -93,30 +101,19 @@ if(FD==TRUE){
   for (i in ids) { # loop only for windows having at least one SNP
     if( nrow(input.list$INPUT.FD[[i]]) > 0) {
       NCV.scan4(INPUT.N=input.list$INPUT.NCV[[i]],FD=TRUE,FD.N=input.list$INPUT.FD[[i]],pop='YRI')->chNCV[[i]]
-    } else { # in case there are no FDs
+	} 
+	if(nrow(input.list$INPUT.FD[[i]])<1) {
       NCV.scan4(INPUT.N=input.list$INPUT.NCV[[i]],FD=FALSE,pop='YRI')->chNCV[[i]] # it does not work
     }
   }
+assign(paste('res__',TAG, '_', BIN,sep=''), do.call(rbind,chNCV))
 }
 if(FD==FALSE){
   input.list<-list(INPUT.NCV=chwinV2)
   for (i in ids){
     NCV.scan4(INPUT.N=input.list$INPUT.NCV[[i]], FD=FALSE,pop='YRI')->chNCV[[i]]
   }
-}
-f5 <- as.data.frame(matrix(NA,nrow=length(s),ncol=11))
-## f5<- cbind(rep(NA, length(s)), rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)),rep(NA, length(s)))
-f5[,1]<-rep(TAG, length(s))  #chromosome
-f5[,2]<-s
-f5[,3]<-s+WINDOW
-STATS.NAMES <- c("NCVf5", "NCVf4", "NCVf3", "NCVf2","NCVf1","Nr.SNPs","Nr.FDs", "Initial_seg_sites")
-f5[ids,4:11] <- matrix(unlist(lapply(chNCV[ids],function(x) x[STATS.NAMES])), ncol=length(STATS.NAMES),byrow=T)
-colnames(f5)<-c('chr','beg.win', 'end.win','NCVf5','NCVf4','NCVf3','NCVf2', 'NCVf1','Nr.SNPs', 'Nr.FDs', 'Init.seg.sites')
-if(FD==T){
-  assign(paste('res__',TAG, '_', BIN,sep=''), list(NCVs=f5,input=chwinV2,fd=chwinfd))
-}
-if(FD==F){
-  assign(paste('res__',TAG, '_', BIN,sep=''), list(NCVs=f5,input=chwinV2))
+  assign(paste('res__',TAG, '_', BIN,sep=''), do.call(rbind,chNCV))  ##save NCV results
 }
 
 ######################################################################################################################

@@ -12,7 +12,7 @@
 
 
 library(multicore)
-
+source('/mnt/sequencedb/PopGen/barbara/simulations/scripts/NCV.scanv6_barbara.r')
 
 FD.N<-read.table('/mnt/sequencedb/PopGen/cesare/bs_genomescan/fds.hg19_pantro2.21.tsv',sep="\t",stringsAsFactors=FALSE,as.is=TRUE)
 colnames(FD.N)<-c('chr', 'pos', 'human', 'chimp')
@@ -48,33 +48,27 @@ input.list<-list(INPUT.NCV=chwinV2, INPUT.FD=chwinfd)
 
 
 
-for (i in ids) { # loop only for windows having at least one SNP
+system.time(for (i in ids) { # loop only for windows having at least one SNP
     if( nrow(input.list$INPUT.FD[[i]]) > 0) {
-      NCV.scan4(INPUT.N=input.list$INPUT.NCV[[i]],FD=TRUE,FD.N=input.list$INPUT.FD[[i]],pop='YRI')->chNCV[[i]]
-    } else { # in case there are no FDs
+      NCV.scan4(INPUT.N=input.list$INPUT.NCV[[i]],FD=TRUE,FD.N=input.list$INPUT.FD[[i]],pop='YRI')->chNCV[[i]]}
+   else { # in case there are no FDs
       NCV.scan4(INPUT.N=input.list$INPUT.NCV[[i]],FD=FALSE,pop='YRI')->chNCV[[i]] # it does not work
     }
 }
+#95.298 
+
+
+#checking
+
+table(unlist(lapply(chNCV, function(x) is.null(x))))   #ids has 21,619 and chNCV has 21,619 'false' (null) NCV results. THat is because of the condition nrow(input.fd) >0
+
+
+system.time(do.call(rbind,chNCV)->chr21.NCV)
+# 24.614 
 
 
 
-
-n<-100
-pop<-'YRI'
-
-
-nisnps<-dim(INPUT.N)[1]
-
-nifds<-dim(z)[1]
-
-
-
-
-
-
-
-
-
+###chr22
 
 
 

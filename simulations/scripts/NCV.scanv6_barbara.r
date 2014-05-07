@@ -12,9 +12,9 @@ NCV.scan4<-function(INPUT.N, pop='YRI',FD=T, FD.N) {
   ##INPUT.N : input data // ##FDs: fixed differences (human vs chimp reference)
   n<-100; if(pop=='PUR'){n<-88}  #it would be ideal to run for all pops at once and dothe rest of the commands on a per pop basis.
 	if(FD==TRUE){
-      	as.data.frame(FD.N)->z}  #list of FDs between human and chimp
+      	as.data.frame(FD.N)->z
+	nifds<-dim(z)[1]}  #list of FDs between human and chimp
   	nisnps<-dim(INPUT.N)[1] #number of SNPs in INPUT.N
-  	nifds<-dim(z)[1]  #number of FDs in FD.N
 #  if(nisnps>1){   #actually I don't need this because we only run the scan for windows with at least one SNP
 	y2 <- as.data.frame(cbind(counts=as.numeric(INPUT.N[,pop])/n, pos=as.numeric(INPUT.N[,2]), ref=INPUT.N[,4], alt=INPUT.N[,5]), stringsAsFactors=F) #alt allele freq
 	y2[,1]<-as.numeric(y2[,1])
@@ -57,7 +57,8 @@ NCV.scan4<-function(INPUT.N, pop='YRI',FD=T, FD.N) {
 	tp<-c(real.snps3$counts,rep(0,fxdlen))}
 ###############################################NCV without FD############################################
     if(FD==FALSE){
-	real.snps4 <- which(y2[,counts] > 0 & y2[,counts<1])   #if the re are no FDs for this window, just exlude SNPs with fixed or absent alt allele.
+	nifds<-NA
+	real.snps4 <- y2[which(y2[,1] > 0 & y2[,1]<1),]   #if the re are no FDs for this window, just exlude SNPs with fixed or absent alt allele.
 	polsites<-dim(real.snps4)[1];	tp<-real.snps4$counts; fxdlen<-0}
 	ncvf1<-sqrt(sum((tp-0.1)^2)/(polsites+fxdlen)); ncvf2<-sqrt(sum((tp-0.2)^2)/(polsites+fxdlen));ncvf3<-sqrt(sum((tp-0.3)^2)/(polsites+fxdlen));
 	ncvf4<-sqrt(sum((tp-0.4)^2)/(polsites+fxdlen)); ncvf5<-sqrt(sum((tp-0.5)^2)/(polsites+fxdlen));
