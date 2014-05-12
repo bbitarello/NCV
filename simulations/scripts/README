@@ -27,11 +27,11 @@ done
 
 BP=3000
 SLIDE=1500
-LOGS=/mnt/scratch/barbara/ncv/
+LOGS=/mnt/scratch/barbara/ncv/logs/
 #CHROM=21
 for CHROM in {1..22}; do
     INPUT=/mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr${CHROM}/AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz
-    CHIMPfd=/mnt/scratch/cee/bs_genomescan/fds_hg19_pantro2/fds.hg19_pantro2.$CHROM.tsv
+     CHIMPfd=/mnt/scratch/cee/bs_genomescan/fds_hg19_pantro2/fds.hg19_pantro2.$CHROM.tsv
     POSITIONS=/mnt/scratch/cee/bs_genomescan/bins/scan_bin3Mb_chr${CHROM}.pos
     NBINS=$(wc -l ${POSITIONS} | cut -f 1 -d ' ') # the number of bins for the chromosome
     for i in `seq 1 ${NBINS}`; do 

@@ -14,7 +14,6 @@ library(multicore)
 library(SOAR)  #speed up workspace loading.
 library(ggplot2)
 
-
 CHR<-seq(1:22)
 
 PATH.1<-paste('/mnt/scratch/barbara/ncv/',CHR, '/', sep='')
@@ -35,7 +34,6 @@ for ( i in 1:22){
 
 ##I THINK THIS IS WHERE WE NEED TO USE QSUB!<<<<<<<<<<<<<<<<<<<
 		for (k in 1:nBINS){
-
 
 			try(load(paste(PATH.1[i], 'bin', k,'/', 'res__',CHR[i],'_',k,'.RData', sep='')))->tmp
 
@@ -59,7 +57,7 @@ for (j in a1){
 TMP.1<-rbind(TMP.1, get(NAMES.A1[j]))
 #remove(get(NAMES.A1[j]))
 }
-TMP.1->CHR.RES[[i]]
+TMP.1[-1,]->CHR.RES[[i]]  #eliminate first row of each chromosome output.
 }
 #Store(TMP.1)
 #remove(list=ls())
@@ -75,29 +73,37 @@ as.character(ALL.RES$CHR)-> ALL.RES[,1]
 ##################################################################
 
 
-#first: eliminate windows with less than 15 SNPs.
+#first: eliminate windows with less than 10 SNPs.
 
-#for (i in 4:17){
 
-#as.numeric(as.character(ALL.RES[,i]))->ALL.RES[,i]
-#}
-
-#filter for minimum number of SNPs
-
-RES.FILT<-subset(ALL.RES, Nr.SNPs>=10)
-
+RES.FILT<-subset(ALL.RES, Nr.SNPs>=10 & Nr.FDs>=1)
 
 
 #take the thresholds
 
-thr.001<-apply(RES.FILT[,3:7],2,function(x)quantile(x, probs=seq(0,1,0.001), na.rm=T))
+thr.001<-apply(RES.FILT[,4:8],2,function(x)quantile(x, probs=seq(0,1,0.001), na.rm=T))
 
 #go to original results and query
 
 thr.001[,5][[2]]-> threshold5
 
-ALL.RES[ALL.RES$Nr.SNPs>=10 & ALL.RES$NCVf5<=threshold5,c(1,2,8,9,10)]-> cands5
+ALL.RES[ALL.RES$Nr.SNPs>=10 & ALL.RES$Nr.FDs>=1 & ALL.RES$NCVf5<=threshold5,c(1,2,8,9,10)]-> cands5
+
+
+
+
+
 #problem: how to find the window that yelded each NCV result.
+
+
+
+
+#another possibility
+
+#RES.FILT[order(RES>FILT[,8]),]->test
+
+#test[1:10,]  #extreme outliers
+
 
 
 
