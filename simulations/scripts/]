@@ -9,10 +9,10 @@
 #$ -R y
 #$ -M barbara_domingues@eva.mpg.de
 #$ -m e
-#$ -l h_vmem=1G,s_vmem=1G
+#$ -l h_vmem=300M,s_vmem=300M
 
 #SIM=${SGE_TASK_ID}
-RSCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_ncv_v2.r
+RSCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_ncv_allpops.r
 INPUT=${1} # the imput file as allele counts such as (AC_13pops.tsv.gz)
 POSITIONS=${2} # the interval to use as CHROMOSOME, START and END positions
 WINDOW=${3} # the window length in bp
