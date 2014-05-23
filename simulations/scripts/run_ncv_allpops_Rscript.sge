@@ -12,7 +12,7 @@
 #$ -l h_vmem=1G,s_vmem=1G
 
 #SIM=${SGE_TASK_ID}
-RSCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_ncv_allpops.r
+RSCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_ncv_allpops_Rscript_v1.r
 INPUT=${1} # the imput file as allele counts such as (AC_13pops.tsv.gz)
 POSITIONS=${2} # the interval to use as CHROMOSOME, START and END positions
 WINDOW=${3} # the window length in bp
@@ -25,7 +25,7 @@ cd ${TMPDIR}
 
 tabix -p vcf ${INPUT} ${POSITIONS} > tmp.ac 
 
-${RSCRIPT} tmp.ac ${WINDOW} ${SLIDE} ${BIN} ${CHIMPfd}
+${RSCRIPT} -i 'tmp.ac' -w ${WINDOW} -s ${SLIDE} -b ${BIN} -fd ${CHIMPfd}
 
 echo DONE
 
