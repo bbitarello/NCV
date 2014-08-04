@@ -1,0 +1,26 @@
+#!/bin/bash
+# Cesare de Filippo, MPI-EVA
+# 
+# This is an SGE batch script
+#$ -S /bin/bash
+#$ -cwd
+#$ -q all.q
+# load personal profile
+#$ -V
+#$ -R y
+#$ -M barbara_domingues@eva.mpg.de
+#$ -m e
+#$ -l h_vmem=1000M,virtual_free=500M,class=*
+
+SIM=${SGE_TASK_ID} 
+RSCRIPT=${1}
+PARAMETERS=${2}
+TMPDIR=${3}
+
+mkdir -p ${TMPDIR}
+
+cd ${TMPDIR}
+
+${RSCRIPT} ${PARAMETERS}
+
+echo DONE
