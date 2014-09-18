@@ -1,9 +1,10 @@
 #Barbara D. Bitarello
-#Last modified: 24.april.2014
+#Last modified: 16.september.2014
 
 ### In the directory 'simulations/msms_sims/' we have all NCV simulations and their analyses.##
 ### In the directory 'vcf_practice' we have all data and analyses for 1000g data.##
-### In the directory 'divergence_hg19_pantro2' I have a divergence (fixed positions file) for humanxchimp
+### in the directory 'scan_may_2014' I analyse scan results for all  populations from NCV-with-FD
+### In the directory 'scan+sept_2014_no_FD' I analyse scab results for all populations from NCV-no-FD
 
 
 ###
