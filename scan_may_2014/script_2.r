@@ -34,6 +34,13 @@ DG_genes<-c("CPE","HLA-DPA1", "HLA-DPB1","FANK1","TEKT4","KIAA1324L","MYOM2", "Z
 #DG=deGiorgio
 
 other_BS_genes<-c('ERAP2','FUT2','HLA-B','CFTR')
+
+#MHC coordinates (by Deborah, but remember that this differs a bit from GENCODE v.19...it is just a quick way to check for HLA windows, but I will remove it after I have my own bedfile for HLA made from GENCODE directly.
+read.table('mhc_shiina_hg19.bed', header=F)-> mhc.coords
+
+names(mhc.coords)<-c('Chr','B.gene', 'E.Gene', 'Gene')
+
+
 #####################################################################################################
 
 ########################################################################
@@ -93,10 +100,16 @@ names(ASIA.no.FD)<-pops[1:3]
 remove(All.Results.Final.no.FD)
 #########################3###############################################
 #########################################################################
+#DO plots for the NCV distributions without any filters applied, to show that we NEED them.
+#I will only apply a minimum proportion of the window covered to the data (upstream). The rest of the ' filters' we judge necessary are applied downstream. E.g
+#we might decide to not trust an outlier window which has 1, 2  or 3 SNPs.a
 
-######################################################################################################################################################
-##Part Iv: From now on I will basically use Yoruba (AFRICA[[3]]) for the first round of analyses. Later I can repeat all analyses for all populations
-######################################################################################################################################################
+
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures')
+
+
+#take top candidates
+
 
 AFRICA[[3]][with(AFRICA[[3]], order(NCVf5)), ]->topf5
 AFRICA[[3]][with(AFRICA[[3]], order(NCVf3)), ]->topf3
@@ -125,3 +138,126 @@ cbind(topf5.no.FD, p.val=p.val)-> topf5bnoFD
 subset(topf5b, p.val<=0.001)->topf5c
 subset(topf5bnoFD, p.val<=0.001)->topf5cnoFD
 
+#all pĺots are for YRI
+
+#Proportion.Covered genomic)
+
+
+pdf('prop.covered.genomic.NCV-w.FD.YRI.pdf')
+
+hist(AFRICA[[3]]$Proportion.Covered, main= 'Proportion of the 3kb window present in the input data', col= ' darkolivegreen', nclass=80, xlab=' Proportion of the window present in the input data' , ylab='Window Count')
+legend("topleft",legend=c("# of Windows = 1,705,970", "Pop =  YRI"),inset=.01,cex=.8,adj=0, bty="n")
+
+
+
+dev.off()
+
+
+pdf('Nr.SNPs.genomic.NCV-w.FD.YRI.pdf')
+
+hist(AFRICA[[3]]$Nr.SNPs, main= 'Number of SNPs per 3 kb window', col= ' darkolivegreen', nclass=80, xlab='SNPs per window' , ylab='Window Count')
+legend("topleft",legend=c("# of Windows = 1,705,970", "Pop =  YRI"),inset=.01,cex=.8,adj=0, bty="n")
+
+dev.off()
+
+
+#another option
+ggplot(AFRICA[[3]]$Nr.SNPs, aes(x=Nr.SNPs)) + geom_histogram(aes(y=..density..),binwidth=.5, colour="black", fill="white") + geom_density(alpha=.2, fill="#FF6666")  
+
+
+
+#FDs
+
+pdf('Nr.FDs.genomic.NCV-w.FD.YRI.pdf')
+hist(AFRICA[[3]]$Nr.FDs, main= 'Number of FDs per 3 kb window', col= ' darkolivegreen', nclass=80, xlab='FDs per window' , ylab='Window Count')
+legend("topright",legend=c("# of Windows = 1,705,970", "Pop =  YRI"),inset=.01,cex=.8,adj=0, bty="n")
+dev.off()
+
+pdf('SNP-FD.genomic.NCV-w.FD.YRI.pdf')
+
+hist(AFRICA[[3]]$Nr.SNPs/AFRICA[[3]]$Nr.FDs, main= 'SNP/FD per 3 kb window', col= ' darkolivegreen', nclass=80, xlab='SNP/FD per window' , ylab='Window Count')
+legend("topright",legend=c("# of Windows = 1,705,970", "Pop =  YRI"),inset=.01,cex=.8,adj=0, bty="n")
+dev.off()
+
+
+
+
+#SNPs and Proportion Covered
+
+
+
+pdf('Prop.Cov_SNPs.pdf')
+ggplot(AFRICA[[3]],aes(x=Nr.SNPs,y=Proportion.Covered)) + stat_binhex() + theme_bw()
+dev.off()
+
+
+pdf('Prop.Cov_FD.pdf')
+ggplot(AFRICA[[3]],aes(x=Nr.FDs,y=Proportion.Covered)) + stat_binhex() + theme_bw()
+dev.off()
+
+
+#Finally, NCVf5 with Nr.SNPs
+
+pdf('NCVf5_Nr.SNPs.pdf')
+ggplot(AFRICA[[3]],aes(x=Nr.SNPs,y=NCVf5)) + stat_binhex() + theme_bw()
+dev.off()
+
+pdf('NCVf5_prop.cov.pdf')
+ggplot(AFRICA[[3]],aes(x=Proportion.Covered, y=NCVf5)) + stat_binhex() + theme_bw()
+dev.off()
+
+
+# filter data for minimum of SNPs  and repear this plot
+
+pdf('NCVf5_prop.cov_min3SNPs.pdf')
+
+test<-subset(AFRICA[[3]], Nr.SNPs>=3)
+
+ggplot(test,aes(x=Proportion.Covered, y=NCVf5)) + stat_binhex() + theme_bw()
+dev.off()
+
+
+pdf('NCVf5_prop.cov_min4SNPs.pdf')
+test<-subset(AFRICA[[3]], Nr.SNPs>=4)
+
+ggplot(test,aes(x=Proportion.Covered, y=NCVf5)) + stat_binhex() + theme_bw()
+dev.off()
+
+pdf('NCVf5_prop.cov_min5SNPs.pdf')
+
+test<-subset(AFRICA[[3]], Nr.SNPs>=5)
+
+ggplot(test,aes(x=Proportion.Covered, y=NCVf5)) + stat_binhex() + theme_bw()
+dev.off()
+
+
+
+#Based on SNPvcProp.Cov, I think we could apply a >=0.5 prop.covered at least
+
+
+
+
+#without filtering
+
+SNP/FD>1: windows (7%) (balancing)
+
+SNP/FD=1: 1.5% (neutral)
+
+SNP/FD<1: 91.3%
+
+
+
+
+
+
+
+####
+
+#Ok, having done that, I will now filter the data (Proportion.Covered)
+
+
+
+
+######################################################################################################################################################
+##Part Iv: From now on I will basically use Yoruba (AFRICA[[3]]) for the first round of analyses. Later I can repeat all analyses for all populations
+######################################################################################################################################################
