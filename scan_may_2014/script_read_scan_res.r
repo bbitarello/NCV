@@ -19,36 +19,6 @@ library(ggplot2)
 ######################################################################################
 ######################################################################################
 
-pops<-c("AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "CLM","PUR")
-#load results for scan without FDs
-
-load('/mnt/sequencedb/PopGen/barbara/scan_sept_2014/All.Results.Final.no.FD.RData')-> All.Results.Final.no.FD
-
-andres_BS_cand_AA_EA<-c('ADAM11', 'ALPK2', 'BTN1A1', 'DEPDC2', 'KRT14', 'LGALS8', 'LILRB4','LINS1', 'RCBTB1', 'RPS7', 'RTP4', 'TRIM22', 'WDR40C')
-
-
-andres_BS_cand_EA<- c('TRPV6', 'ARHGEF3', 'C20orf186', 'CAMK2B', 'CD200R1', 'CDSN', 'FLJ90650', 'FUT2', 'GM632', 'ZNF512B', 'GM632', 'ZNF512B',  'GPR111', 'GRIN3A', 'HLA-B', 'KIAA0753', 'KIAA0753', 'KRT6E', 'LHB', 'LOC197322', 'ACSF3', 'LRAP', 'MYO1G', 'NALP13', 'PCDHB16', 'RABEP1', 'RIOK2', 'SAMM50', 'SERPINB5', 'SLC2A9', 'SMARCAD1', 'TMEM171','TSPAN10', 'UNC5C', 'VARSL', 'ZNF415')
-#GM632 / ZNF512B,are the same gene
-
-andres_BS_cand_AA<-c('ADAMTS7', 'C14orf124', 'CLCNKB', 'COL27A1', 'COPE', 'FGF6', 'FLJ40243', 'KRT6B','KRT84', 'LRRN6A', 'LINGO', 'PPP1R15A', 'SERPINH1', 'TARBP1', 'TNS1', 'TRPV6')  #LINDO/LRRN6A are the same gene
-
-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/candidates')
-
-as.character(candidates[,1])-> candidates
-
-sort(c(andres_BS_cand_EA, andres_BS_cand_AA_EA, andres_BS_cand_AA))->andres_2009
-
-read.table('testX')->testX
-
-colnames(testX)<-c('chr', 'beg.pos.scan', 'end.pos.scan', 'wind.ID', 'chrb', 
-+ 'beg.pos.genc', 'end.pos.genc', 'gene.name', 'type', 'exon_count' , 'exons', 'overlap')
-
-c("CPE","HLA-DPA1", "HLA-DPB1","FANK1","TEKT4","KIAA1324L","MYOM2", "ZNF568","C1orf130","ARPC5","MSH3","SH3RF3","DMBT1","BNC2","PKD1L1","USP20","C4orf37","APBB1IP","STK32B","SLC15A2","PACRG","WFDC8","RGL1","MLF1IP","POLN","SLC2A9","SPEF2","FRMD4B","MLL3","PGLYRP4","LGALS8","ART3","RCAN1","ARHGAP24","RNF144B","CEP112","HLA-DRB5","CCDC169","CCDC169-SOHLH2","C18orf1","STK32A","SPATA16","LRRC16A","HLA-C","HLA-DQB1","SNX19","CHRNB3","CCDC146","WDR75","MYO5B","HPSE2","IGSF5","CASQ2","MYRIP","FRG2C","APOBEC4","NTN4","ALG8","ESYT2","ATP8A2","RFX8","ULK4","AXDND1","EMID2","SMYD3","HLA-B","VRK3","ARHGAP42","RBFOX1","C15orf48","GBA3","KLHL14","BICC1","SNX31","WWTR1","KIAA0748","ASTN2","ANK3","PGBD5","SLC38A9","SLCO1B3","DGKI","RAMP3","LAMA2","HLA-A","ACBD5","MYLK4","DHX37","EMR1","RYR2","BCKDHB","C16orf73","FAHD1","RCBTB1","RGS6","ACSBG2","SWAP70","ABCD4","PTPRB","PTPN14")->DG_genes
-#DG=deGiorgio
-
-######################################################################################
-#Part I: read in scan results and save in .RData file for easy manipulation later.####
-######################################################################################
 
 CHR<-seq(1:22)
 
@@ -429,11 +399,6 @@ mergeBed -i YRItop.f5.bed -nms |sed 's/^/chr/' |awk -v OFS="\t" '$1=$1' > merged
 
 topf5b[c('209655','209665','209675','209685','209695','209705','209719','209725'),] #for HLA-DRA
 
-
-andres_BS_cand_AA_EA<-c('ADAM11', 'ALPK2', 'BTN1A1', 'DEPDC2', 'KRT14', 'LGALS8', 'LILRB4','LINS1', 'RCBTB1', 'RPS7', 'RTP4', 'TRIM22', 'WDR40C')
-
-
-andres_BS_cand_EA<- c('TRPV6', 'ARHGEF3', 'C20orf186', 'CAMK2B', 'CD200R1', 'CDSN', 'FLJ90650', 'FUT2', 'GM632', 'ZNF512B', 'GM632', 'ZNF512B',  'GPR111', 'GRIN3A', 'HLA-B', 'KIAA0753', 'KIAA0753', 'KRT6E', 'LHB', 'LOC197322', 'ACSF3', 'LRAP', 'MYO1G', 'NALP13', 'PCDHB16', 'RABEP1', 'RIOK2', 'SAMM50', 'SERPINB5', 'SLC2A9', 'SMARCAD1', 'TMEM171','TSPAN10', 'UNC5C', 'VARSL', 'ZNF415')
 
 
 AFRICA2[[3]][order(AFRICA2[[3]]$NCVf5),]->sort.YRI.NCVf5
