@@ -151,7 +151,7 @@ Fourth: Scan results are in the following folders
 script_1.r #to read in the scan data and save as .RData in this directory. Close without saving
 script_2.r #load the .RData for both scans and start analysing, make figures etc
 script_3.sh # bash stuff, handling bed files
-
+script_4.r  #reading in the intersected bed files, and analysing outlier windows, comparing scans etc.
 ...
 
 ########################################################################################################################################################

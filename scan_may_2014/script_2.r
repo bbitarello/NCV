@@ -105,7 +105,7 @@ remove(All.Results.Final.no.FD)
 #we might decide to not trust an outlier window which has 1, 2  or 3 SNPs.a
 
 
-setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures')
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/')
 
 
 #take top candidates
@@ -116,31 +116,65 @@ AFRICA[[3]][with(AFRICA[[3]], order(NCVf3)), ]->topf3
 
 
 
-
 AFRICA.no.FD[[3]][with(AFRICA.no.FD[[3]], order(NCVf5)), ]->topf5.no.FD
 AFRICA.no.FD[[3]][with(AFRICA.no.FD[[3]], order(NCVf3)), ]->topf3.no.FD
 
+
+YRI.2.f5<-subset(topf5, Nr.SNPs>=4)
+YRI.2.no.FD.f5<-subset(topf5.no.FD, Nr.SNPs>=4)
+
 tpv<-seq(1: dim(AFRICA[[3]])[1])
-
-
-
 p.val <-tpv/dim(AFRICA[[3]])[1]
-
-
 
 cbind(topf3, p.val=p.val)-> topf3b
 cbind(topf5, p.val=p.val)-> topf5b
 
-
 cbind(topf3.no.FD, p.val=p.val)-> topf3bnoFD
 cbind(topf5.no.FD, p.val=p.val)-> topf5bnoFD
+
+tpv2<-seq(1:dim(YRI.2.f5)[1])
+
+p.val2<-tpv2/(dim(YRI.2.f5)[1])
+
+cbind(YRI.2.f5, p.val=p.val2)->YRI.2.f5b
+cbind(YRI.2.no.FD.f5, p.val=p.val2)->YRI.2.no.FD.f5b
 
 subset(topf5b, p.val<=0.001)->topf5c
 subset(topf5bnoFD, p.val<=0.001)->topf5cnoFD
 
+subset(YRI.2.f5b, p.val<=0.001)->topf5.min4SNPs
+subset(YRI.2.no.FD.f5b, p.val<=0.001)->topf5.min4SNPs.no.FD
+
+
+#sort bed files
+
+topf5c[order(topf5c$Chr, topf5c$Beg.Win),]->topf5.sort
+
+topf5cnoFD[order(topf5cnoFD$Chr, topf5cnoFD$Beg.Win),]->topf5noFD.sort
+
+topf5.min4SNPs.no.FD[order(topf5.min4SNPs.no.FD$Chr, topf5.min4SNPs.no.FD$Beg.Win),]->topf5.min4SNPs.no.FD.sort
+
+topf5.min4SNPs[order(topf5.min4SNPs$Chr, topf5.min4SNPs$Beg.Win),]->topf5.min4SNPs.sort
+
+#write bed files
+
+write.table(cbind(topf5.sort, rownames(topf5.sort)), options(scipen=1),file = paste0(pops[3],'top.f5.bed'), quote=F, sep='\t', col.names=F, row.names=F)
+
+write.table(cbind(topf5noFD.sort, rownames(topf5noFD.sort)), options(scipen=1),file = paste0(pops[3],'top.f5.noFD.bed'), quote=F, sep='\t', col.names=F, row.names=F)
+
+
+write.table(cbind(topf5.min4SNPs.sort, rownames(topf5.min4SNPs.sort)), options(scipen=1),file = paste0(pops[3],'top.f5.min4SNPs.bed'), quote=F, sep='\t', col.names=F, row.names=F)
+
+write.table(cbind(topf5.min4SNPs.no.FD.sort, rownames(topf5.min4SNPs.no.FD.sort)), options(scipen=1),file = paste0(pops[3],'top.f5.noFD.min4SNPs.bed'), quote=F, sep='\t', col.names=F, row.names=F)
+
+
+#################################################################################################
+
 #all pĺots are for YRI
 
 #Proportion.Covered genomic)
+
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/')
 
 
 pdf('prop.covered.genomic.NCV-w.FD.YRI.pdf')
@@ -239,25 +273,19 @@ dev.off()
 
 #without filtering
 
-SNP/FD>1: windows (7%) (balancing)
+#SNP/FD>1: windows (7%) (balancing)
 
-SNP/FD=1: 1.5% (neutral)
+#SNP/FD=1: 1.5% (neutral)
 
-SNP/FD<1: 91.3%
-
-
+#SNP/FD<1: 91.3%
 
 
 
 
 
-####
-
-#Ok, having done that, I will now filter the data (Proportion.Covered)
 
 
 
 
-######################################################################################################################################################
-##Part Iv: From now on I will basically use Yoruba (AFRICA[[3]]) for the first round of analyses. Later I can repeat all analyses for all populations
-######################################################################################################################################################
+
+
