@@ -62,7 +62,34 @@ lapply(listD, function(x) andres_2009[which(andres_2009 %in% x)])-> listF
 lapply(listD,function(x) x[grep("HLA", x)])
 
 
+#find windows which overlap with HLA-B a(two conditionals), bind the two data frames and eliminate duplicated collumns
+rbind(subset(YRI.2.f5b, Chr==6 & End.Win> 31321648 & End.Win < 31324965), subset(YRI.2.f5b, Chr==6 & Beg.Win > 31321648 & Beg.Win < 31324965))->hla.b
 
+
+YRI.2.f5b[rownames(hla.b[!duplicated(hla.b),]),]$p.val  #with this we can see that the p-values for HLA-B are low...all below 0.01
+
+
+#HLa-C
+
+
+rbind(subset(YRI.2.f5b, Chr==6 & End.Win> 31236525 & End.Win <  31239907), subset(YRI.2.f5b, Chr==6 & Beg.Win > 31236525 & Beg.Win < 31239907))->hla.c
+
+
+YRI.2.f5b[rownames(hla.c[!duplicated(hla.c),]),]$p.val  #with this we can see that the p-values for HLA-C low (all below 1%)
+
+
+	31236525	31239907	
+
+#find pseudogenes
+
+
+lapply(listB, function(x) subset(x, type.2!='pseudogene'))-> Pseudog
+
+lapply(Pseudog, function(x) as.character(unique(x$gene.name)))-> Pseudog.cand
+
+lapply(listB, function(x) subset(x, type.2!='lincRNA'))-> lincRNA
+
+lapply(lincRNA, function(x) as.character(unique(x$gene.name)))-> lincRNA.cand
 
 
 
