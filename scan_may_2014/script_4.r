@@ -77,8 +77,39 @@ rbind(subset(YRI.2.f5b, Chr==6 & End.Win> 31236525 & End.Win <  31239907), subse
 
 YRI.2.f5b[rownames(hla.c[!duplicated(hla.c),]),]$p.val  #with this we can see that the p-values for HLA-C low (all below 1%)
 
+read.table("mhc_coords.bed")-> mhc.coords.gencode
 
-	31236525	31239907	
+names(mhc.coords.gencode)<-c("chr","B","E","Name")
+
+
+t.list<-vector('list', dim(mhc.coords.gencode)[1])
+
+
+
+
+my.function<-function(B, E, df=YRI.2.f5b){
+
+rbind(subset(df, Chr==6 & End.Win > B & End.Win < E), subset(df, Chr==6 & Beg.Win > B &Beg.Win < E))->res
+
+
+YRI.2.f5b[rownames(res[!duplicated(res),]),]-> res2
+
+res2$p.val->p.vals
+
+return(list(p.vals, res2))
+}
+
+
+for (i in 1: dim(mhc.coords.gencode)[1]){
+
+my.function(mhc.coords.gencode$B[i], mhc.coords.gencode$E[i])->t.list[[i]]
+}
+
+names(t.list)<-mhc.coords.gencode$Name
+
+#now I can check everything about HLA-s
+
+
 
 #find pseudogenes
 
