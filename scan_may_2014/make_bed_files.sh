@@ -3,35 +3,72 @@
 #	Make bed file for Andres et al. (2009) candidates for balancing selection and DeGiorgio et al. (2014) candidates for balancing selection
 #	Barbara D Bitarello
 #
-#	LAst modified: 24.09.2014
+#	LAst modified: 25.09.2014
 #########################################################
 
 #HLA
 #genocde v.19
-for i in HLA-A HLA-B HLA-C HLA-E HLA-F HLA-G HLA-DPA1 HLA-DPB1 HLA-DPB2 HLA-DMA HLA-DMB HLA-DOA HLA-DRA HLA-DRB HLA-DRB6 HLA-DQA1 HLA-DQB1
+for i in HLA-A HLA-B HLA-C HLA-E HLA-F HLA-G HLA-DPA1 HLA-DPB1 HLA-DPB2 HLA-DMA HLA-DMB HLA-DOA HLA-DRA HLA-DRB1 HLA-DRB5 HLA-DQA1 HLA-DQB1
 
 do
 
-grep $i final_encode.bed  |grep chr6| awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}' >> mhc.coords.gencode.bed
+grep -w $i final_encode.bed  |grep chr6| awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}' >> mhc.coords.gencode.bed
 
 done
 
 
-#ANdres et al. (2009)
+#ANdres et al. (2009) #60 'aEXTREME' genes, but actually 58 in the final bed file (see comments)
 
-for i in ADAM11 ALPK2 BTN1A1 DEPDC2 KRT14 LGALS8 LILRB4 LINS1 RCBTB1 RPS7 RTP4 TRIM22 WDR40C ADAMTS7 C14orf124 CLCNKB COL27A1 COPE FGF6 FLJ40243 KRT6B KRT84  LINGO1 PPP1R15A SERPINH1 TARBP1 TNS1 TRPV6 ALDH4A1 ARHGEF3 C20orf186 CAMK2B CD200R1 CDSN FLJ90650 FUT2  ZNF512B GPR111 GRIN3A HLA-B KIAA0753 RPTOR KRT6E LHB  ACSF3 LRAP 	MYO1G NALP13 PCDHB16 RABEP1 RIOK2 SAMM50 SERPINB5 SLC2A9 SMARCAD1 TMEM171 TSPAN10 UNC5C VARSL ZNF415 
+for i in ADAM11 ALPK2 BTN1A1 PREX2 KRT14 LGALS8 LILRB4 LINS RCBTB1 RPS7 RTP4 TRIM22 DCAF12L2 ADAMTS7 SDR39U1 CLCNKB COL27A1 COPE FGF6 MROH2B KRT6B KRT84  LINGO1 PPP1R15A SERPINH1 TARBP1 TNS1 TRPV6 ALDH4A1 ARHGEF3 BPIFB4 CAMK2B CD200R1 CDSN AQPEP  FUT2  ZNF512B GPR111 GRIN3A HLA-B KIAA0753 RPTOR KRT6C  LHB  ACSF3 ERAP2 MYO1G NLRP13 PCDHB16 RABEP1 RIOK2 SAMM50 SERPINB5 SLC2A9 SMARCAD1 TMEM171 TSPAN10 UNC5C VARS2 ZNF415 
 
 
 do
 
-grep $i final_encode.bed |awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}' >> andres.2009.bed
+grep -w $i final_encode.bed |awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}'|grep -v chrX >> andres.2009.bed
 
-echo grep $i final_encode.bed|wc 
 
 done
 
 
 
+
+#warning, when Andres gibves two options for a gene name, tje second one is usually the one in GENCODe, so that's what I use. in some cases, the current name was not given in Andres and I replaced it. Ex. PREX2.
+#LINS1 (from the Andres scan) does not exist in GENCODE annotation. But I found LINS, which is also in chr15, so I assume it changed name or something.
+#WDR40C actually has a different name: DCAF12L2. SInce it is located on chromosome X, we will not consider it downstream.
+#SDR39U1 is the new name of  C14orf124
+#FLJ40243 switched to MROH2B
+#C20orf186  switched to  BPIFB4
+#FLJ90650 switched to AQPEP 
+#KRT6E switched to KRT6C 
+# LRAP switched to ERAP2
+#NALP13  switched to  NLRP13
+# VARSL switched to VARS2
+
+
+#I actually end up with 58 genes because one of them, TSPAN10, is a polymorphic pseudogene and one is in chromosome X< which we are not scanning.
+
+#DeGiorgio (T2 test, YRI, 100 genes, 99 in the final bed file)
+
+
+for i in CPE HLA-DPA1 HLA-DPB1 FANK1 TEKT4 KIAA1324L MYOM2 ZNF568 NCMAP ARPC5 MSH3 SH3RF3 DMBT1 BNC2 PKD1L1 USP20 STPG2 APBB1IP STK32B SLC15A2 PACRG WFDC8 RGL1 MLF1IP POLN SLC2A9 SPEF2 FRMD4B KMT2C PGLYRP4 LGALS8 ART3 RCAN1 ARHGAP24 RNF144B CEP112 HLA-DRB5 CCDC169 CCDC169-SOHLH2  LDLRAD4  STK32A SPATA16 LRRC16A HLA-C HLA-DQB1 SNX19 CHRNB3 CCDC146 WDR75 MYO5B HPSE2 IGSF5 CASQ2 MYRIP FRG2C APOBEC4 NTN4 ALG8 ESYT2 ATP8A2 RFX8 ULK4 AXDND1 COL26A1  SMYD3 HLA-B VRK3 ARHGAP42 RBFOX1 C15orf48 GBA3 KLHL14 BICC1 SNX31 WWTR1 TESPA1  ASTN2 ANK3 PGBD5 SLC38A9 SLCO1B3 DGKI RAMP3 LAMA2 HLA-A ACBD5 MYLK4 DHX37 EMR1 RYR2 BCKDHB MEIOB FAHD1 RCBTB1 RGS6 ACSBG2 SWAP70 ABCD4 PTPRB PTPN14
+
+
+do
+
+
+
+grep -w $i  final_encode.bed |awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}'  >> DG.2014.bed
+
+done
+
+# C1orf130 switched to NCMAP
+# C4orf37 switched to STPG2
+# MLL3 switched to KMT2C 
+# C16orf73 switched to MEIOB
+# KIAA0748 switched to TESPA1 
+# GBA3 is a polymorphic pseudogene so will not appear in the bed file
+# EMID2 switched to COL26A1 and is a polymorphic pseudogene
+# C18orf1 switched to LDLRAD4 
 
 
 
