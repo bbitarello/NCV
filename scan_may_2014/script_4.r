@@ -67,29 +67,8 @@ DG_genes[which(DG_genes$Gene %in% andres_2009$Gene),]
 
 lapply(listD,function(x) x[grep("HLA-", x)])
 
-#find windows which overlap with HLA-B a(two conditionals), bind the two data frames and eliminate duplicated collumns
-rbind(subset(YRI.2.f5b, Chr==6 & End.Win> 31321648 & End.Win < 31324965), subset(YRI.2.f5b, Chr==6 & Beg.Win > 31321648 & Beg.Win < 31324965))->hla.b
-
-
-YRI.2.f5b[rownames(hla.b[!duplicated(hla.b),]),]$p.val  #with this we can see that the p-values for HLA-B are low...all below 0.01
-
-
-#HLa-C
-
-
-rbind(subset(YRI.2.f5b, Chr==6 & End.Win> 31236525 & End.Win <  31239907), subset(YRI.2.f5b, Chr==6 & Beg.Win > 31236525 & Beg.Win < 31239907))->hla.c
-
-
-YRI.2.f5b[rownames(hla.c[!duplicated(hla.c),]),]$p.val  #with this we can see that the p-values for HLA-C low (all below 1%)
-
-read.table("mhc_coords.bed")-> mhc.coords.gencode
-
-names(mhc.coords.gencode)<-c("chr","B","E","Name")
-
 
 t.list<-vector('list', dim(mhc.coords.gencode)[1])
-
-
 
 
 my.function<-function(B, E, df=YRI.2.f5b, chr=6){
@@ -114,6 +93,29 @@ my.function(B=mhc.coords.gencode$B[i], E=mhc.coords.gencode$E[i], chr=chr1)->t.l
 names(t.list)<-mhc.coords.gencode$Name
 
 #now I can check everything about HLA-s
+
+
+t2.list<-vector('list', dim(DG_genes)[1])
+system.time(for (i in 1: dim(DG_genes)[1]){
+
+chr1<- as.numeric(unlist(strsplit(as.character(DG_genes$chr[i]),  split="chr", fixed=TRUE))[2])
+my.function(B=DG_genes$B[i], E=DG_genes$E[i], chr=chr1)-> t2.list[[i]]
+}
+)
+names(t2.list)<-DG_genes$Name
+
+
+
+
+t3.list<-vector('list', dim(andres_2009)[1])
+
+system.time(for (i in 1: dim(andres_2009)[1]){
+
+chr1<- as.numeric(unlist(strsplit(as.character(andres_2009$chr[i]),  split="chr", fixed=TRUE))[2])
+my.function(B=andres_2009$B[i], E=andres_2009$E[i], chr=chr1)-> t2.list[[i]]
+}
+)
+names(t2.list)<-andres_2009$Name
 
 
 
