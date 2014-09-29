@@ -3,7 +3,7 @@
 #
 # Read in scan data (NCV-with-FD and NCV-no-FD)
 #
-# Last modified: 26.09.2014
+# Last modified: 29.09.2014
 ######################################################################################
 #############################################
 library(parallel)
@@ -27,6 +27,7 @@ DG_genes<-read.table('DG.2014.bed')
 
 mhc.coords<-read.table('mhc.coords.gencode.bed')
 
+pseudogenes<-read.table('pseudogenes.bed')
 
 #MHC coordinates (by Deborah, but remember that this differs a bit from GENCODE v.19...it is just a quick way to check for HLA windows, but I will remove it after I have my own bedfile for HLA made from GENCODE directly.
 #read.table('mhc_shiina_hg19.bed', header=F)-> mhc.coords
@@ -37,6 +38,7 @@ names(andres_2009)<-c('chr','B', 'E', 'Name')
 
 names(DG_genes)<-c('chr','B', 'E', 'Name')
 
+names(pseudogenes)<-c('chr', 'B', 'E', 'Name')
 
 #####################################################################################################
 

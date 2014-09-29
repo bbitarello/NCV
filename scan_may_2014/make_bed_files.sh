@@ -3,12 +3,12 @@
 #	Make bed file for Andres et al. (2009) candidates for balancing selection and DeGiorgio et al. (2014) candidates for balancing selection
 #	Barbara D Bitarello
 #
-#	LAst modified: 25.09.2014
+#	LAst modified: 29.09.2014
 #########################################################
 
 #HLA
 #genocde v.19
-for i in HLA-A HLA-B HLA-C HLA-E HLA-F HLA-G HLA-DPA1 HLA-DPB1 HLA-DPB2 HLA-DMA HLA-DMB HLA-DOA HLA-DRA HLA-DRB1 HLA-DRB5 HLA-DQA1 HLA-DQB1
+for i in HLA-A HLA-B HLA-C HLA-E HLA-F HLA-G HLA-DPA1 HLA-DPB1 HLA-DPB2 HLA-DMA HLA-DMB HLA-DOA HLA-DRA HLA-DRB1 HLA-DRB5 HLA-DQA1 HLA-DQB1 HLA-DQB2
 
 do
 
@@ -69,6 +69,22 @@ done
 # GBA3 is a polymorphic pseudogene so will not appear in the bed file
 # EMID2 switched to COL26A1 and is a polymorphic pseudogene
 # C18orf1 switched to LDLRAD4 
+
+
+#Male a bed file with pseudogene coordinates, and check their p-values on the scan
+
+awk '{print $1, $2, $3, $4}'  >> pseudogenes.bed
+
+grep pseudogene final_encode.bed |awk '$5=="gene"{print $0}'| grep -v chrX|grep -v chrY >> pseudogenes.bed
+
+# awk '{print $4}' pseudogenes.bed |sort|uniq -c| awk '$1==2{print $0}'
+
+#these genes have two entries (pseudogene and polymorphic_pseudogene) so I will keep the one with longer coordinates.
+
+#     2 OR52E1
+#     2 OR5AL1
+#     2 RPS23P5
+#     2 SRSF8
 
 
 

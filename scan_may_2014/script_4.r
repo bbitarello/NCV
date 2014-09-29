@@ -1,7 +1,7 @@
 #################################3
 #	Barbara D.  Bitarello
 #
-#	Last modified: 25.09.2014
+#	Last modified: 29.09.2014
 ###########################################
 
 
@@ -112,14 +112,28 @@ t3.list<-vector('list', dim(andres_2009)[1])
 system.time(for (i in 1: dim(andres_2009)[1]){
 
 chr1<- as.numeric(unlist(strsplit(as.character(andres_2009$chr[i]),  split="chr", fixed=TRUE))[2])
-my.function(B=andres_2009$B[i], E=andres_2009$E[i], chr=chr1)-> t2.list[[i]]
+my.function(B=andres_2009$B[i], E=andres_2009$E[i], chr=chr1)-> t3.list[[i]]
 }
 )
-names(t2.list)<-andres_2009$Name
+names(t3.list)<-andres_2009$Name
+
+
 
 
 
 #find pseudogenes
+
+
+
+t4.list<-vector('list', dim(pseudogenes)[1])
+
+system.time(for (i in 1: dim(pseudogenes)[1]){
+
+chr1<- as.numeric(unlist(strsplit(as.character(pseudogenes$chr[i]),  split="chr", fixed=TRUE))[2])
+my.function(B=pseudogenes$B[i], E=pseudogenes$E[i], chr=chr1)-> t4.list[[i]]
+}
+)
+names(t4.list)<-pseudogenes$Name
 
 
 lapply(listB, function(x) subset(x, type.2!='pseudogene'))-> Pseudog
