@@ -51,10 +51,12 @@ lapply(listC, function(x) dim(x)[1])
 lapply(listC, function(x) as.character(unique(x$gene.name)))-> listD
 
 
-lapply(listD, function(x) DG_genes[(which(DG_genes$Gene %in% x)),])-> listE
+lapply(listD, function(x) DG_genes[(which(DG_genes$Name %in% x)),])-> listE
 
-lapply(listD, function(x) andres_2009[(which(andres_2009$Gene %in% x)),])-> listF
+lapply(listD, function(x) andres_2009[(which(andres_2009$Name %in% x)),])-> listF
 
+
+lapply(listD, function(x) mch.coords.gencode[(which(mhc.coords.gencode$Name %in% x)),])->ll
 
 #DG and Andres
 
