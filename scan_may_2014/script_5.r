@@ -6,7 +6,7 @@
 #
 #
 #
-#	Last modified :01.10.2014
+#	Last modified :6.10.2014
 #
 #################################################################
 
@@ -16,7 +16,7 @@
 
 #1. read in data (.RData)
 #2. plot distributions for: NCVs, SNPs, FDs, everything, all columns
-#3. input max NCV value for windows with >0 FDs and 0 SNPs (currently they are NAs) and input #FDs into NCV-no-FD data sets (even if is not used for the calculation, it is important to know)
+#3. input max NCV value for windows with >0 FDs and 0 SNPs (currently they are NAs) and input #FDs into NCV-no-FD data sets (even if is not used for the calculation, it is important to know) (no need to do this, it is alV
 #4. replot everything, especially NCV distribution.
 #5. apply cutoff from neutral simulations for the non-inputed distribution and the inputed distribution, and check if we get less outliers (it should be the case since the inputation will shift NCV to higher values, and our distribution will resemble more those from the simulations, because Cesare did compute NCV for windows with 0 SNPs and >0 FDs.
 #6. If there are zero FDs and zero SNPs there is nothing to do, so that is the only filtering we will do for starters (do that after 1.). Compute the number of windows for which this is the case, and if they are concentrated in some region/chromosome.
@@ -44,7 +44,7 @@ load('../All.Results.Final.no.FD.RData')
 
 All.Results.Final[[3]]->YRI.with.FD
 
-All.Results.Final[[3]]->YRI.no.FD
+All.Results.Final.no.FD[[3]]->YRI.no.FD
 
 
 remove(All.Results.Final)
@@ -54,18 +54,15 @@ remove(All.Results.Final.no.FD)
 
 YRI.with.FD$Nr.FDs-> YRI.no.FD$Nr.FDs
 
-cbind(YRI.with.FD, as.data.frame(YRI.with.FD$Nr.SNPs+1/YRI.with.FD$Nr.FDs+1))->YRI.with.FD #avoid infinite values and keeping the ratio of P to D
+cbind(YRI.with.FD, as.data.frame(YRI.with.FD$Nr.SNPs/(YRI.with.FD$Nr.FDs+1)))->YRI.with.FD #avoid infinite values and keeping the ratio of P to D
 
-cbind(YRI.with.FD, as.data.frame(YRI.no.FD$Nr.SNPs+1/YRI.no.FD$Nr.FDs))->YRI.no.FD
+cbind(YRI.no.FD, as.data.frame(YRI.no.FD$Nr.SNPs/(YRI.no.FD$Nr.FDs+1)))->YRI.no.FD
 
 colnames(YRI.with.FD)[14]<-"PtoD"
 
 colnames(YRI.no.FD)[14]<-"PtoD"
 
 subset(YRI.with.FD, Proportion.Covered>=0.5)-> YRI.with.FD.prop50
-
-subset(YRI.no.FD, Proportion.Covered>=0.5)-> YRI.no.FD.prop50
-
 
 subset(YRI.with.FD, Nr.SNPs+Nr.FDs>=2)-> YRI.with.FD.2.IS
 
@@ -83,12 +80,13 @@ subset(YRI.with.FD.4.IS, Proportion.Covered>=0.5)-> YRI.with.FD.prop50.4.IS
 
 #inout max NCV for windows with 0 SNPs and >0 FDs
 #853 with NCV not calculated, for both NCV-with-FD and NCV_no-=FD, because the data is the same
-
+******************************************
 #All of them have zero SNPs and zero FDs.
-#
+******************************************
+
 #70% of these ~800 have only one initial SNP, which is most likely a singleton in a population different than YRI. The remaining 30 have more than one initial SNP (before filtering), which most likely have frequency zero in the YRI population (manually checked some and it was the case)
 
-ummary of window coverage for these 853 windows:
+summary of window coverage for these 853 windows:
 
 summary(subset(YRI.with.FD, is.na(NCVf5==T))$Proportion.Covered)
      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
@@ -109,6 +107,29 @@ summary(YRI.with.FD$Proportion.Covered)
 
 #Plots  
 
+pdf('PtoD_unnafected.pdf')
+test<-data.frame(
+
+PtoD=rbind(data.frame(PtoD=YRI.with.FD$PtoD), data.frame(PtoD=YRI.with.FD.2.IS$PtoD), data.frame(PtoD=YRI.with.FD.3.IS$PtoD), data.frame(PtoD=YRI.with.FD.4.IS$PtoD), data.frame(PtoD=YRI.with.FD.prop50$PtoD), data.frame(PtoD=YRI.with.FD.prop50.4.IS$PtoD)),
+Dataset=rbind(data.frame(Dataset=rep("No filter", dim(YRI.with.FD)[[1]])), data.frame(Dataset=rep("2 Inf.Sites", dim(YRI.with.FD.2.IS)[[1]])),  data.frame(Dataset=rep("3 Inf.SItes", dim(YRI.with.FD.3.IS)[[1]])), data.frame(Dataset=rep("4 Inf.Sites", dim(YRI.with.FD.4.IS)[[1]])), data.frame(Dataset=rep("Cov>=0.5", dim(YRI.with.FD.prop50)[[1]])), data.frame(Dataset=rep("4 Inf.Sites & Cov>=0.5", dim(YRI.with.FD.prop50.4.IS)[[1]])))
+
+)
+qplot(PtoD, colour=factor(Dataset), data=test, geom="density")
+
+
+dev.off()
+
+
+pdf('NCV_unnafected.pdf')
+test1<-data.frame(
+
+NCV=rbind(data.frame(NCV=YRI.with.FD$NCVf5), data.frame(NCV=YRI.with.FD.2.IS$NCVf5), data.frame(NCV=YRI.with.FD.3.IS$NCVf5), data.frame(NCV=YRI.with.FD.4.IS$NCVf5), data.frame(NCV=YRI.with.FD.prop50$NCVf5), data.frame(NCV=YRI.with.FD.prop50.4.IS$NCVf5)),
+Dataset=rbind(data.frame(Dataset=rep("No filter", dim(YRI.with.FD)[[1]])), data.frame(Dataset=rep("2 Inf.Sites", dim(YRI.with.FD.2.IS)[[1]])),  data.frame(Dataset=rep("3 Inf.SItes", dim(YRI.with.FD.3.IS)[[1]])), data.frame(Dataset=rep("4 Inf.Sites", dim(YRI.with.FD.4.IS)[[1]])), data.frame(Dataset=rep("Cov>=0.5", dim(YRI.with.FD.prop50)[[1]])), data.frame(Dataset=rep("4 Inf.Sites & Cov>=0.5", dim(YRI.with.FD.prop50.4.IS)[[1]])))
+
+)
+qplot(PtoD, colour=factor(Dataset), data=test, geom="density")
+dev.off()
+
 #plot figures for various data sets on the same document, to make comparisons easier.
 
 #Summary(none of these filters really change the NCV distribution). We must remember that the extreme low values are very few.
@@ -117,33 +138,33 @@ summary(YRI.with.FD$Proportion.Covered)
 pdf('../figures/NCVf0.5.distributions.pdf')
 par(mfrow=c(3,2))
 
-hist(YRI.with.FD$NCVf5,  main= 'NCV (f=0.5) per 3 kb window', col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count', xlim=c(0,0.5))
+hist(YRI.with.FD$NCVf5,  main= 'NCV (f=0.5) per 3 kb', col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count', xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile(YRI.with.FD$NCVf5, na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.prop50$NCVf5,  main= "NCV (f=0.5) per 3 kb window min. 0.50 Cov", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count', xlim=c(0,0.5))
+hist(YRI.with.FD.prop50$NCVf5,  main= "NCV (f=0.5) per 3 kb min. 0.50 cov", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count', xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.prop50)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile(YRI.with.FD.prop50$NCVf5, na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.2.IS$NCVf5,  main= "NCV (f=0.5) per 3 kb window min. 2 Inform. Sites", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count', xlim=c(0,0.5))
+hist(YRI.with.FD.2.IS$NCVf5,  main= "NCV (f=0.5) per 3 kb min. 2 Inf.Sites", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count', xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.2.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile(YRI.with.FD.2.IS$NCVf5, na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
 
 
-hist(YRI.with.FD.3.IS$NCVf5,  main= "NCV (f=0.5) per 3 kb window min. 3 Inform. Sites", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count',xlim=c(0,0.5))
+hist(YRI.with.FD.3.IS$NCVf5,  main= "NCV (f=0.5) per 3 kb min. 3 Inf. Sites", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count',xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.3.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile(YRI.with.FD.3.IS$NCVf5, na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.4.SNPs$NCVf5,  main= "NCV (f=0.5) per 3 kb window min. 4 SNPs", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count',xlim=c(0,0.5))
+hist(YRI.with.FD.4.SNPs$NCVf5,  main= "NCV (f=0.5) per 3 kb min. 4 SNPs", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count',xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.4.SNPs)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile(YRI.with.FD.4.SNPs$NCVf5, na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.prop50.4.IS$NCVf5,  main= "NCV (f=0.5) per 3 kb window min. 4 Inform.Sites and 0.50 cov", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count',xlim=c(0,0.5))
+hist(YRI.with.FD.prop50.4.IS$NCVf5,  main= "NCV (f=0.5) per 3 kb min. 4 Inf.Sites & 0.50 cov", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count',xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.prop50.4.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile( YRI.with.FD.prop50.4.IS$NCVf5,  na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
@@ -156,34 +177,83 @@ pdf('../figures/PtoD.distributions.pdf')
 
 par(mfrow=c(3,2))
 
-hist(YRI.with.FD$PtoD,  main= 'PtoD per 3 kb window', col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+plot(density(YRI.with.FD$PtoD),  main= 'PtoD per 3 kb', col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+
+
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD)[1])),inset=.01,cex=.8,adj=0, bty="n")
-abline(v=quantile(YRI.with.FD$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
+#abline(v=quantile(YRI.with.FD$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.prop50$PtoD,  main= "PtoD per 3 kb window min. 0.50 Cov", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+plot(density(YRI.with.FD.prop50$PtoD),  main= "PtoD per 3 kb min. 0.50 Cov", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.prop50)[1])),inset=.01,cex=.8,adj=0, bty="n")
-abline(v=quantile(YRI.with.FD.prop50$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
+#abline(v=quantile(YRI.with.FD.prop50$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.2.IS$PtoD,  main= "PtoD per 3 kb window min. 2 Inform. Sites", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+plot(density(YRI.with.FD.2.IS$PtoD),  main= "PtoD per 3 kb min. 2 Inform. Sites", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.2.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
-abline(v=quantile(YRI.with.FD.2.IS$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
+#abline(v=quantile(YRI.with.FD.2.IS$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 
 
 
-hist(YRI.with.FD.3.IS$PtoD,  main= "NCV (f=0.5) per 3 kb window min. 3 Inform. Sites", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+hist(YRI.with.FD.3.IS$PtoD,  main= "PtoD per 3 kb min. 3 Inform. Sites", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.3.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
-abline(v=quantile(YRI.with.FD.3.IS$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
+#abline(v=quantile(YRI.with.FD.3.IS$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.4.SNPs$PtoD,  main= "NCV (f=0.5) per 3 kb window min. 4 SNPs", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+hist(YRI.with.FD.4.SNPs$PtoD,  main= "PtoD per 3 kb min. 4 SNPs", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.4.SNPs)[1])),inset=.01,cex=.8,adj=0, bty="n")
-abline(v=quantile(YRI.with.FD.4.SNPs$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
+#abline(v=quantile(YRI.with.FD.4.SNPs$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.prop50.4.IS$PtoD,  main= "NCV (f=0.5) per 3 kb window min. 4 Inform.Sites and 0.50 cov", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+hist(YRI.with.FD.prop50.4.IS$PtoD,  main= "PtoD per 3 kb min. 4 Inform.Sites and 0.50 cov", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.prop50.4.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
-abline(v=quantile( YRI.with.FD.prop50.4.IS$PtoD,  na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
+#abline(v=quantile( YRI.with.FD.prop50.4.IS$PtoD,  na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 
 dev.off()
+
+
+
+#another plot option
+
+library(reshape)
+library(ggplot2)
+
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/')
+
+d <- melt(YRI.with.FD[,-c(1,2,3)])
+
+pdf('NCV-with-FD.no.filter.pdf') 
+ggplot(d,aes(x = value)) + facet_wrap(~variable, scales = "free_x") + geom_histogram()
+dev.off()
+
+
+d1<-melt(YRI.with.FD.2.IS[,-c(1,2,3)])
+
+pdf('NCV-with-FD.2.IS.pdf')
+ggplot(d1,aes(x = value)) + facet_wrap(~variable,scales = "free_x") + geom_histogram()
+dev.off()
+
+
+d2<-melt(YRI.with.FD.3.IS[,-c(1,2,3)])
+pdf('NCV-with-FD.3.IS.pdf')
+ggplot(d2, aes(x = value)) + facet_wrap(~variable,scales = "free_x") + geom_histogram()
+dev.off()
+
+
+d3<-melt(YRI.with.FD.4.SNPs[,-c(1,2,3)])
+pdf('NCV-with-FD.4.IS.pdf')
+ggplot(d3, aes(x = value)) + facet_wrap(~variable,scales = "free_x") + geom_histogram()
+dev.off()
+
+
+d4<-melt(YRI.with.FD.prop50[,-c(1,2,3)])
+pdf('NCV-with-FD.prop50.pdf')
+ggplot(d4, aes(x = value)) + facet_wrap(~variable,scales = "free_x") + geom_histogram()
+dev.off()
+
+d5<-melt(YRI.with.FD.prop50.4.IS[,-c(1,2,3)])
+pdf('NCV-with-FD.prop50.4.IS.pdf')
+ggplot(d5, aes(x = value)) + facet_wrap(~variable,scales = "free_x") + geom_histogram()
+dev.off()
+
+
