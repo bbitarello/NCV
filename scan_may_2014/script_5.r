@@ -6,7 +6,7 @@
 #
 #
 #
-#	Last modified :6.10.2014
+#	Last modified :13.10.2014
 #
 #################################################################
 
@@ -14,7 +14,7 @@
 #To DOs
 
 
-#1. read in data (.RData)
+#1. rmes(a)<-c('Genomic', 'Cand.0.5%')
 #2. plot distributions for: NCVs, SNPs, FDs, everything, all columns
 #3. input max NCV value for windows with >0 FDs and 0 SNPs (currently they are NAs) and input #FDs into NCV-no-FD data sets (even if is not used for the calculation, it is important to know) (no need to do this, it is alV
 #4. replot everything, especially NCV distribution.
@@ -33,13 +33,14 @@
 ################################################################################
 #load data
 
-setwd('/mnt/sequence/PopGen/barbara/scan_may_2014/pg/')
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/pg/')
 
 load('../All.Results.Final.RData')
 
 load('../All.Results.Final.no.FD.RData')
 
-
+library(parallel)
+library(ggplot2)
 #get YRI scan
 
 All.Results.Final[[3]]->YRI.with.FD
@@ -77,35 +78,283 @@ subset(YRI.with.FD, Nr.SNPs>=4)-> YRI.with.FD.4.SNPs
 
 subset(YRI.with.FD.4.IS, Proportion.Covered>=0.5)-> YRI.with.FD.prop50.4.IS
 
+YRI.with.FD[with(YRI.with.FD, order(NCVf5)), ]->sort.YRI.with.FD
+
+YRI.with.FD.2.IS[with(YRI.with.FD.2.IS, order(NCVf5)), ]->sort.YRI.with.FD.2.IS
+
+
+YRI.with.FD.3.IS[with(YRI.with.FD.3.IS, order(NCVf5)), ]->sort.YRI.with.FD.3.IS
+
+YRI.with.FD.4.IS[with(YRI.with.FD.4.IS, order(NCVf5)), ]->sort.YRI.with.FD.4.IS
+
+YRI.with.FD.5.IS[with(YRI.with.FD.5.IS, order(NCVf5)), ]->sort.YRI.with.FD.5.IS
+
+
+YRI.with.FD.4.SNPs[with(YRI.with.FD.4.SNPs, order(NCVf5)),]-> sort.YRI.with.FD.4.SNPs
+
+YRI.with.FD.prop50[with(YRI.with.FD.prop50, order(NCVf5)), ]->sort.YRI.with.FD.prop50
+
+YRI.with.FD.prop50.4.IS[with(YRI.with.FD.prop50.4.IS, order(NCVf5)), ]->sort.YRI.with.FD.prop50.4.IS
+
+
+listA<-vector('list', 8)
+listA[[1]]<-sort.YRI.with.FD
+listA[[2]]<-sort.YRI.with.FD.2.IS
+listA[[3]]<-sort.YRI.with.FD.3.IS
+listA[[4]]<-sort.YRI.with.FD.4.IS
+listA[[5]]<-sort.YRI.with.FD.5.IS
+listA[[6]]<-sort.YRI.with.FD.4.SNPs
+listA[[7]]<-sort.YRI.with.FD.prop50
+listA[[8]]<-sort.YRI.with.FD.prop50.4.IS
+
+#like this it is easier to apply functions to all datasets.
+
+names(listA)<-c("No.filters", "2 IS", "3 IS", "4 IS" , "5 IS", "4 SNPs", "Cov>=0.5", "4 IS & Cov>=0.5")
+
+
+# % OF fdS==0
+#(unlist(lapply(listB, function(x) table(x$Nr.FDs==0)[[2]]))/unlist(lapply(listB, function(x) dim(x)[[1]])))*100
+
+p.val2<-(seq(1:dim(listA[[8]])[[1]]))/(dim(listA[[8]])[1])
+
+
+cbind(listA[[8]], P.val=p.val2)->listB
+
+
+listC<-listB[seq(1:(dim(listB)[[1]]*0.005)),]
+
+
+tt<-cbind(listC, Singletons1=rep(NA, dim(listC)[[1]], Singletons2=rep(NA, dim(listC)[[1]])
+
+
+tt<-cbind(listC, Singletons1=rep(NA, dim(listC)[[1]])) #singletons1 is #singletons in initial SFS. 
+
+for (i in 1: dim(listC)[[1]]){
+
+sum(sfs.list[[i]][,1]==1)->tt[i,16]
+}
+
+
+for (i in a){
+tmppp<-sfs.list[[i]][,1]/100
+
+
+#for (j in 1: length(tmppp)){
+#if (tmppp[j]>0.5){
+#tmppp[j]<-1-tmppp[j]
+#}}
+plot(density(tmppp))
+ }
+
+
+
+
+(cbind(data.frame(Genomic=data.frame(summary(as.factor(listB[[8]]$Chr))/dim(listB[[8]])[[1]])), data.frame(Candidates=data.frame(summary(as.factor(listC[[8]]$Chr))/dim(listC[[8]])[[1]]))))*100-> a
+
+
+names(a)<-c('Genomic', 'Candidates')
+
+b<-(cbind(a, ((a$Genomic)/100)*dim(listB[[8]])[[1]], ((a$Candidates)/100)*dim(listC[[8]])[[1]]))
+
+
+cbind(b, p.value=rep(NA,22))->b
+
+
+
+res<-vector('list', 22)
+
+for (i in 1:22){
+
+
+fisher.test(matrix(c(b[i,4], dim(listC[[8]])[[1]],b[i,3], dim(listB[[8]])[[1]]),nrow=2))$p.value->b[i,5]
+
+
+
+}
+
+
+
+
+
+andres_2009<- read.table('../andres.2009.bed')
+
+DG_genes<-read.table('../DG.2014.bed')
+
+mhc.coords<-read.table('../mhc.coords.gencode.bed')
+
+pseudogenes<-read.table('../pseudogenes.bed')
+
+#MHC coordinates (by Deborah, but remember that this differs a bit from GENCODE v.19...it is just a quick way to check for HLA windows, but I will remove it after I have my own bedfile for HLA made from GENCODE directly.
+#read.table('mhc_shiina_hg19.bed', header=F)-> mhc.coords
+
+names(mhc.coords)<-c('chr','B', 'E', 'Name')
+
+names(andres_2009)<-c('chr','B', 'E', 'Name')
+
+names(DG_genes)<-c('chr','B', 'E', 'Name')
+
+names(pseudogenes)<-c('chr', 'B', 'E', 'Name')
+
+
+write.table(cbind(listC[[8]], rownames(listC[[8]])), options(scipen=1),file ='testOUTL.bed', quote=F, sep='\t', col.names=F, row.names=F)
+
+read.table('topf5.YRI.bed') -> my.candidates
+
+bed.header<-c('chr', 'beg.pos.scan', 'end.pos.scan', 'wind.ID', 'chrb','beg.pos.genc', 'end.pos.genc', 'gene.name', 'type', 'gene_id' , 'type.2', 'overlap')
+
+names(my.candidates)<-bed.header
+
+my.candidates[,-9]-> my.candidates
+
+genc_withoutXY<-read.table('../final_encode.bed')
+
+#select only genes and minimum 1000 overlap (1/3 of a window, and many are collapsed so 1000 is quite  a low number)
+as.character(unique(subset(my.candidates, type.2=='protein_coding' & overlap>=1000)$gene.name)) #1291 genes
+
+as.character(unique(subset(my.candidates, type.2=='protein_coding' & overlap>=1500)$gene.name)) #1264
+
+as.character(unique(subset(my.candidates, type.2=='protein_coding' & overlap>=2000)$gene.name)) #1245
+
+as.character(unique(subset(my.candidates, type.2=='protein_coding' & overlap>=2500)$gene.name))  #1230
+
+as.character(unique(subset(my.candidates, type.2=='protein_coding' & overlap>=3000)$gene.name))-> listD  #1206 genes
+
+
+
+my.function<-function(B, E, df=listC[[8]], chr=6){
+
+rbind(subset(df, Chr==chr & End.Win > B & End.Win < E), subset(df, Chr==chr & Beg.Win > B & Beg.Win < E))->res
+
+
+df[rownames(res[!duplicated(res),]),]-> res2
+
+res2$P.val->p.vals
+
+return(list(p.vals, res2))
+}
+
+
+
+list.MHC<-vector('list', dim(mhc.coords)[[1]])
+
+for (i in 1: dim(mhc.coords)[[1]]){
+chr1<- as.numeric(unlist(strsplit(as.character(mhc.coords$chr[i]), split="chr", fixed=TRUE))[2])
+my.function(B=mhc.coords$B[i], E=mhc.coords$E[i], chr=chr1)->list.MHC[[i]]
+}
+
+
+
+list.Andres<-vector('list', dim(andres_2009)[[1]])
+
+
+for (i in 1: dim(andres_2009)[[1]]){
+chr1<- as.numeric(unlist(strsplit(as.character(andres_2009$chr[i]), split="chr", fixed=TRUE))[2])
+my.function(B=andres_2009$B[i], E=andres_2009$E[i], chr=chr1)->list.Andres[[i]]
+}
+
+
+list.DG<-vector('list', dim(DG_genes)[[1]])
+
+for (i in 1: dim(DG_genes)[[1]]){
+chr1<- as.numeric(unlist(strsplit(as.character(DG_genes$chr[i]), split="chr", fixed=TRUE))[2])
+my.function(B=DG_genes$B[i], E=DG_genes$E[i], chr=chr1)->list.DG[[i]]
+}
+
+
+
+
+
+
+mhc.coords[(which(mhc.coords$Name %in% listD)),]
+
+
+andres_2009[(which(andres_2009$Name %in% listD)),]
+
+
+aDG_genes[(which(DG_genes$Name %in% listD)),]
+#these two lists allow me to check differences between datasets, and between genomic and candidate distributions.
+
+#write bed files
 
 #inout max NCV for windows with 0 SNPs and >0 FDs
 #853 with NCV not calculated, for both NCV-with-FD and NCV_no-=FD, because the data is the same
-******************************************
 #All of them have zero SNPs and zero FDs.
-******************************************
 
 #70% of these ~800 have only one initial SNP, which is most likely a singleton in a population different than YRI. The remaining 30 have more than one initial SNP (before filtering), which most likely have frequency zero in the YRI population (manually checked some and it was the case)
-
-summary of window coverage for these 853 windows:
-
-summary(subset(YRI.with.FD, is.na(NCVf5==T))$Proportion.Covered)
-     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
-0.0006667 0.0136700 0.0243300 0.0408300 0.0450000 0.7140000 
-
-#super low compared to the entire genome
-
-summary(YRI.with.FD$Proportion.Covered)
-   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
- 0.0000  0.8157  0.9110  0.8594  0.9733  1.0000 
 
 #not possible to input max NCV value because all the windows with zwro SNPs also have zero FDs and, in general, very low coverage. Only TWO of these 853 windows with zero SNPs and zero FDs actually have coverage above 50% (the filter I intend to use) and they both have high number of initial_seg_sites (14 and 13), but ut turns out all of those SNPs are low frequency variants from otehr pupulations
 
 
 
+#CHECK SFS for outlier windows
+
+as.numeric(system('ls |grep sfs -c', intern=T))->n
+
+
+sfs.list<-vector('list', n)
+
+for (i in 1: n){
 
 
 
-#Plots  
+paste0('sfs.', i)-> tmp
+
+as.vector(read.table(tmp))-> sfs.list[[i]]
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+############
+#Old stuff
+all.dtsets<-rbind(YRI.with.FD, YRI.with.FD.2.IS, YRI.with.FD.3.IS, YRI.with.FD.4.IS, YRI.with.FD.5.IS, YRI.with.FD.4.SNPs, YRI.with.FD.prop50, YRI.with.FD.prop50.4.IS)
+
+
+t<-cbind(all.dtsets, Dataset=rbind(data.frame(Dataset=rep("No filter", dim(YRI.with.FD)[[1]])), data.frame(Dataset=rep("2 Inf.Sites", dim(YRI.with.FD.2.IS)[[1]])),  data.frame(Dataset=rep("3 Inf.SItes", dim(YRI.with.FD.3.IS)[[1]])), data.frame(Dataset=rep("4 Inf.Sites", dim(YRI.with.FD.4.IS)[[1]])), data.frame(Dataset=rep('5 Inf.Sites', dim(YRI.with.FD.5.IS)[[1]])),data.frame(Dataset=rep("4 SNPs", dim(YRI.with.FD.4.SNPs)[[1]])),data.frame(Dataset=rep("Cov>=0.5", dim(YRI.with.FD.prop50)[[1]])), data.frame(Dataset=rep("4 Inf.Sites & Cov>=0.5", dim(YRI.with.FD.prop50.4.IS)[[1]]))))
+
+#the following type of command will make it possible for me to compare all pertinent variables
+
+by(t, t$Dataset, function(x) summary(x$PtoD))
+
+#and so on and so forth.
+
+#the following type of command will make it possible for me to compare all pertinent variables
+
+
+
+
+
+
+qplot(NCVf5, colour=Dataset, data=t, geom='density')
 
 pdf('PtoD_unnafected.pdf')
 test<-data.frame(
@@ -135,36 +384,36 @@ dev.off()
 #Summary(none of these filters really change the NCV distribution). We must remember that the extreme low values are very few.
 
 
-pdf('../figures/NCVf0.5.distributions.pdf')
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/NCVf0.5.distributions.pdf')
 par(mfrow=c(3,2))
 
-hist(YRI.with.FD$NCVf5,  main= 'NCV (f=0.5) per 3 kb', col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count', xlim=c(0,0.5))
+plot(density(YRI.with.FD$NCVf5, na.rm=T),  main= 'NCV (f=0.5) per 3 kb', col= ' darkolivegreen', nclass=80, xlab='NCV per window' , xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile(YRI.with.FD$NCVf5, na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.prop50$NCVf5,  main= "NCV (f=0.5) per 3 kb min. 0.50 cov", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count', xlim=c(0,0.5))
+plot(density(YRI.with.FD.prop50$NCVf5, na.rm=T),  main= "NCV (f=0.5) per 3 kb min. 0.50 cov", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.prop50)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile(YRI.with.FD.prop50$NCVf5, na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.2.IS$NCVf5,  main= "NCV (f=0.5) per 3 kb min. 2 Inf.Sites", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count', xlim=c(0,0.5))
+plot(density(YRI.with.FD.2.IS$NCVf5, na.rm=T),  main= "NCV (f=0.5) per 3 kb min. 2 Inf.Sites", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.2.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile(YRI.with.FD.2.IS$NCVf5, na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
 
 
-hist(YRI.with.FD.3.IS$NCVf5,  main= "NCV (f=0.5) per 3 kb min. 3 Inf. Sites", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count',xlim=c(0,0.5))
+plot(density(YRI.with.FD.3.IS$NCVf5, na.rm=T),  main= "NCV (f=0.5) per 3 kb min. 3 Inf. Sites", col= ' darkolivegreen', nclass=80, xlab='NCV per window' ,xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.3.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile(YRI.with.FD.3.IS$NCVf5, na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.4.SNPs$NCVf5,  main= "NCV (f=0.5) per 3 kb min. 4 SNPs", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count',xlim=c(0,0.5))
+plot(density(YRI.with.FD.4.SNPs$NCVf5, na.rm=T),  main= "NCV (f=0.5) per 3 kb min. 4 SNPs", col= ' darkolivegreen', nclass=80, xlab='NCV per window' ,xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.4.SNPs)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile(YRI.with.FD.4.SNPs$NCVf5, na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.prop50.4.IS$NCVf5,  main= "NCV (f=0.5) per 3 kb min. 4 Inf.Sites & 0.50 cov", col= ' darkolivegreen', nclass=80, xlab='NCV per window' , ylab='Window Count',xlim=c(0,0.5))
+plot(density(YRI.with.FD.prop50.4.IS$NCVf5, na.rm=T),  main= "NCV (f=0.5) per 3 kb min. 4 Inf.Sites & 0.50 cov", col= ' darkolivegreen', nclass=80, xlab='NCV per window' ,xlim=c(0,0.5))
 legend("topleft",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.prop50.4.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
 abline(v=quantile( YRI.with.FD.prop50.4.IS$NCVf5,  na.rm=T, probs=seq(0,1,0.001))[6], col='darkgray', lty=2)
 
@@ -173,39 +422,38 @@ dev.off()
 #repat the block above for SNP/FD
 
 
-pdf('../figures/PtoD.distributions.pdf')
-
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/PtoD.distributions.pdf')
 par(mfrow=c(3,2))
 
-plot(density(YRI.with.FD$PtoD),  main= 'PtoD per 3 kb', col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+plot(density(YRI.with.FD$PtoD),  main= 'PtoD per 3 kb', col= ' darkolivegreen', nclass=80, xlab='PtoD per window')
 
 
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD)[1])),inset=.01,cex=.8,adj=0, bty="n")
 #abline(v=quantile(YRI.with.FD$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 
 
-plot(density(YRI.with.FD.prop50$PtoD),  main= "PtoD per 3 kb min. 0.50 Cov", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+plot(density(YRI.with.FD.prop50$PtoD),  main= "PtoD per 3 kb min. 0.50 Cov", col= ' darkolivegreen', nclass=80, xlab='PtoD per window')
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.prop50)[1])),inset=.01,cex=.8,adj=0, bty="n")
 #abline(v=quantile(YRI.with.FD.prop50$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 
 
-plot(density(YRI.with.FD.2.IS$PtoD),  main= "PtoD per 3 kb min. 2 Inform. Sites", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+plot(density(YRI.with.FD.2.IS$PtoD),  main= "PtoD per 3 kb min. 2 Inform. Sites", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' )
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.2.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
 #abline(v=quantile(YRI.with.FD.2.IS$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 
 
 
-hist(YRI.with.FD.3.IS$PtoD,  main= "PtoD per 3 kb min. 3 Inform. Sites", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+plot(density(YRI.with.FD.3.IS$PtoD),  main= "PtoD per 3 kb min. 3 Inform. Sites", col= ' darkolivegreen', nclass=80, xlab='PtoD per window')
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.3.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
 #abline(v=quantile(YRI.with.FD.3.IS$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.4.SNPs$PtoD,  main= "PtoD per 3 kb min. 4 SNPs", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+plot(density(YRI.with.FD.4.SNPs$PtoD),  main= "PtoD per 3 kb min. 4 SNPs", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' )
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.4.SNPs)[1])),inset=.01,cex=.8,adj=0, bty="n")
 #abline(v=quantile(YRI.with.FD.4.SNPs$PtoD, na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 
 
-hist(YRI.with.FD.prop50.4.IS$PtoD,  main= "PtoD per 3 kb min. 4 Inform.Sites and 0.50 cov", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' , ylab='Window Count')
+plot(density(YRI.with.FD.prop50.4.IS$PtoD),  main= "PtoD per 3 kb min. 4 Inform.Sites and 0.50 cov", col= ' darkolivegreen', nclass=80, xlab='PtoD per window' )
 legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.prop50.4.IS)[1])),inset=.01,cex=.8,adj=0, bty="n")
 #abline(v=quantile( YRI.with.FD.prop50.4.IS$PtoD,  na.rm=T, probs=seq(0,1,0.001))[991], col='darkgray', lty=2)
 

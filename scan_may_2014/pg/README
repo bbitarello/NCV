@@ -1,0 +1,30 @@
+####################################################
+#	Barbara D Bitarello
+#
+#	Last modified: 13.10.2014
+###################################################
+
+
+
+
+sort -k1,1V -k2,2g testOUTL.bed |sed s/^/chr/ > out.bed
+
+
+mergeBed -i out.bed -nms|perl -pe 's/ +/ /g'|perl -pe 's/ /t/g' > out2.bed
+
+
+bedtools intersect -wo -a out2.bed -b ../final_encode.bed > topf5.YRI.bed
+
+
+
+
+
+#checking SFS of outlier windows
+
+
+./perl_script.pl testOUTL.bed > test.bash.sh
+
+#perl_script produces a sh list of commands to get the SFS for YRI for each of the candidate windows and save as out.1 ...out.8139 (# of candidate windows currently)
+
+
+./test.bash.sh  #generate sfs files for the outlier windows
