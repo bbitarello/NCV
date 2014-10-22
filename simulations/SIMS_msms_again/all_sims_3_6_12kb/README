@@ -1,0 +1,23 @@
+#####################################################################
+#	Barbara Bitarello
+#
+#	Last modified: 22.10.2014
+#
+######################################################################
+
+This directory contains all simulations used for NCV power evaluation.
+I redid the scripts and the simulations on 22.10.2014 in order to organize the data and have clearer scripts and directories, so I might erase some of the old ones.
+
+
+
+Names of files are self explanatory
+
+Tbs: time since appearance of balanced polymorphism (1, 3 and 5 million years)
+
+n100..n20: size of sample from each pop (Africa, Europe, Asia) [+1 chimp]
+
+l3kb..l12kb: sequence length
+
+
+neutral:neutral simulations (one set for each sequence length)
+

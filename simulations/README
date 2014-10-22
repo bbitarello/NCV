@@ -1,0 +1,533 @@
+## Cesare de Filippo  
+## (modified by Barbara Bitarello)
+## Last modified: 22-October-2014
+
+## I modified the script and parameter file to run SLiM with two human populations (no Asians).
+
+
+
+####model with human split out of Africa and BS
+
+###s=0.001, h=10, tdiv=`1 million years
+
+## run 10 simulations
+
+#s1
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLiM2pop
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 10 > run_SLiM.r.model_2pop.log
+
+
+#10
+
+#s2
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s2/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLiM2pops2
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 10 > run_SLiM.r.model_2pop_s2.log
+
+
+#s3
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s3/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLiM2pops3
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 80 > run_SLiM.r.model_2pop_s3.log
+
+#s4
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s4/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLiM2pops4
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 100 > run_SLiM.r.model_2pop_s4.log
+
+
+#s5
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s5/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLiM2pops5
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 300 > run_SLiM.r.model_2pop_s5.log
+
+#s6
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s6/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLiM2pops6
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 200 > run_SLiM.r.model_2pop_s6.log
+
+
+
+
+#s7
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s7/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLiM2pops7
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 300 > run_SLiM.r.model_2pop_s7.log
+
+
+
+
+
+
+######
+######
+
+## BS 1 million years, s=0.1, h=10
+
+
+
+#s1=1000
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop_s.1
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLimS1
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 1000 > run_model2pop_s.1.log
+
+
+
+## BS 1 million years, s=0.01, h=10
+
+#s1=1000
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop_s.01
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLimS01
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 1000 > run_model2pop_s.01.log
+
+
+
+
+
+
+
+##############################################################################################################################################################
+#500,000 of BS (instead of 1 million, like the first one), s=0.001, h=10
+
+
+#100
+
+#s1
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop_0.5div
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLiM2pop1
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 100 > run_model2pop_0.5div_s1.log
+
+
+#s2
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop_0.5div
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s2/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLiM2pop2
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 100 > run_model2pop_0.5div_s2.log
+
+#s3
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop_0.5div
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s3/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLiM2pop3
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 500 > run_model2pop_0.5div_s3.log
+
+
+#s4
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop_0.5div
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s4/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=SLiM2pop4
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 300 > run_model2pop_0.5div_s4.log
+
+
+
+##########################################################################################################################################
+
+
+#s1=1000
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop_0.5div_s.1
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_sample.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=bitslim
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 100 > log_model2_0.5div_s.1.log
+
+
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2pop_0.5div_s.1
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_sample.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s2/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=bitslim2
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 100 > log_model2_0.5div_s.2.log
+
+
+
+
+
+
+###
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2_0.5div_s.01
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick.r
+PARAMETERS=${fd}/parameters.tsv
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=slim05s01
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 1000 > log_model2_0.5div_s.01.log
+
+
+
+
+
+
+
+##################################################################################################################################
+#m2_1mh100s001
+h=100; s=0.001
+
+#remember in these sims I ouputed 60 afr, 60 eur and 2 chimps (although I only use one). I will change the SLim script in the following block to putput only one chimp. REMEMBER THIS.
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/m2_1mh100s001
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=slimh100
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 200 > slimh100.log
+
+
+
+#here I started to print just one chimp.
+
+h=100; s=0.001
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/m2_1mh100s001
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s2/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=slimh100_2
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 800 > slimh100_2.log
+
+
+
+
+
+
+###################################################################################
+
+h=100; s=0.01
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2_h100_s01
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=slimh100_1
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 500 > slimh100_1.log
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2_h100_s01
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s2/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=slimh100_2
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 500 > slimh100_2.log
+
+#####################################################################################################################################
+
+h=100 balpol=3 million s=0.001
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2_h100_3my
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=slim1003my
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 100 > slimh1003my.log
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2_h100_3my
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s2/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=slim1003m2
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 900 > slimh1003my.log
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/model2_h100_3my
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s3/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=slim1003m3
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 600 > slim1003m3.log
+
+
+
+
+######
+
+##NEUTRAL SLIM SIMULATIONS #####
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neutral
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neuts1
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 500 > neut.log
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neutral
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s2/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neuts2
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 500 > neut2.log
+
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neutral
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s3/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neuts3
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 500 > neut3.log
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neutral
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s4/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neuts4
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 500 > neut4.log
+
+
+
+
+
+
+
+
+###############################################################
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neut_1mya
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neuts3
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 100 > neuts3.log
+
+
+
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neut_1mya
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s2/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neuts4
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 900 > neuts4.log
+
+
+
+
+
+#############################################################################################################################################################
+
+
+
+#other info
+
+
+#after running simulations in directories s1, s2 etc, use ~/sims/NCV/move_direcotires.pl to rename direcotires and then manually move all sims to s1.
+
+
+
+##aftar that, alter file /simulations/scripts/bash_test.sh and execute to create slim_sample.txt files
+
+
+
+
+###
+
+
+#test
+
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neutral/test
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s1/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neutst
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 2 > test.log
+#works
+
+
+#run a lot more, see if there's difference by omitting the m2 and m3 mutations. If there isn't, just join them with the other neutral mutations.
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neutral/test
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s2/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neutst2
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 200 > test2.log
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neutral/test
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s3/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neutst3
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 800 > test3.log
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neutral/test
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s4/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neutst4
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 300 > test4.log
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neutral/test
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s5/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neutst5
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 200 > test5.log
+
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/slim_neutral/test
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s6/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=neutst6
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 200 > test6.log
+
+
+
+
+
+
+##############################################################3
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/m3h10s01
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s2/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=m3h10s0t2
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 500 > m3h10s01.log
+
+
+
+
+
+fd=/mnt/sequencedb/PopGen/barbara/simulations/m3h10s01
+Rscript=/mnt/sequencedb/PopGen/barbara/simulations/scripts/SLiM_2pop_wOUT_trick_barbara.r
+PARAMETERS=${fd}/parameters.tsv  #this file is changed for h=100
+WORKING_DIRECTORY=${fd}/s3/   #alter this s1 every time I run more.##
+SGE_SCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/slim.sge
+SGE_KEY_JOB=m3h10s01t3
+LOGS_FOLDER=${fd}/logs/
+/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_SLiM.r ${Rscript} ${PARAMETERS} ${WORKING_DIRECTORY} ${SGE_SCRIPT} ${SGE_KEY_JOB} ${LOGS_FOLDER} barbara_domingues 500 > m3h10s01t3.log
+
+##########################
+##########################
+
+
+I have MSMS simulations in many place....msms_sims, SIMS_msms...
+However, on 22.Oct.2014 I decided to re-run all of them. I havent erased the old ones yet, but the new ones are in all_sims_3_6_12kb
+
