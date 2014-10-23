@@ -6,7 +6,7 @@
 #
 #
 #
-#	Last modified :13.10.2014
+#	Last modified :15.10.2014
 #
 #################################################################
 
@@ -16,7 +16,7 @@
 
 #1. rmes(a)<-c('Genomic', 'Cand.0.5%')
 #2. plot distributions for: NCVs, SNPs, FDs, everything, all columns
-#3. input max NCV value for windows with >0 FDs and 0 SNPs (currently they are NAs) and input #FDs into NCV-no-FD data sets (even if is not used for the calculation, it is important to know) (no need to do this, it is alV
+#3. input max NCV value for windows with >0 FDs and 0 SNPs (currently they are NAs) and input #FDs into NCV-no-FD data sets (even if is not used for the calculation, it is important to know) (no need to do this, it is already there and I didnt remember.
 #4. replot everything, especially NCV distribution.
 #5. apply cutoff from neutral simulations for the non-inputed distribution and the inputed distribution, and check if we get less outliers (it should be the case since the inputation will shift NCV to higher values, and our distribution will resemble more those from the simulations, because Cesare did compute NCV for windows with 0 SNPs and >0 FDs.
 #6. If there are zero FDs and zero SNPs there is nothing to do, so that is the only filtering we will do for starters (do that after 1.). Compute the number of windows for which this is the case, and if they are concentrated in some region/chromosome.
@@ -41,6 +41,9 @@ load('../All.Results.Final.no.FD.RData')
 
 library(parallel)
 library(ggplot2)
+library(multicore)
+library(parallel)
+library(SOAR)
 #get YRI scan
 
 All.Results.Final[[3]]->YRI.with.FD
@@ -82,20 +85,17 @@ YRI.with.FD[with(YRI.with.FD, order(NCVf5)), ]->sort.YRI.with.FD
 
 YRI.with.FD.2.IS[with(YRI.with.FD.2.IS, order(NCVf5)), ]->sort.YRI.with.FD.2.IS
 
-
 YRI.with.FD.3.IS[with(YRI.with.FD.3.IS, order(NCVf5)), ]->sort.YRI.with.FD.3.IS
 
 YRI.with.FD.4.IS[with(YRI.with.FD.4.IS, order(NCVf5)), ]->sort.YRI.with.FD.4.IS
 
 YRI.with.FD.5.IS[with(YRI.with.FD.5.IS, order(NCVf5)), ]->sort.YRI.with.FD.5.IS
 
-
 YRI.with.FD.4.SNPs[with(YRI.with.FD.4.SNPs, order(NCVf5)),]-> sort.YRI.with.FD.4.SNPs
 
 YRI.with.FD.prop50[with(YRI.with.FD.prop50, order(NCVf5)), ]->sort.YRI.with.FD.prop50
 
 YRI.with.FD.prop50.4.IS[with(YRI.with.FD.prop50.4.IS, order(NCVf5)), ]->sort.YRI.with.FD.prop50.4.IS
-
 
 listA<-vector('list', 8)
 listA[[1]]<-sort.YRI.with.FD
@@ -124,18 +124,20 @@ cbind(listA[[8]], P.val=p.val2)->listB
 listC<-listB[seq(1:(dim(listB)[[1]]*0.005)),]
 
 
-tt<-cbind(listC, Singletons1=rep(NA, dim(listC)[[1]], Singletons2=rep(NA, dim(listC)[[1]])
+tt<-cbind(listC, Singletons1=rep(NA, dim(listC)[[1]], Singletons2=rep(NA, dim(listC)[[1]]) #only 0.5% outliers
 
+ttt<-cbind(listB, Singletons1=rep(NA, dim(listB)[[1]]))  #genomic
 
 tt<-cbind(listC, Singletons1=rep(NA, dim(listC)[[1]])) #singletons1 is #singletons in initial SFS. 
-
+##############################################################################################################################################################
+##############################################################################################################################################################
 for (i in 1: dim(listC)[[1]]){
 
 sum(sfs.list[[i]][,1]==1)->tt[i,16]
 }
 
 
-for (i in a){
+for (i in dim(listC)[[1]]){
 tmppp<-sfs.list[[i]][,1]/100
 
 
@@ -143,7 +145,7 @@ tmppp<-sfs.list[[i]][,1]/100
 #if (tmppp[j]>0.5){
 #tmppp[j]<-1-tmppp[j]
 #}}
-plot(density(tmppp))
+plot(density(tmppp, from=0))
  }
 
 
@@ -197,6 +199,11 @@ names(pseudogenes)<-c('chr', 'B', 'E', 'Name')
 
 
 write.table(cbind(listC[[8]], rownames(listC[[8]])), options(scipen=1),file ='testOUTL.bed', quote=F, sep='\t', col.names=F, row.names=F)
+
+#write table with all windows
+
+write.table(cbind(listB, rownames(listB)), options(scipen=1),file ='complete_4ISprop50.bed', quote=F, sep='\t', col.names=F, row.names=F)
+
 
 read.table('topf5.YRI.bed') -> my.candidates
 
@@ -271,7 +278,7 @@ mhc.coords[(which(mhc.coords$Name %in% listD)),]
 andres_2009[(which(andres_2009$Name %in% listD)),]
 
 
-aDG_genes[(which(DG_genes$Name %in% listD)),]
+DG_genes[(which(DG_genes$Name %in% listD)),]
 #these two lists allow me to check differences between datasets, and between genomic and candidate distributions.
 
 #write bed files
@@ -285,23 +292,261 @@ aDG_genes[(which(DG_genes$Name %in% listD)),]
 #not possible to input max NCV value because all the windows with zwro SNPs also have zero FDs and, in general, very low coverage. Only TWO of these 853 windows with zero SNPs and zero FDs actually have coverage above 50% (the filter I intend to use) and they both have high number of initial_seg_sites (14 and 13), but ut turns out all of those SNPs are low frequency variants from otehr pupulations
 
 
-
 #CHECK SFS for outlier windows
+#soon, check for genomic distribution....running script now (14.10.2014)
+
+
+
+library(SOAR)
+Store(listA)
+Store(p.val2)
+
 
 as.numeric(system('ls |grep sfs -c', intern=T))->n
 
+as.numeric(system('ls tmp1/ |grep sfs -c'. intern=T))->n2
 
 sfs.list<-vector('list', n)
 
 for (i in 1: n){
-
-
 
 paste0('sfs.', i)-> tmp
 
 as.vector(read.table(tmp))-> sfs.list[[i]]
 
 }
+#
+genomic.sfs.list1<-vector('list', 180000)
+
+
+system.time(for (i in 1: 180000){
+
+paste0('sfs.', i)-> tmp
+
+as.vector(read.table(paste0('/mnt/sequencedb/PopGen/barbara/scan_may_2014/tmp1/',tmp)))-> genomic.sfs.list1[[i]]
+
+})
+
+Store(genomic.sfs.list1)
+#
+
+
+genomic.sfs.list2<-vector('list', 180000)
+
+a<-seq(from=180001, to=360000)
+
+system.time(
+for (i in 1:180000){
+
+paste0('sfs.', a[i])-> tmp
+
+as.vector(read.table(paste0('/mnt/sequencedb/PopGen/barbara/scan_may_2014/tmp1/',tmp)))-> genomic.sfs.list2[[i]]
+
+})
+
+Store(genomic.sfs.list2)
+#
+
+genomic.sfs.list3<-vector('list', 180000)
+
+
+a<-seq(from=360001, to=540000)
+
+system.time(
+for (i in 1:180000){
+
+paste0('sfs.', a[i])-> tmp
+
+as.vector(read.table(paste0('/mnt/sequencedb/PopGen/barbara/scan_may_2014/tmp1/',tmp)))-> genomic.sfs.list3[[i]]
+
+})
+
+Store(genomic.sfs.list3)
+#
+
+genomic.sfs.list4<-vector('list', 180000)
+
+a<-seq(from=540001, to=720000)
+
+system.time(
+for (i in 1:180000){
+
+paste0('sfs.', a[i])-> tmp
+
+as.vector(read.table(paste0('/mnt/sequencedb/PopGen/barbara/scan_may_2014/tmp1/',tmp)))-> genomic.sfs.list4[[i]]
+
+})
+
+Store(genomic.sfs.list4)
+#
+
+genomic.sfs.list5<-vector('list', 180000)
+
+
+a<-seq(from=720001, to=900000)
+
+system.time(
+for (i in 1:180000){
+
+paste0('sfs.', a[i])-> tmp
+
+as.vector(read.table(paste0('/mnt/sequencedb/PopGen/barbara/scan_may_2014/tmp1/',tmp)))-> genomic.sfs.list5[[i]]
+
+})
+
+Store(genomic.sfs.list5)
+
+
+#this part didnt work.... I erased the files before...
+
+genomic.sfs.list6<-vector('list', 180000)
+
+
+a<-seq(from=900001, to= 1080000)
+
+system.time(
+for (i in 1:180000){
+
+paste0('sfs.', a[i])-> tmp
+
+as.vector(read.table(paste0('/mnt/sequencedb/PopGen/barbara/scan_may_2014/tmp1/',tmp)))-> genomic.sfs.list6[[i]]
+
+})
+
+Store(genomic.sfs.list6)
+
+
+
+genomic.sfs.list7<-vector('list', 180000)
+
+
+a<-seq(from=1080001, to=1260000)
+
+system.time(
+for (i in 1:180000){
+
+paste0('sfs.', a[i])-> tmp
+
+as.vector(read.table(paste0('/mnt/sequencedb/PopGen/barbara/scan_may_2014/tmp1/',tmp)))-> genomic.sfs.list7[[i]]
+
+})
+
+Store(genomic.sfs.list7)
+
+
+
+genomic.sfs.list8<-vector('list', 180000)
+
+
+a<-seq(from=1260001, to=1440000)
+
+system.time(
+for (i in 1:180000){
+
+paste0('sfs.', a[i])-> tmp
+
+as.vector(read.table(paste0('/mnt/sequencedb/PopGen/barbara/scan_may_2014/tmp1/',tmp)))-> genomic.sfs.list8[[i]]
+
+})
+
+Store(genomic.sfs.list8)
+
+
+
+genomic.sfs.list9<-vector('list', 180000)
+
+
+a<-seq(from=1440001, to=1620000)
+
+system.time(
+for (i in 1:180000){
+
+paste0('sfs.', a[i])-> tmp
+
+as.vector(read.table(paste0('/mnt/sequencedb/PopGen/barbara/scan_may_2014/tmp1/',tmp)))-> genomic.sfs.list9[[i]]
+
+})
+
+Store(genomic.sfs.list9)
+#
+genomic.sfs.list10<-vector('list', 7870)
+
+a<-seq(from=1620001, to=1627871)
+
+system.time(
+for (i in 1:7869){
+
+paste0('sfs.', a[i])-> tmp
+
+as.vector(read.table(paste0('/mnt/sequencedb/PopGen/barbara/scan_may_2014/tmp1/',tmp)))-> genomic.sfs.list10[[i]]
+
+})
+
+Store(genomic.sfs.list10)
+
+
+
+Objects()
+
+c(genomic.sfs.list1, genomic.sfs.list2, genomic.sfs.list3, genomic.sfs.list4, genomic.sfs.list5, genomic.sfs.list6, genomic.sfs.list7, genomic.sfs.list8, genomic.sfs.list9, genomic.sfs.list10)->all.genomic.sfs
+
+
+
+#combine all lists
+#first, fix list6a
+
+pdf('SFS.pdf')
+par(mfrow=c(2,1))
+
+#barplot(table(unlist(lapply(sfs.list, function (x) sapply(x[,1], function(x) if (x>50){x<-100-x} else{x<-x}))))[-1], col='red', log='y', main='0.5% outlier windows')
+#barplot(table(unlist(lapply(all.genomic.sfs, function(x) sapply(x[,1], function(x) if (x>50){x<-100-x} else{x<-x}))))[-1], col='blue', log='y', main='Genomic')
+#dev.off()
+
+
+
+barplot(table(unlist(sfs.list))[c(-1,-101)], col='red', main='0.5% outlier windows')
+barplot(table(unlist(all.genomic.sfs))[c(-1,-101)], col='blue', main='Genomic')
+
+dev.off()
+
+
+
+pdf('SFS.non.log.pdf')
+
+par(mfrow=c(2,1))
+
+barplot(table(unlist(lapply(sfs.list, function (x) sapply(x[,1], function(x) if (x>50){x<-100-x} else{x<-x})))), col='red', main='0.5% outlier windows')
+barplot(table(unlist(lapply(all.genomic.sfs, function(x) sapply(x[,1], function(x) if (x>50){x<-100-x} else{x<-x})))), col='blue', main='Genomic')
+dev.off()
+
+
+
+
+
+
+tt<-cbind(listC, Singletons1=rep(NA, dim(listC)[[1]], Singletons2=rep(NA, dim(listC)[[1]]) #only 0.5% outliers
+
+ttt<-cbind(listB, Singletons1=rep(NA, dim(listB)[[1]]))  #genomic
+
+tt<-cbind(listC, Singletons1=rep(NA, dim(listC)[[1]])) #singletons1 is #singletons in initial SFS. 
+##############################################################################################################################################################
+##############################################################################################################################################################
+for (i in 1: dim(listC)[[1]]){
+
+sum(sfs.list[[i]][,1]==1)->tt[i,16]
+}
+
+
+for (i in dim(listC)[[1]]){
+tmppp<-sfs.list[[i]][,1]/100
+
+
+#for (j in 1: length(tmppp)){
+#if (tmppp[j]>0.5){
+#tmppp[j]<-1-tmppp[j]
+#}}
+plot(density(tmppp, from=0))
+ }
 
 
 
@@ -327,14 +572,8 @@ as.vector(read.table(tmp))-> sfs.list[[i]]
 
 
 
-
-
-
-
-
-
-
-############
+#######################################################################################################################################################################
+#######################################################################################################################################################################
 #Old stuff
 all.dtsets<-rbind(YRI.with.FD, YRI.with.FD.2.IS, YRI.with.FD.3.IS, YRI.with.FD.4.IS, YRI.with.FD.5.IS, YRI.with.FD.4.SNPs, YRI.with.FD.prop50, YRI.with.FD.prop50.4.IS)
 
@@ -460,8 +699,10 @@ legend("topright",legend=c("Yoruba",paste0("# of Windows = ",dim(YRI.with.FD.pro
 dev.off()
 
 
-
+######################################################################################
+######################################################################################
 #another plot option
+#(even more obsolete)
 
 library(reshape)
 library(ggplot2)

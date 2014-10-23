@@ -40,24 +40,6 @@ done
 
 
 
-cat testOUTL.bed| while read line; 
-do 
 
-
-CHR=$(awk '{print $1}');
-
-
-C1=$(awk '{print $2}');
-C2=$(awk '{print $3}');
-
-
-OUT=$(echo tabix /mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr$CHR/AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz $CHR:$C1-$C2);
-
-echo -e "$OUT"
-done
-
-
-
-done
 
 

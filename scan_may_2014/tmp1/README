@@ -1,0 +1,33 @@
+####################################################
+#	Barbara D Bitarello
+#
+#	Last modified: 15.10.2014
+###################################################
+
+
+
+
+#checking SFS of all windows (4 IS, 0.50 prop.cov
+
+
+../pg/perl_script.pl ../complete_4ISprop50.bed > a_bash_file.sh
+
+#perl_script produces a sh list of commands to get the SFS for YRI for each of the candidate windows and save as out.1 ...out.8139 (# of candidate windows currently)
+
+
+qsub sge_script.sge  #generate sfs files for the outlier windows
+
+
+
+#remove the files after reading them in in R
+
+
+for i in {1..X}; do rm sfs.$i; done
+
+
+
+#grep certain lines
+
+sed '1620001, 1627871!d' a_bash_file.sh > blablabla.sh
+
+

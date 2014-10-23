@@ -1,7 +1,7 @@
 #####################################################################
 #	Barbara Bitarello
 #
-#	Last modified: 22.10.2014
+#	Last modified: 23.10.2014
 #
 ######################################################################
 
@@ -20,4 +20,10 @@ l3kb..l12kb: sequence length
 
 
 neutral:neutral simulations (one set for each sequence length)
+
+
+
+OBS: 23.10.2014
+
+I am runnign script l6kb_simulations.r in dir tmp6 and l12kb_simulations.r in dir tmp12 (using source). It appears to be working. After I run it I can copy the simulations to this directory.
 
