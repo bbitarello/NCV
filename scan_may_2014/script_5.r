@@ -149,8 +149,6 @@ plot(density(tmppp, from=0))
  }
 
 
-
-
 (cbind(data.frame(Genomic=data.frame(summary(as.factor(listB[[8]]$Chr))/dim(listB[[8]])[[1]])), data.frame(Candidates=data.frame(summary(as.factor(listC[[8]]$Chr))/dim(listC[[8]])[[1]]))))*100-> a
 
 
@@ -173,10 +171,6 @@ fisher.test(matrix(c(b[i,4], dim(listC[[8]])[[1]],b[i,3], dim(listB[[8]])[[1]]),
 
 
 }
-
-
-
-
 
 andres_2009<- read.table('../andres.2009.bed')
 
@@ -519,16 +513,27 @@ barplot(table(unlist(lapply(sfs.list, function (x) sapply(x[,1], function(x) if 
 barplot(table(unlist(lapply(all.genomic.sfs, function(x) sapply(x[,1], function(x) if (x>50){x<-100-x} else{x<-x})))), col='blue', main='Genomic')
 dev.off()
 
-
-
-
-
-
 tt<-cbind(listC, Singletons1=rep(NA, dim(listC)[[1]], Singletons2=rep(NA, dim(listC)[[1]]) #only 0.5% outliers
 
 ttt<-cbind(listB, Singletons1=rep(NA, dim(listB)[[1]]))  #genomic
 
 tt<-cbind(listC, Singletons1=rep(NA, dim(listC)[[1]])) #singletons1 is #singletons in initial SFS. 
+
+
+
+#TAJIMA
+
+
+source('/mnt/sequencedb/PopGen/barbara/simulations/scripts/TajimaD_manual.r')
+
+system.time(lapply(all.genomic.sfs, function(x) tajD(x))-> res.genomic)
+system.time(lapply(sfs.list, function(x) tajD(x))-> res.outliers)
+
+pdf('TajD_outliers_genomic.pdf')
+par(mfrow=c(2,1))
+plot(density(unlist(lapply(res.outliers, function(x)x$TajD)), na.rm=T), col='red', xlim=c(-20, 40), main=' Outliers')
+plot(density(unlist(lapply(res.genomic, function(x)x$TajD)), na.rm=T), col='blue', xlim=c(-20, 40), main=' Genomic')
+dev.off()
 ##############################################################################################################################################################
 ##############################################################################################################################################################
 for (i in 1: dim(listC)[[1]]){
@@ -547,36 +552,10 @@ tmppp<-sfs.list[[i]][,1]/100
 #}}
 plot(density(tmppp, from=0))
  }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #######################################################################################################################################################################
 #######################################################################################################################################################################
 #Old stuff
 all.dtsets<-rbind(YRI.with.FD, YRI.with.FD.2.IS, YRI.with.FD.3.IS, YRI.with.FD.4.IS, YRI.with.FD.5.IS, YRI.with.FD.4.SNPs, YRI.with.FD.prop50, YRI.with.FD.prop50.4.IS)
-
 
 t<-cbind(all.dtsets, Dataset=rbind(data.frame(Dataset=rep("No filter", dim(YRI.with.FD)[[1]])), data.frame(Dataset=rep("2 Inf.Sites", dim(YRI.with.FD.2.IS)[[1]])),  data.frame(Dataset=rep("3 Inf.SItes", dim(YRI.with.FD.3.IS)[[1]])), data.frame(Dataset=rep("4 Inf.Sites", dim(YRI.with.FD.4.IS)[[1]])), data.frame(Dataset=rep('5 Inf.Sites', dim(YRI.with.FD.5.IS)[[1]])),data.frame(Dataset=rep("4 SNPs", dim(YRI.with.FD.4.SNPs)[[1]])),data.frame(Dataset=rep("Cov>=0.5", dim(YRI.with.FD.prop50)[[1]])), data.frame(Dataset=rep("4 Inf.Sites & Cov>=0.5", dim(YRI.with.FD.prop50.4.IS)[[1]]))))
 
@@ -587,11 +566,6 @@ by(t, t$Dataset, function(x) summary(x$PtoD))
 #and so on and so forth.
 
 #the following type of command will make it possible for me to compare all pertinent variables
-
-
-
-
-
 
 qplot(NCVf5, colour=Dataset, data=t, geom='density')
 
