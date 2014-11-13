@@ -1,0 +1,42 @@
+
+#for simulations
+
+in /mnt/scratch/barbara/ballet I generated input files
+
+#open R in this directory and run the script barbara_sims_T1_T2.R
+
+This generates the input files
+
+In this directory, run the commands below as a test
+
+
+
+#DivFile
+./BALLET -inter_coal_time /mnt/scratch/barbara/ballet/CombinedSNPFile_neu 15000 0.000731 DivFile_neu
+
+./BALLET -inter_coal_time /mnt/scratch/barbara/ballet/CombinedSNPFile_bs 15000 0.000731 DivFile_bs
+
+#coalescence time is greater for BS, so so far it looks better
+
+#PolySub
+./BALLET -poly_sub /mnt/scratch/barbara/ballet/CombinedSNPFile_neu PolySubFile_neu
+
+./BALLET -poly_sub /mnt/scratch/barbara/ballet/CombinedSNPFile_bs PolySubFile_bs
+
+
+#Spect
+./BALLET -spect /mnt/scratch/barbara/ballet/CombinedSNPFile_neu SpectFile_neu
+
+./BALLET -spect /mnt/scratch/barbara/ballet/CombinedSNPFile_bs SpectFile_bs
+
+
+#T1
+
+./BALLET -T1 100 DivFile_neu PolySubFile_neu  /mnt/scratch/barbara/ballet/neu_SNPFile1  /mnt/scratch/barbara/ballet/neu_RecFile1 OutFile_T1_neu1
+
+
+
+#T2
+./BALLET -T2 100 DivFile_neu PolySubFile_neu SpectFile_neu /mnt/scratch/barbara/ballet/neu_SNPFile1 /mnt/scratch/barbara/ballet/neu_RecFile1 /home/barbara_domingues/Downloads/simulated_spectra/ testNEU_T2
+
+
