@@ -1,0 +1,27 @@
+#a!/bin/bash
+# Cesare de Filippo, MPI-EVA
+# modified on 12-August-2013 
+#$ -S /bin/bash
+#$ -cwd
+#$ -q all.q
+# load personal profile
+#$ -V
+#$ -R y
+#$ -M barbara_domingues@eva.mpg.de
+#$ -m e
+#$ -l h_vmem=1G,s_vmem=1G
+
+
+
+for i in {1..1000};
+
+do
+
+
+./BALLET -T1 100 DivFile_neu PolySubFile_neu  bs_SNPFile$i bs_RecFile$i OutFile_T1_bs$i
+
+
+
+
+done
+
