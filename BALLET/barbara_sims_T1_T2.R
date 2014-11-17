@@ -35,14 +35,42 @@ ms2CombinedSNPFile <- function(x, pop="p1",Length=15000,Ne=7310,r=1e-8) {
   ##   a <- a[-i2];p=p[-i2]
   ## } 
   rho <- sapply(2:length(p), function(i) (p[i]-p[i-1])*4*Ne*r)
-  out <- list(CombinedSNPFile=cbind(position=p,x=a,n=rep(length(ids),length(a))),RecFile=cbind(position=p,rate=c(0,rho)))
+  out <- list(SNPFile=cbind(position=p,x=a,n=rep(length(ids),length(a))),RecFile=cbind(position=p,rate=c(0,rho)))
 } 
 
 ## write 10 balancing selection simulations
-setwd('/mnt/sequencedb/PopGen/barbara/')
-a=lapply(1:10, function(x) ms2CombinedSNPFile(sims.s[[x]]))
+setwd('/mnt/sequencedb/PopGen/barbara/BALLET')
+
+
+#apply function to all sims
+a=lapply(sims.s, function(x) ms2CombinedSNPFile(x))
+b=n=lapply(sims.n, function(x) ms2CombinedSNPFile(x))
+
+for( i in 2:2000) {
+n[[i]][[1]][,1] = n[[i]][[1]][,1]+1000000*i
+
+} 
+#we only need 1000 sims
+n=do.call("rbind", lapply(n[1:1000], function(x) x[[1]]))
+
+write.table(n, 'CombinedSNPFile_neu', row.names=F, quote=F, sep="\t")
+
+
 sapply(1:1000, function(x) sapply(names(a[[x]]), function(y) write.table(a[[x]][[y]], paste0("bs_",y,x),row.names=F,quote=F,sep="\t")))
 
+
 ## write 10 neutral simulations
-a=lapply(1:10, function(x) ms2CombinedSNPFile(sims.n[[x]]))
-sapply(1:10, function(x) sapply(names(a[[x]]), function(y) write.table(a[[x]][[y]], paste0("neu_",y,x),row.names=F,quote=F,sep="\t")))
+sapply(1:1000, function(x) sapply(names(b[[x]]), function(y) write.table(b[[x]][[y]], paste0("neu_",y,x),row.names=F,quote=F,sep="\t")))
+
+
+
+
+#run other scripts in the readme file
+#run_ballet.sge etc
+#bash_script_ballet.sh
+#something is wrong...I only get infinite values for T2
+
+
+read.table()
+
+
