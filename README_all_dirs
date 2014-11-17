@@ -1,11 +1,11 @@
 #Barbara D. Bitarello
-#Last modified: 16.september.2014
+#Last modified: 08.10.2014
 
 ### In the directory 'simulations/msms_sims/' we have all NCV simulations and their analyses.##
 ### In the directory 'vcf_practice' we have all data and analyses for 1000g data.##
 ### in the directory 'scan_may_2014' I analyse scan results for all  populations from NCV-with-FD
 ### In the directory 'scan+sept_2014_no_FD' I analyse scab results for all populations from NCV-no-FD
-
-
+### scratch is a copy of what used to be in my /mnt/scratch/barbara folder, but I had to empty the space ans I moed it here. It basically contains all the scan results.
+##BALLET: directory with BALLET program from Deiorgio et al. 2014. It is also where I have the results from T1 and T2 tests (tmp) and the pertinent scripts.
 ###
 
