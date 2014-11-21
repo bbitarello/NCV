@@ -229,9 +229,6 @@ XX$P.val.NCVf0.5[temp[j]]<-pval.tmp
 #now for l.bin.vec3
 
 #
-
-
-
 which(XX$Nr.IS>=254)-> temp
 
 for (j in 1: length(temp)){
@@ -247,7 +244,7 @@ XX$P.val.NCVf0.5[temp[j]]<-pval.tmp
 
 bin.vec2<-seq(from=18, to=252, by=2) 
 
-for (i in 1: length(bin.vec2)){
+system.time(for (i in 1: length(bin.vec2)){
 
 bin.vec2[i]->I
 (bin.vec2[i]+1)->II
@@ -261,8 +258,25 @@ for (j in 1: length(temp)){
 XX$P.val.NCVf0.5[temp[j]]<-pval.tmp
 }
 }
+)
 
-#now apply p-values to each element of the list based on the simulations. It should be faster than reading in the entire genomic scans at once.
+mclapply(bin.vec2, function(x) which(XX$Nr.IS==x|XX$Nr.IS==(x+1)))-> temp
+
+
+
+
+mclapply(bin.vec2, function(x)  # for each element in TEMP list (118 elements, which are positions in the XX data frame
+
+
+sapply(temp[[x]], function(y)  (sum(XX$NCVf5[y]>=l.bin.vec2[[x]]$ncvFD)/2000)))-> testAAA
+
+
+
+
+
+
+
+#naw apply p-values to each element of the list based on the simulations.  iaIt should be faster than reading in the entire genomic scans at once.
 
 
 #now I should do some sanity checks...first check that every line in XX has a p value
@@ -271,4 +285,12 @@ XX$P.val.NCVf0.5[temp[j]]<-pval.tmp
 
 
 
+objectName<-'XX'
+
+save(list=objectName, file= 'All.Res.4.IS.prop50.YRI.with.pval.RData')
+
+
+
+
+##
 
