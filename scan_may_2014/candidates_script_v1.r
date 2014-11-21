@@ -79,7 +79,7 @@ save(list=objectName, file= 'All.Res.4.IS.prop50.RData')
 ########################################################################################################################
 library(parallel)
 
-list.MSMS.rec.1e_09<-mclapply(c(0:5,"5b",6), function(x) read.table(paste0("/mnt/sequencedb/PopGen/cesare/bs_genomescan/simulations/msms/neutral_n100_mu1e-07_rho1e-09_3000bp.downsampled.allstats",x,".tsv.gz"), header=T))
+list.MSMS.rec.1e_09<-mclapply(c(0:5,"5b",6,8:15), function(x) read.table(paste0("/mnt/sequencedb/PopGen/barbara/simulations/msms_sims/neutral_n100_mu1e-07_rho1e-09_3000bp.downsampled.allstats",x,".tsv.gz"), header=T))
 
 
 list.MSMS<-vector('list', 3)
@@ -89,17 +89,21 @@ do.call('rbind', list.MSMS.rec.1e_09)-> list.MSMS[[1]]
 remove(list.MSMS.rec.1e_09)
 
 
-Store(list.MSMS)
+#Store(list.MSMS)
 #
-list.MSMS.rec.1e_08<-mclapply(c(0:5,"5b",6), function(x) read.table(paste0("/mnt/sequencedb/PopGen/cesare/bs_genomescan/simulations/msms/neutral_n100_mu1e-07_rho1e-08_3000bp.downsampled.allstats",x,".tsv.gz"), header=T))
-list.MSMS.rec.1e_07<-mclapply(c(0:5,"5b",6), function(x) read.table(paste0("/mnt/sequencedb/PopGen/cesare/bs_genomescan/simulations/msms/neutral_n100_mu1e-07_rho1e-07_3000bp.downsampled.allstats",x,".tsv.gz"), header=T))
-
+list.MSMS.rec.1e_08<-mclapply(c(0:5,"5b",6,8:15), function(x) read.table(paste0("/mnt/sequencedb/PopGen/barbara/simulations/msms_sims/neutral_n100_mu1e-07_rho1e-08_3000bp.downsampled.allstats",x,".tsv.gz"), header=T))
 
 do.call('rbind', list.MSMS.rec.1e_08)-> list.MSMS[[2]]
+
+remove(list.MSMS.rec.1e_08)
+
+
+list.MSMS.rec.1e_07<-mclapply(c(0:5,"5b",6,8:15), function(x) read.table(paste0("/mnt/sequencedb/PopGen/barbara/simulations/msms_sims/neutral_n100_mu1e-07_rho1e-07_3000bp.downsampled.allstats",x,".tsv.gz"), header=T))
+
+
 do.call('rbind', list.MSMS.rec.1e_07)-> list.MSMS[[3]]
 
 
-remove(list.MSMS.rec.1e_08)
 remove(list.MSMS.rec.1e_07)
 
 #
@@ -110,10 +114,10 @@ names(list.MSMS)<-c('rec.1e_09', 'rec.1e_08', 'rec.1e_07')
 
 AFRICA<-vector('list', 3)
 names(AFRICA)<-c('rec.1e_09', 'rec.1e_08', 'rec.1e_07')
-#EUROPE<-vector('list', 3)
-#names(EUROPE)<-c('rec.1e_09', 'rec.1e_0.8', 'rec.1e_07')
-#ASIA<-vector('list', 3)
-#names(ASIA)<-c('rec.1e_09', 'rec.1e_0.8', 'rec.1e_07')
+EUROPE<-vector('list', 3)
+names(EUROPE)<-c('rec.1e_09', 'rec.1e_0.8', 'rec.1e_07')
+ASIA<-vector('list', 3)
+names(ASIA)<-c('rec.1e_09', 'rec.1e_0.8', 'rec.1e_07')
 #58,000 simulations for AFRICA for each rec rate.
 AFRICA[[1]]<-subset(list.MSMS[[1]], pop==0)
 AFRICA[[2]]<-subset(list.MSMS[[2]], pop==0)
@@ -129,104 +133,142 @@ ASIA[[2]]<-subset(list.MSMS[[2]], pop==2)
 ASIA[[3]]<-subset(list.MSMS[[3]], pop==2)
 #separate sims in bins of Nr.Inf. SItes
 
+################3
 my.thr<-function(x, y){
-sort(unique(x$Nr.IS))->a
+sort(unique(as.numeric(x$Nr.IS)))->a
 length(a)->a1
 thr<-rep(NA, a1)
 l<-rep(NA, a1)
+
 for (i in 1:a1){
-quantile((subset(x, Nr.IS==a[i])$ncvFD), prob=y)->thr[i]
+quantile((subset(x, Nr.IS==a[i] )$ncvFD), prob=y)->thr[[i]]
 length((subset(x, Nr.IS==a[i])$ncvFD))->l[i]
 }
 cbind(thr, a, l)->df
 colnames(df)<-c('thr', 'bin.IS', 'Nr.cases')
 return(df)}
 
-lapply(AFRICA, function(x) my.thr(x,0.001))-> res.thr
+system.time(test<-my.thr(AFRICA[[2]], 0.001))
+#############################
 
-system.time(for ( i in 1:3){
-write.table(res.thr[[i]], file=paste0('thr.neutral.', names(AFRICA)[[i]]), row.names=F, col.names=T, sep="\t")
-})
-
-
-#x: data
-#y: thr
-
-temp<-seq(from=4, to=496)
-
-temp2<-as.data.frame(cbind(thr=rep(NA, length(temp)), bin.IS=temp, Nr.cases=rep(NA, length(temp))))
-
-#tmp.thr2<-dataframe(thr=rep(0.48, length(temp)), bin.IS=temp, Nr.cases=rep(0, length(temp)))
- 
-
-for (i in 1: dim(res.thr[[2]])[1]){
-
-res.thr[[2]][i,2]->a
-
-which(temp2$bin.IS==a)-> a1
-
-temp2[a1,1]<-res.thr[[2]][i,1]
-temp2[a1,2]<-a
-temp2[a1,3]<-res.thr[[2]][i,3]
+my.thr2<-function(x, y){
+sort(unique(as.numeric(x$Nr.IS)))[-seq(1:18)]->a
+length(a)->a1
+thr<-rep(NA, a1/2)
+l<-rep(NA, a1/2)
+b1<-seq(from=1, to=a1, by=2)
+a2<-vector('list', length(b1))
+for (i in 1: length(b1)){
+quantile((subset(x, Nr.IS==a[b1[i]]|Nr.IS==a[b1[i]+1])$ncvFD), prob=y)->thr[[i]]
+length(subset(x, Nr.IS==a[b1[i]]|Nr.IS==a[b1[i]+1])$ncvFD)->l[i]
+a2[[i]]<-paste0(a[b1[i]],"-",a[b1[i]+1])
 }
-#artifically introduce thr for BR.IS>352 in the above data.frame, and then run the for loop below.
+as.data.frame(cbind(thr, unlist(a2), l))->df
+colnames(df)<-c('thr', 'bin.IS', 'Nr.cases')
+return(df)}
 
-list.thr.data<-vector('list', dim(res.thr[[2]])[1]+1)
+system.time(test2<-my.thr2(AFRICA[[2]], 0.001))
 
+rbind(test[1:18,], test2[1:117,], c(as.numeric(as.character(test2[117,1])), "253+", sum(as.numeric(as.character(test2[118:dim(test2)[1], 3])))))-> VOILA
 
-system.time(for (i in 1: dim(res.thr[[2]])[1]){
+############################################
 
-subset(x, Nr.IS==res.thr[[2]][i,2])-> list.thr.data[[i]]
-
-})
-
-
-list.thr.data[[dim(res.thr[[2]])[1]]]<-subset(x, Nr.IS>res.thr[[2]][dim(res.thr[[2]])[1],2])
+#join results from test and test2. finally, collapse bins >250.
 
 
+#MAKE A TABLE LIKE THE ONE ABOVE, BUT WITH BINS 1:18, AND THEN (19,20), (21,22)...250 AND THEN 250+
+#
 
+
+X<-AFRICA[[2]]
+#3 vectors for the bins
+
+bin.vec1<-seq(from=4, to=17) #1 by 1 bins
+bin.vec2<-seq(from=18, to=252, by=2) #2 by 2 bins
+bin.vec3<-254 #>253 Informative Sites bin
+
+#list.bin.vec1<-vector('list', length(bin.vec1))
+#list.bin.vec2<-vector('list', length(bin.vec2))
+#list.bin.vec3<-vector('list', length(bin.vec3))
+
+mclapply(bin.vec1, function(x) subset(X, Nr.IS==x))->list.bin.vec1
+
+mclapply(list.bin.vec1, function(x) x[sample(seq(1:dim(x)[1]), 2000),])-> l.bin.vec1
+
+mclapply(bin.vec2, function(x) subset(X, Nr.IS==x |Nr.IS==x+1))-> list.bin.vec2
+
+mclapply(list.bin.vec2, function(x) x[sample(seq(1:dim(x)[1]), 2000),])-> l.bin.vec2
+
+mclapply(bin.vec3, function(x) subset(X, Nr.IS>=x))->list.bin.vec3
+
+mclapply(list.bin.vec3, function(x) x[sample(seq(1:dim(x)[1]), 2000),])-> l.bin.vec3
+
+#now I have the distributions from where to obtain p-values for the genomic windows.
+
+
+###
+
+
+XX<-All.Res.4.IS.prop50[[3]]
+
+
+for (i in 1: length(l.bin.vec1)){
+
+I<-i+3
+
+which(XX$Nr.IS==I)-> temp
+
+for (j in 1: length(temp)){
+
+(sum(XX$NCVf5[temp[j]]>=l.bin.vec1[[i]]$ncvFD)/2000)->pval.tmp
+
+XX$P.val.NCVf0.5[temp[j]]<-pval.tmp
+}
+}
+#worked fine
+#now for l.bin.vec3
+
+#
+
+
+
+which(XX$Nr.IS>=254)-> temp
+
+for (j in 1: length(temp)){
+
+(sum(XX$NCVf5[temp[j]]>=l.bin.vec3[[1]]$ncvFD)/2000)->pval.tmp
+
+XX$P.val.NCVf0.5[temp[j]]<-pval.tmp
+}
+
+
+#now for l.bin.vec2
+#this takes A LONG time
+
+bin.vec2<-seq(from=18, to=252, by=2) 
+
+for (i in 1: length(bin.vec2)){
+
+bin.vec2[i]->I
+(bin.vec2[i]+1)->II
+
+which(XX$Nr.IS==I|XX$Nr.IS==II)-> temp
+
+for (j in 1: length(temp)){
+
+(sum(XX$NCVf5[temp[j]]>=l.bin.vec2[[i]]$ncvFD)/2000)->pval.tmp
+
+XX$P.val.NCVf0.5[temp[j]]<-pval.tmp
+}
+}
 
 #now apply p-values to each element of the list based on the simulations. It should be faster than reading in the entire genomic scans at once.
 
 
-
-#read in NCV cutoff
-
-list.cutoffs<-vector('list', 3)
-
-
-list.cutoffs[[1]]<-read.table('/mnt/sequencedb/PopGen/cesare/bs_genomescan/simulations/msms/ncv_cutoffs_r1e-09_africa.tsv', header=T)
-list.cutoffs[[2]]<-read.table('/mnt/sequencedb/PopGen/cesare/bs_genomescan/simulations/msms/ncv_cutoffs_r1e-08_africa.tsv', header=T)
-list.cutoffs[[3]]<-read.table('/mnt/sequencedb/PopGen/cesare/bs_genomescan/simulations/msms/ncv_cutoffs_r1e-07_africa.tsv', header=T)
-
-names(list.cutoffs)<-c('rec.1e_09', 'rec.1e_08', 'rec.1e_07')
-
-a<-data.frame(nSites=seq(from=202, to=496),X1.=rep(list.cutoffs[[2]][201,2], 295)     , X0.1.= rep(list.cutoffs[[2]][201,3], 295)    ,X0.05.= rep(list.cutoffs[[2]][201,4], 295)   ,X0.1.Sub=rep(list.cutoffs[[2]][201,5], 295) , minSub=rep(list.cutoffs[[2]][201,6], 295) )  
-
-rbind(list.cutoffs[[2]], a)-> cutoffs.rec.1e_08
+#now I should do some sanity checks...first check that every line in XX has a p value
+#check how many p<0.001, for instance. Before, that gave me ~8,139 windows. Hopefully now we will have less
 
 
 
-list.thr.data<-vector('list', 202)
-
-
-system.time(for (i in 1: 201){
-
-subset(x, Nr.IS==cutoffs.rec.1e_08[i,1])-> list.thr.data[[i]]
-
-})
-
-list.thr.data[[202]]<-subset(x, Nr.IS>201)
-
-for (i in 1: dim(list.thr.data)[[1]]){
-
-list.thr.data[[i]][which(list.thr.data[[i]]$NCVf5<=cutoffs.rec.1e_08[i,6]),16]<-'PASS'
-list.thr.data[[i]][-which(list.thr.data[[i]]$NCVf5<=cutoffs.rec.1e_08[i,6]),16]<-'NOTPASS'
-
-
-
-dim(do.call(rbind, list.thr.data)) #just check if the dim is the same as x, because it should be.
-
-#NExt, add information if a windows passes a certain threshold or not. (from the cutoffs.rec object)
 
 
