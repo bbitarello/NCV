@@ -1,0 +1,38 @@
+#a!/bin/bash
+# Cesare de Filippo, MPI-EVA
+# modified on 12-August-2013 
+#$ -S /bin/bash
+#$ -cwd
+#$ -q all.q
+# load personal profile
+#$ -V
+#$ -R y
+#$ -M barbara_domingues@eva.mpg.de
+#$ -m e
+#$ -l h_vmem=1G,s_vmem=1G
+
+
+
+
+SIM=${SGE_TASK_ID}
+
+for i in {1..1000};
+
+do
+tmp = echo ./BALLET -T1 100 DivFile_neu PolySubFile_neu neu_SNPFile$i neu_RecFile$i OutFile_T1_neu$i 
+
+qsub -o ballet$i$T1neu.log  $tmp
+
+./BALLET -T1 100 DivFile_neu PolySubFile_neu bs_SNPFile$i bs_RecFile$i OutFile_T1_bs$i
+
+#T2
+./BALLET -T2 100 DivFile_neu PolySubFile_neu SpectFile_neu /mnt/scratch/barbara/ballet/neu_SNPFile$i /mnt/scratch/barbara/ballet/neu_RecFile$i /home/barbara_domingues/Downloads/simulated_spectra/ OutFile_T2_neu$i
+#T2
+./BALLET -T2 100 DivFile_neu PolySubFile_neu SpectFile_neu /mnt/scratch/barbara/ballet/bs_SNPFile$i /mnt/scratch/barbara/ballet/bs_RecFile$i /home/barbara_domingues/Downloads/simulated_spectra/ OutFile_T2_bs$i
+
+
+
+done
+
+#this is definitely wrong, because I onyl get negative values for T2...
+#read mike's emails again.

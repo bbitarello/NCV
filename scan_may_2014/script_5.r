@@ -78,7 +78,6 @@ subset(YRI.with.FD, Nr.SNPs+Nr.FDs>=5)-> YRI.with.FD.5.IS
 
 subset(YRI.with.FD, Nr.SNPs>=4)-> YRI.with.FD.4.SNPs
 
-
 subset(YRI.with.FD.4.IS, Proportion.Covered>=0.5)-> YRI.with.FD.prop50.4.IS
 
 YRI.with.FD[with(YRI.with.FD, order(NCVf5)), ]->sort.YRI.with.FD
@@ -235,12 +234,13 @@ return(list(p.vals, res2))
 }
 
 
+names(mhc.coords)<-c('chr', 'B', 'E', 'Name')
 
 list.MHC<-vector('list', dim(mhc.coords)[[1]])
 
 for (i in 1: dim(mhc.coords)[[1]]){
 chr1<- as.numeric(unlist(strsplit(as.character(mhc.coords$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=mhc.coords$B[i], E=mhc.coords$E[i], chr=chr1)->list.MHC[[i]]
+my.function(B=mhc.coords$B[i], E=mhc.coords$E[i], chr=chr1, df=listB)->list.MHC[[i]]
 }
 
 

@@ -1,0 +1,14 @@
+##
+
+#Run NCV.scanV2.r for 4sets of chromosomes:
+
+
+I : chr1, 16,17,18,19,20,21,22
+IIa: chr2, chr14, chr15
+IIb: chr10, chr11, chr12, chr13
+IIIa:chr3, chr7
+IIIb:chr4, chr5
+IIIc:chr8, chr9
+IV: chr6
+
+#

@@ -1,0 +1,65 @@
+########################################################################
+##	Barbara D Bitarello
+##	Last modified: 14.08.2014
+##	Handling bed files of candidate windows for YRI population
+########################################################################
+
+
+#keep only lines with more than one window (i.e, when there were at least two overlapping or sequential windows
+
+
+#e.g: overlapping 1-3000; 1500-4500
+#sequential: 1-3000/3000-4500
+
+for CHROM in {1..22}; do
+
+awk '/'^${CHROM}'\t/' merged.ncv0.5.YRI.bed > tmp.${CHROM}.bed
+
+awk '$4 ~  /;/ { print }' tmp.${CHROM}.bed > min2win.${CHROM}.bed
+
+done
+
+
+##############################################################################################
+##############################################################################################
+##############################################################################################
+
+
+#copy all VCF files into this directory merge them to bed file from candidate regions
+
+
+for CHROM in {1..22}; do
+INPUT=/mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr${CHROM}/AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz
+INPUT2=AC_13pops.Map50_100.TRF.SDs.pantro2.${CHROM}.tsv.gz
+INPUT3=/mnt/sequencedb/PopGen/barbara/scan_may_2014/merging/
+
+
+cp ${INPUT} .
+
+
+mv AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz ${INPUT2}
+
+
+tabix -p vcf ${INPUT2}  #generate tbi file
+
+
+
+intersectBed -wa -a ${INPUT2} -b min2win.${CHROM}.bed > min2win.${CHROM}.vcf
+
+done
+########################################################################
+########################################################################
+########################################################################
+
+
+cat min2win.1.bed min2win.2.bed min2win.3.bed min2win.4.bed min2win.5.bed min2win.6.bed min2win.7.bed min2win.8.bed min2win.9.bed min2win.10.bed min2win.11.bed min2win.12.bed min2win.13.bed min2win.14.bed min2win.15.bed min2win.16.bed min2win.17.bed min2win.18.bed min2win.19.bed min2win.20.bed min2win.21.bed min2win.22.bed > min2win.ALL.bed
+
+
+
+
+cat tmp.1.bed tmp.2.bed tmp.3.bed tmp.4.bed tmp.5.bed tmp.6.bed tmp.7.bed tmp.8.bed tmp.9.bed tmp.10.bed tmp.11.bed tmp.12.bed tmp.13.bed tmp.14.bed tmp.15.bed tmp.16.bed tmp.17.bed tmp.18.bed tmp.19.bed tmp.20.bed tmp.21.bed tmp.22.bed > all.tmp.bed
+
+
+
+
+sed 's/^/chr/'all.tmp.bed > tmp
