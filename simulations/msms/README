@@ -1,0 +1,30 @@
+#################################
+#	Barbara D Bitarello
+#
+#	Last modified: 27.11.2014
+#
+##################################
+
+
+I copied all these simulations from Cesare's directory:
+
+/mnt/sequencedb/PopGen/cesare/bs_genomescan/simulations/msms/
+
+
+so that I can work on them without having the risk of loosing them.
+
+
+The names are almost self-explanatory:
+
+n20, n60, n100: number of sampled individuals
+
+
+neutral simulations
+
+The other ones have selection...
+
+Tbs1,3,5: time since appearance of the balanced polymorphism.
+
+f0.1...0.5: frequency equilibrium for the simulations with balancing selection.
+
+

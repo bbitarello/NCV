@@ -5,7 +5,7 @@
 ####### Script for MSMS simulations and NCV analyses, etc #################
 #######	Author: Barbara Bitarello (with parts of Cee's codes) #############
 #######	Creation:16.09.2013  ##############################################
-#######	Last Modified: 24.10.2013  ########################################
+#######	Last Modified: 25.04.2014  ########################################
 ###########################################################################
 ###########################################################################
 ###########################################################################
@@ -22,6 +22,7 @@ library(multicore)
 msms <- "java -Xmx800M -jar ~/apps/msms/lib/msms.jar"
 library(SOAR)  #speed up workspace loading.
 Sys.setenv(R_LOCAL_CACHE="gigantic_datasets_stored_here") #already created.
+
 
 
 

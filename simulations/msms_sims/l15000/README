@@ -1,0 +1,8 @@
+#############
+Barbara Bitarello
+27.11.2014
+
+##############
+
+this directory contains a script for running the MSMS simulations for NCV performance evaluation. 
+the subdirectory figures contain figures generated from these simulations.
