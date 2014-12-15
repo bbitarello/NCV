@@ -1,4 +1,4 @@
-#a!/bin/bash
+#!/bin/bash
 # Cesare de Filippo, MPI-EVA
 # modified on 12-August-2013 
 #$ -S /bin/bash
@@ -18,8 +18,18 @@ for i in {1..1000};
 do
 
 
-./BALLET -T1 100 DivFile_neu PolySubFile_neu  bs_SNPFile$i bs_RecFile$i OutFile_T1_bs$i
+./BALLET -T1 100 DivFile_neu PolySubFile_neu  /mnt/sequencedb/PopGen/barbara/BALLET/tmp/bs_f0.1_SNPFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp/bs_f0.1_RecFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp/OutFile_T1_f0.1_bs_$i
 
+./BALLET -T1 100 DivFile_neu PolySubFile_neu  /mnt/sequencedb/PopGen/barbara/BALLET/tmp/bs_f0.2_SNPFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp/bs_f0.2_RecFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp/OutFile_T1_f0.2_bs_$i
+
+
+./BALLET -T1 100 DivFile_neu PolySubFile_neu  /mnt/sequencedb/PopGen/barbara/BALLET/tmp/bs_f0.3_SNPFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp/bs_f0.3_RecFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp/OutFile_T1_f0.3_bs_$i
+
+
+./BALLET -T1 100 DivFile_neu PolySubFile_neu  /mnt/sequencedb/PopGen/barbara/BALLET/tmp/bs_f0.4_SNPFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp/bs_f0.4_RecFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp/OutFile_T1_f0.4_bs_$i
+
+
+./BALLET -T1 100 DivFile_neu PolySubFile_neu  /mnt/sequencedb/PopGen/barbara/BALLET/tmp/bs_f0.5_SNPFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp/bs_f0.5_RecFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp/OutFile_T1_f0.5_bs_$i
 
 
 

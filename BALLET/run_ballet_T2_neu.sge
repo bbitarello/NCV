@@ -1,4 +1,4 @@
-#a!/bin/bash
+#!/bin/bash
 # Cesare de Filippo, MPI-EVA
 # modified on 12-August-2013 
 #$ -S /bin/bash
@@ -20,10 +20,9 @@ do
 
 
 #T2
-./BALLET -T2 100 DivFile_neu PolySubFile_neu SpectFile_neu neu_SNPFile$i neu_RecFile$i /home/barbara_domingues/Downloads/simulated_spectra/ OutFile_T2_neu$i
-#T2
 
 
+./BALLET -T2 100 DivFile_neu PolySubFile_neu SpectFile_neu /mnt/sequencedb/PopGen/barbara/BALLET/tmp/neuSNPFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp/neuRecFile$i /home/barbara_domingues/Downloads/simulated_spectra/ /mnt/sequencedb/PopGen/barbara/BALLET/tmp/OutFile_T2_neu_$i
 
 done
 

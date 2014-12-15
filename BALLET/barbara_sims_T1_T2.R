@@ -1,12 +1,22 @@
 ## Cesare de Filippo
 ## 10-11-2014
 ## T1 and T2 from DeGiorgio
-#modified by Barbara Bitarello on 13.11.2014
+#modified by Barbara Bitarello on 27.11.2014
+
+library(parallel)
+library(SOAR)
 
 source("/home/cesare_filippo/scripts/R_scr/tools/ms_tools.R")
-setwd("/mnt/sequencedb/PopGen/cesare/bs_genomescan/simulations/msms/")
+setwd("/mnt/sequencedb/PopGen/barbara/simulations/msms/")
+
+
+
 sims.s <- read.ms("Tbs5_f0.5_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1)) 
 sims.n <- read.ms("neutral_n100.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1)) 
+sims.f0.4 <- read.ms("Tbs5_f0.4_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1))
+sims.f0.3 <- read.ms("Tbs5_f0.1_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1))
+sims.f0.2 <- read.ms("Tbs5_f0.1_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1))
+sims.f0.1 <- read.ms("Tbs5_f0.1_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1))
 
 ms2CombinedSNPFile <- function(x, pop="p1",Length=15000,Ne=7310,r=1e-8) {
   o <- x[grep("p4_1",rownames(x)),]
@@ -43,8 +53,13 @@ setwd('/mnt/sequencedb/PopGen/barbara/BALLET')
 
 
 #apply function to all sims
-a=lapply(sims.s, function(x) ms2CombinedSNPFile(x))
-b=n=lapply(sims.n, function(x) ms2CombinedSNPFile(x))
+a=mclapply(sims.s, function(x) ms2CombinedSNPFile(x))
+a2=mclapply(sims.f0.4, function(x) ms2CombinedSNPFile(x))
+a3=mclapply(sims.f0.3, function(x) ms2CombinedSNPFile(x))
+a4=mclapply(sims.f0.2, function(x) ms2CombinedSNPFile(x))
+a5=mclapply(sims.f0.1, function(x) ms2CombinedSNPFile(x))
+
+b=n=mclapply(sims.n, function(x) ms2CombinedSNPFile(x))
 
 for( i in 2:2000) {
 n[[i]][[1]][,1] = n[[i]][[1]][,1]+1000000*i
@@ -56,12 +71,11 @@ n=do.call("rbind", lapply(n[1:1000], function(x) x[[1]]))
 write.table(n, 'CombinedSNPFile_neu', row.names=F, quote=F, sep="\t")
 
 
-sapply(1:1000, function(x) sapply(names(a[[x]]), function(y) write.table(a[[x]][[y]], paste0("bs_",y,x),row.names=F,quote=F,sep="\t")))
-
-
-## write 10 neutral simulations
-sapply(1:1000, function(x) sapply(names(b[[x]]), function(y) write.table(b[[x]][[y]], paste0("neu_",y,x),row.names=F,quote=F,sep="\t")))
-
+sapply(1:1000, function(x) sapply(names(a[[x]]), function(y) write.table(a[[x]][[y]], paste0("bs_f0.5_",y,x),row.names=F,quote=F,sep="\t")))
+sapply(1:1000, function(x) sapply(names(a2[[x]]), function(y) write.table(a2[[x]][[y]], paste0("bs_f0.4_",y,x),row.names=F,quote=F,sep="\t")))
+sapply(1:1000, function(x) sapply(names(a3[[x]]), function(y) write.table(a3[[x]][[y]], paste0("bs_f0.4_",y,x),row.names=F,quote=F,sep="\t")))
+sapply(1:1000, function(x) sapply(names(a4[[x]]), function(y) write.table(a4[[x]][[y]], paste0("bs_f0.4_",y,x),row.names=F,quote=F,sep="\t")))
+sapply(1:1000, function(x) sapply(names(a5[[x]]), function(y) write.table(a5[[x]][[y]], paste0("bs_f0.1_",y,x),row.names=F,quote=F,sep="\t")))
 
 
 
@@ -69,8 +83,5 @@ sapply(1:1000, function(x) sapply(names(b[[x]]), function(y) write.table(b[[x]][
 #run_ballet.sge etc
 #bash_script_ballet.sh
 #something is wrong...I only get infinite values for T2
-
-
-read.table()
 
 
