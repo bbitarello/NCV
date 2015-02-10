@@ -69,7 +69,7 @@ lapply(All.Res.4.IS, function(x) subset(x, Proportion.Covered>=0.5))-> All.Res.4
 #dim YRI:1627870 
 
 objectName<-'All.Res.4.IS.prop50'
-
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/')
 save(list=objectName, file= 'All.Res.4.IS.prop50.RData')    
 #######################################################################################################################
 #######################################################################################################################
@@ -80,7 +80,7 @@ save(list=objectName, file= 'All.Res.4.IS.prop50.RData')
 #######################################################################################################################
 ##Second part###########
 ########################
-##Read in simulations which encompass the rang eof informative sites####
+##Read in simulations which encompass the range of informative sites####
 ########################
 ########################################################################################################################
 library(parallel)
@@ -151,38 +151,28 @@ Store(AFRICA)
 #
 Objects()
 
+#load('All.Res.4.IS.prop50.RData')
 X<-AFRICA[[2]]
-#X<-EUROPE[[2]]
 #3 vectors for the bins
 
 bin.vec1<-seq(from=4, to=229) #1 	by 1 bins
-#bin.vec1<-seq(from=4, to=21) 
 bin.vec2<-230
 nsims<-10000
-#list.bin.vec1<-vector('list', length(bin.vec1))
-#list.bin.vec2<-vector('list', length(bin.vec2))
-#list.bin.vec3<-vector('list', length(bin.vec3))
 system.time(lapply(bin.vec1, function(x) subset(X, Nr.IS==x))->list.bin.vec1)
-#mclapply(bin.vec1, function(x) subset(X, Nr.IS==x))->list.bin.vec1
 system.time(lapply(list.bin.vec1, function(x) x[sample(seq(1:dim(x)[1]), nsims),])-> l.bin.vec1)
 system.time(mclapply(bin.vec2, function(x) subset(X, Nr.IS>=x))-> list.bin.vec2)
 system.time(mclapply(list.bin.vec2, function(x) x[sample(seq(1:dim(x)[1]),nsims),])-> l.bin.vec2)
 
-#mclapply(bin.vec3, function(x) subset(X, Nr.IS>=x))->list.bin.vec3
-#mclapply(list.bin.vec3, function(x) x[sample(seq(1:dim(x)[1]), 2000),])-> l.bin.vec3
-#now I have the distributions from where to obtain p-values for the genomic windows.
-
 #
-load('../All.Res.4.IS.prop50.RData')
 YRI.2<-All.Res.4.IS.prop50[[3]]
 nsims<-10000
 
-lapply(bin.vec1, function(x) (which(YRI.2$Nr.IS==x)))->temp
+lapply(bin.vec1, function(x) (which(YRI.2$Nr.IS==x)))->temp.YRI
 
-which(YRI.2$Nr.IS>=bin.vec2[[1]])->temp2
+which(YRI.2$Nr.IS>=bin.vec2[[1]])->temp2.YRI
 
-system.time(for (i in 1: length(temp)){
-I<-temp[[i]]
+system.time(for (i in 1: length(temp.YRI)){
+I<-temp.YRI[[i]]
 unlist(lapply(I, function(x) (sum(YRI.2$NCVf5[x]>=l.bin.vec1[[i]]$ncvFD_f0.5)/nsims)))->YRI.2$P.val.NCVf0.5[I]
 
 unlist(lapply(I, function(x) (sum(YRI.2$NCVf4[x]>=l.bin.vec1[[i]]$ncvFD_f0.4)/nsims)))->YRI.2$P.val.NCVf0.4[I]
@@ -191,22 +181,22 @@ unlist(lapply(I, function(x) (sum(YRI.2$NCVf2[x]>=l.bin.vec1[[i]]$ncvFD_f0.2)/ns
 unlist(lapply(I, function(x) (sum(YRI.2$NCVf1[x]>=l.bin.vec1[[i]]$ncvFD_f0.1)/nsims)))->YRI.2$P.val.NCVf0.1[I]
 })
 
-unlist(lapply(temp2, function(x) (sum(YRI.2$NCVf5[x]>=l.bin.vec2[[1]]$ncvFD_f0.5)/nsims)))->YRI.2$P.val.NCVf0.5[temp2]
-unlist(lapply(temp2, function(x) (sum(YRI.2$NCVf4[x]>=l.bin.vec2[[1]]$ncvFD_f0.4)/nsims)))->YRI.2$P.val.NCVf0.4[temp2]
-unlist(lapply(temp2, function(x) (sum(YRI.2$NCVf3[x]>=l.bin.vec2[[1]]$ncvFD_f0.3)/nsims)))->YRI.2$P.val.NCVf0.3[temp2]
-unlist(lapply(temp2, function(x) (sum(YRI.2$NCVf2[x]>=l.bin.vec2[[1]]$ncvFD_f0.2)/nsims)))->YRI.2$P.val.NCVf0.2[temp2]
-unlist(lapply(temp2, function(x) (sum(YRI.2$NCVf1[x]>=l.bin.vec2[[1]]$ncvFD_f0.1)/nsims)))->YRI.2$P.val.NCVf0.1[temp2]
+unlist(lapply(temp2.YRI, function(x) (sum(YRI.2$NCVf5[x]>=l.bin.vec2[[1]]$ncvFD_f0.5)/nsims)))->YRI.2$P.val.NCVf0.5[temp2.YRI]
+unlist(lapply(temp2.YRI, function(x) (sum(YRI.2$NCVf4[x]>=l.bin.vec2[[1]]$ncvFD_f0.4)/nsims)))->YRI.2$P.val.NCVf0.4[temp2.YRI]
+unlist(lapply(temp2.YRI, function(x) (sum(YRI.2$NCVf3[x]>=l.bin.vec2[[1]]$ncvFD_f0.3)/nsims)))->YRI.2$P.val.NCVf0.3[temp2.YRI]
+unlist(lapply(temp2.YRI, function(x) (sum(YRI.2$NCVf2[x]>=l.bin.vec2[[1]]$ncvFD_f0.2)/nsims)))->YRI.2$P.val.NCVf0.2[temp2.YRI]
+unlist(lapply(temp2.YRI, function(x) (sum(YRI.2$NCVf1[x]>=l.bin.vec2[[1]]$ncvFD_f0.1)/nsims)))->YRI.2$P.val.NCVf0.1[temp2.YRI]
 
-pdf('../figures/vioplots.YRI.pdf')
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.YRI.pdf')
 par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1[[x]]$ncvFD_f0.5, YRI.2[temp[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+sapply(1:12, function(x) vioplot(l.bin.vec1[[x]]$ncvFD_f0.5, YRI.2[temp.YRI[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
 dev.off()
 
 
 
-pdf('../figures/YRI.vs.neutral.sims.p0.5.pdf')
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/YRI.vs.neutral.sims.p0.5.pdf')
 unlist(lapply(l.bin.vec1, function(x) quantile(x$ncvFD_f0.5, prob=0.5)))-> sim
-unlist(lapply(temp, function(x) quantile(YRI.2[x,]$NCVf5, prob=0.5)))-> data
+unlist(lapply(temp.YRI, function(x) quantile(YRI.2[x,]$NCVf5, prob=0.5)))-> data
 plot(data~sim, col='cornflowerblue', ylim=c(min(sort(c(data,sim))), 0.5), xlim=c(min(sort(c(data,sim))), 0.5), type= 'n')
 points(data[1:10]~sim[1:10], col='cornflowerblue', ylim=c(min(sort(c(data,sim))), 0.5), xlim=c(min(sort(c(data,sim))), 0.5))
 points(data[11:20]~sim[11:20], col='blue', ylim=c(min(sort(c(data,sim))), 0.5), xlim=c(min(sort(c(data,sim))), 0.5))
@@ -217,28 +207,28 @@ lines(y=seq(from=0.43, to=0.45, by=0.01), x=seq(from=0.43, to=0.45, by=0.01),lty
 legend('topleft',c('4:13 I.S', '14:23 I.S','24:33 I.S', '33:43 I.S', '43+ I.S'), col=c('cornflowerblue','blue','purple','magenta','violetred1'), pch=19)
 dev.off()
 
-pdf('../figures/vioplots.4_54.IS.YRI.pdf')
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.4_54.IS.YRI.pdf')
 par(mfrow=c(2,3))
-vioplot(l.bin.vec1[[1]]$ncvFD_f0.5, YRI.2[temp[[1]],]$NCVf5)
-vioplot(l.bin.vec1[[11]]$ncvFD_f0.5, YRI.2[temp[[11]],]$NCVf5)
-vioplot(l.bin.vec1[[21]]$ncvFD_f0.5, YRI.2[temp[[21]],]$NCVf5)
-vioplot(l.bin.vec1[[31]]$ncvFD_f0.5, YRI.2[temp[[31]],]$NCVf5)
-vioplot(l.bin.vec1[[41]]$ncvFD_f0.5, YRI.2[temp[[41]],]$NCVf5)
-vioplot(l.bin.vec1[[51]]$ncvFD_f0.5, YRI.2[temp[[51]],]$NCVf5)
+vioplot(l.bin.vec1[[1]]$ncvFD_f0.5, YRI.2[temp.YRI[[1]],]$NCVf5)
+vioplot(l.bin.vec1[[11]]$ncvFD_f0.5, YRI.2[temp.YRI[[11]],]$NCVf5)
+vioplot(l.bin.vec1[[21]]$ncvFD_f0.5, YRI.2[temp.YRI[[21]],]$NCVf5)
+vioplot(l.bin.vec1[[31]]$ncvFD_f0.5, YRI.2[temp.YRI[[31]],]$NCVf5)
+vioplot(l.bin.vec1[[41]]$ncvFD_f0.5, YRI.2[temp.YRI[[41]],]$NCVf5)
+vioplot(l.bin.vec1[[51]]$ncvFD_f0.5, YRI.2[temp.YRI[[51]],]$NCVf5)
 dev.off()
 
-
 Store(YRI.2)
+############
 #now for LWK
 
 LWK.2<-All.Res.4.IS.prop50[[2]]
 
-lapply(bin.vec1, function(x) (which(LWK.2$Nr.IS==x)))->temp
+lapply(bin.vec1, function(x) (which(LWK.2$Nr.IS==x)))->temp.LWK
 
-which(LWK.2$Nr.IS>=bin.vec2[[1]])->temp2
+which(LWK.2$Nr.IS>=bin.vec2[[1]])->temp2.LWK
 
-system.time(for (i in 1: length(temp)){
-I<-temp[[i]]
+system.time(for (i in 1: length(temp.LWK)){
+I<-temp.LWK[[i]]
 unlist(lapply(I, function(x) (sum(LWK.2$NCVf5[x]>=l.bin.vec1[[i]]$ncvFD_f0.5)/nsims)))->LWK.2$P.val.NCVf0.5[I]
 
 unlist(lapply(I, function(x) (sum(LWK.2$NCVf4[x]>=l.bin.vec1[[i]]$ncvFD_f0.4)/nsims)))->LWK.2$P.val.NCVf0.4[I]
@@ -247,22 +237,18 @@ unlist(lapply(I, function(x) (sum(LWK.2$NCVf2[x]>=l.bin.vec1[[i]]$ncvFD_f0.2)/ns
 unlist(lapply(I, function(x) (sum(LWK.2$NCVf1[x]>=l.bin.vec1[[i]]$ncvFD_f0.1)/nsims)))->LWK.2$P.val.NCVf0.1[I]
 })
 
-unlist(lapply(temp2, function(x) (sum(LWK.2$NCVf5[x]>=l.bin.vec2[[1]]$ncvFD_f0.5)/nsims)))->LWK.2$P.val.NCVf0.5[temp2]
-unlist(lapply(temp2, function(x) (sum(LWK.2$NCVf4[x]>=l.bin.vec2[[1]]$ncvFD_f0.4)/nsims)))->LWK.2$P.val.NCVf0.4[temp2]
-unlist(lapply(temp2, function(x) (sum(LWK.2$NCVf3[x]>=l.bin.vec2[[1]]$ncvFD_f0.3)/nsims)))->LWK.2$P.val.NCVf0.3[temp2]
-unlist(lapply(temp2, function(x) (sum(LWK.2$NCVf2[x]>=l.bin.vec2[[1]]$ncvFD_f0.2)/nsims)))->LWK.2$P.val.NCVf0.2[temp2]
-unlist(lapply(temp2, function(x) (sum(LWK.2$NCVf1[x]>=l.bin.vec2[[1]]$ncvFD_f0.1)/nsims)))->LWK.2$P.val.NCVf0.1[temp2]
+unlist(lapply(temp2.LWK, function(x) (sum(LWK.2$NCVf5[x]>=l.bin.vec2[[1]]$ncvFD_f0.5)/nsims)))->LWK.2$P.val.NCVf0.5[temp2.LWK]
+unlist(lapply(temp2.LWK, function(x) (sum(LWK.2$NCVf4[x]>=l.bin.vec2[[1]]$ncvFD_f0.4)/nsims)))->LWK.2$P.val.NCVf0.4[temp2.LWK]
+unlist(lapply(temp2.LWK, function(x) (sum(LWK.2$NCVf3[x]>=l.bin.vec2[[1]]$ncvFD_f0.3)/nsims)))->LWK.2$P.val.NCVf0.3[temp2.LWK]
+unlist(lapply(temp2.LWK, function(x) (sum(LWK.2$NCVf2[x]>=l.bin.vec2[[1]]$ncvFD_f0.2)/nsims)))->LWK.2$P.val.NCVf0.2[temp2.LWK]
+unlist(lapply(temp2.LWK, function(x) (sum(LWK.2$NCVf1[x]>=l.bin.vec2[[1]]$ncvFD_f0.1)/nsims)))->LWK.2$P.val.NCVf0.1[temp2.LWK]
 pdf('../figures/vioplots.LWK.pdf')
 par(mfrow=c(3,4))
 sapply(1:12, function(x) vioplot(l.bin.vec1[[x]]$ncvFD_f0.5, LWK.2[temp[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
 dev.off()
 
-Store(LWK.2)
 
-
-#:
-
-pdf('../figures/AFRICA.NrIS.NCV.neutral.p0.01.pdf')
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/AFRICA.NrIS.NCV.neutral.p0.01.pdf')
 
 plot(c(seq(from=0.12, to=0.45, by=0.01), rep(0.3,196))~seq(1:230), type='n', ylab='NCV', xlab='Number of Informative Sites')
 points(c(unlist(lapply(l.bin.vec1, function(x) quantile(x$ncvFD_f0.5, prob=0.01))),quantile(l.bin.vec2[[1]]$ncvFD_f0.5, prob=0.01))~c(bin.vec1,bin.vec2), col='cornflowerblue', pch=20)
@@ -279,11 +265,9 @@ lines(c(unlist(lapply(l.bin.vec1, function(x) quantile(x$ncvFD_f0.2, prob=0.01))
 legend('bottomright', c('feq=0.5', 'feq=0.4','feq=0.3', 'feq=0.2'), col=c('cornflowerblue', 'sienna1', 'violetred1', 'darkolivegreen'), pch=20, bty='n')
 dev.off()
 
-
-
-pdf('../figures/LWk.vs.neutral.sims.p0.5.pdf')
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/LWK.vs.neutral.sims.p0.5.pdf')
 unlist(lapply(l.bin.vec1, function(x) quantile(x$ncvFD_f0.5, prob=0.5)))-> sim
-unlist(lapply(temp, function(x) quantile(LWK.2[x,]$NCVf5, prob=0.5)))-> data
+unlist(lapply(temp.LWK, function(x) quantile(LWK.2[x,]$NCVf5, prob=0.5)))-> data
 plot(data~sim, col='cornflowerblue', ylim=c(min(sort(c(data,sim))), 0.5), xlim=c(min(sort(c(data,sim))), 0.5), type= 'n')
 points(data[1:10]~sim[1:10], col='cornflowerblue', ylim=c(min(sort(c(data,sim))), 0.5), xlim=c(min(sort(c(data,sim))), 0.5))
 points(data[11:20]~sim[11:20], col='blue', ylim=c(min(sort(c(data,sim))), 0.5), xlim=c(min(sort(c(data,sim))), 0.5))
@@ -294,133 +278,127 @@ lines(y=seq(from=0.43, to=0.45, by=0.01), x=seq(from=0.43, to=0.45, by=0.01),lty
 legend('topleft',c('4:13 I.S', '14:23 I.S','24:33 I.S', '33:43 I.S', '43+ I.S'), col=c('cornflowerblue','blue','purple','magenta','violetred1'), pch=19)
 dev.off()
 
-pdf('../figures/vioplots.4_54.IS.LWK.pdf')
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.4_54.IS.LWK.pdf')
 par(mfrow=c(2,3))
-vioplot(l.bin.vec1[[1]]$ncvFD_f0.5, LWK.2[temp[[1]],]$NCVf5)
-vioplot(l.bin.vec1[[11]]$ncvFD_f0.5, LWK.2[temp[[11]],]$NCVf5)
-vioplot(l.bin.vec1[[21]]$ncvFD_f0.5, LWK.2[temp[[21]],]$NCVf5)
-vioplot(l.bin.vec1[[31]]$ncvFD_f0.5, LWK.2[temp[[31]],]$NCVf5)
-vioplot(l.bin.vec1[[41]]$ncvFD_f0.5, LWK.2[temp[[41]],]$NCVf5)
-vioplot(l.bin.vec1[[51]]$ncvFD_f0.5, LWK.2[temp[[51]],]$NCVf5)
+vioplot(l.bin.vec1[[1]]$ncvFD_f0.5, LWK.2[temp.LWK[[1]],]$NCVf5)
+vioplot(l.bin.vec1[[11]]$ncvFD_f0.5, LWK.2[temp.LWK[[11]],]$NCVf5)
+vioplot(l.bin.vec1[[21]]$ncvFD_f0.5, LWK.2[temp.LWK[[21]],]$NCVf5)
+vioplot(l.bin.vec1[[31]]$ncvFD_f0.5, LWK.2[temp.LWK[[31]],]$NCVf5)
+vioplot(l.bin.vec1[[41]]$ncvFD_f0.5, LWK.2[temp.LWK[[41]],]$NCVf5)
+vioplot(l.bin.vec1[[51]]$ncvFD_f0.5, LWK.2[temp.LWK[[51]],]$NCVf5)
 dev.off()
 
+Store(LWK.2)
+#############
 
+AWS.2<-All.Res.4.IS.prop50[[1]]
+
+lapply(bin.vec1, function(x) (which(AWS.2$Nr.IS==x)))->temp.AWS
+
+which(AWS.2$Nr.IS>=bin.vec2[[1]])->temp2.AWS
+
+system.time(for (i in 1: length(temp.AWS)){
+I<-temp.AWS[[i]]
+unlist(lapply(I, function(x) (sum(AWS.2$NCVf5[x]>=l.bin.vec1[[i]]$ncvFD_f0.5)/nsims)))->AWS.2$P.val.NCVf0.5[I]
+
+unlist(lapply(I, function(x) (sum(AWS.2$NCVf4[x]>=l.bin.vec1[[i]]$ncvFD_f0.4)/nsims)))->AWS.2$P.val.NCVf0.4[I]
+unlist(lapply(I, function(x) (sum(AWS.2$NCVf3[x]>=l.bin.vec1[[i]]$ncvFD_f0.3)/nsims)))->AWS.2$P.val.NCVf0.3[I]
+unlist(lapply(I, function(x) (sum(AWS.2$NCVf2[x]>=l.bin.vec1[[i]]$ncvFD_f0.2)/nsims)))->AWS.2$P.val.NCVf0.2[I]
+unlist(lapply(I, function(x) (sum(AWS.2$NCVf1[x]>=l.bin.vec1[[i]]$ncvFD_f0.1)/nsims)))->AWS.2$P.val.NCVf0.1[I]
+})
+
+unlist(lapply(temp2.AWS, function(x) (sum(AWS.2$NCVf5[x]>=l.bin.vec2[[1]]$ncvFD_f0.5)/nsims)))->AWS.2$P.val.NCVf0.5[temp2.AWS]
+unlist(lapply(temp2.AWS, function(x) (sum(AWS.2$NCVf4[x]>=l.bin.vec2[[1]]$ncvFD_f0.4)/nsims)))->AWS.2$P.val.NCVf0.4[temp2.AWS]
+unlist(lapply(temp2.AWS, function(x) (sum(AWS.2$NCVf3[x]>=l.bin.vec2[[1]]$ncvFD_f0.3)/nsims)))->AWS.2$P.val.NCVf0.3[temp2.AWS]
+unlist(lapply(temp2.AWS, function(x) (sum(AWS.2$NCVf2[x]>=l.bin.vec2[[1]]$ncvFD_f0.2)/nsims)))->AWS.2$P.val.NCVf0.2[temp2.AWS]
+unlist(lapply(temp2.AWS, function(x) (sum(AWS.2$NCVf1[x]>=l.bin.vec2[[1]]$ncvFD_f0.1)/nsims)))->AWS.2$P.val.NCVf0.1[temp2.AWS]
+
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.AWS.pdf')
+par(mfrow=c(3,4))
+sapply(1:12, function(x) vioplot(l.bin.vec1[[x]]$ncvFD_f0.5, AWS.2[temp.AWS[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+dev.off()
+
+Store(AWS.2)
 ########################################################################################################################################
 ########################################################################################################################################
 X<-EUROPE[[2]]
-#3 vectors for the bins
 
 bin.vec1.eu<-seq(from=4, to=207) #1        by 1 bins
-#bin.vec1<-seq(from=4, to=21) 
 bin.vec2.eu<-208
 nsims<-10000
-#list.bin.vec1<-vector('list', length(bin.vec1))
-#list.bin.vec2<-vector('list', length(bin.vec2))
-#list.bin.vec3<-vector('list', length(bin.vec3))
-system.time(lapply(bin.vec1.eu, function(x) subset(X, Nr.IS==x))->list.bin.vec1.eu)
-#mclapply(bin.vec1, function(x) subset(X, Nr.IS==x))->list.bin.vec1
-system.time(lapply(list.bin.vec1.eu, function(x) x[sample(seq(1:dim(x)[1]), nsims),])-> l.bin.vec1.eu)
-system.time(mclapply(bin.vec2.eu, function(x) subset(X, Nr.IS>=x))-> list.bin.vec2.eu)
-system.time(mclapply(list.bin.vec2.eu, function(x) x[sample(seq(1:dim(x)[1]),nsims),])-> l.bin.vec2.eu)
 
-CEU.2<-All.Res.4.IS.prop50[[4]]
 system.time(mclapply(bin.vec1.eu, function(x) subset(X, Nr.IS==x))->list.bin.vec1.eu)
 system.time(mclapply(list.bin.vec1.eu, function(x) x[sample(seq(1:dim(x)[1]), nsims),])-> l.bin.vec1.eu)
 system.time(mclapply(bin.vec2.eu, function(x) subset(X, Nr.IS>=x))-> list.bin.vec2.eu)
 system.time(mclapply(list.bin.vec2.eu, function(x) x[sample(seq(1:dim(x)[1]), nsims),])-> l.bin.vec2.eu)
-lapply(bin.vec1.eu, function(x) (which(CEU.2$Nr.IS==x)))->temp
-which(CEU.2$Nr.IS>=bin.vec2.eu[[1]])->temp2
 
-pdf('../figures/vioplots.CEU.pdf')
+
+
+
+CEU.2<-All.Res.4.IS.prop50[[4]]
+lapply(bin.vec1.eu, function(x) (which(CEU.2$Nr.IS==x)))->temp.CEU
+which(CEU.2$Nr.IS>=bin.vec2.eu[[1]])->temp2.CEU
+
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.CEU.pdf')
 par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, CEU.2[temp[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, CEU.2[temp.CEU[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
 dev.off()
 
-system.time(for (i in 1: length(temp)){
-I<-temp[[i]]
+system.time(for (i in 1: length(temp.CEU)){
+I<-temp.CEU[[i]]
 unlist(lapply(I, function(x) (sum(CEU.2$NCVf5[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.5)/nsims)))->CEU.2$P.val.NCVf0.5[I]
 unlist(lapply(I, function(x) (sum(CEU.2$NCVf4[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.4)/nsims)))->CEU.2$P.val.NCVf0.4[I]
 unlist(lapply(I, function(x) (sum(CEU.2$NCVf3[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.3)/nsims)))->CEU.2$P.val.NCVf0.3[I]
 unlist(lapply(I, function(x) (sum(CEU.2$NCVf2[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.2)/nsims)))->CEU.2$P.val.NCVf0.2[I]
 unlist(lapply(I, function(x) (sum(CEU.2$NCVf1[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.1)/nsims)))->CEU.2$P.val.NCVf0.1[I]
 })
-unlist(lapply(temp2, function(x) (sum(CEU.2$NCVf5[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.5)/nsims)))->CEU.2$P.val.NCVf0.5[temp2]
-unlist(lapply(temp2, function(x) (sum(CEU.2$NCVf4[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.4)/nsims)))->CEU.2$P.val.NCVf0.4[temp2]
-unlist(lapply(temp2, function(x) (sum(CEU.2$NCVf3[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.3)/nsims)))->CEU.2$P.val.NCVf0.3[temp2]
-unlist(lapply(temp2, function(x) (sum(CEU.2$NCVf2[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.2)/nsims)))->CEU.2$P.val.NCVf0.2[temp2]
-unlist(lapply(temp2, function(x) (sum(CEU.2$NCVf1[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.1)/nsims)))->CEU.2$P.val.NCVf0.1[temp2]
+unlist(lapply(temp2.CEU, function(x) (sum(CEU.2$NCVf5[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.5)/nsims)))->CEU.2$P.val.NCVf0.5[temp2.CEU]
+unlist(lapply(temp2.CEU, function(x) (sum(CEU.2$NCVf4[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.4)/nsims)))->CEU.2$P.val.NCVf0.4[temp2.CEU]
+unlist(lapply(temp2.CEU, function(x) (sum(CEU.2$NCVf3[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.3)/nsims)))->CEU.2$P.val.NCVf0.3[temp2.CEU]
+unlist(lapply(temp2.CEU, function(x) (sum(CEU.2$NCVf2[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.2)/nsims)))->CEU.2$P.val.NCVf0.2[temp2.CEU]
+unlist(lapply(temp2.CEU, function(x) (sum(CEU.2$NCVf1[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.1)/nsims)))->CEU.2$P.val.NCVf0.1[temp2.CEU]
 
 Store(CEU.2)
-#now for FIN
-
+################
+#now for the remaining European pops.
 FIN.2<-All.Res.4.IS.prop50[[5]]
-lapply(bin.vec1.eu, function(x) (which(FIN.2$Nr.IS==x)))->temp
-
-which(FIN.2$Nr.IS>=bin.vec2.eu[[1]])->temp2
-
-
-
-pdf('../figures/vioplots.FIN.pdf')
-par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, FIN.2[temp[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
-dev.off()
-
-system.time(for (i in 1: length(temp)){
-I<-temp[[i]]
-unlist(lapply(I, function(x) (sum(FIN.2$NCVf5[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.5)/nsims)))->FIN.2$P.val.NCVf0.5[I]
-unlist(lapply(I, function(x) (sum(FIN.2$NCVf4[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.4)/nsims)))->FIN.2$P.val.NCVf0.4[I]
-unlist(lapply(I, function(x) (sum(FIN.2$NCVf3[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.3)/nsims)))->FIN.2$P.val.NCVf0.3[I]
-unlist(lapply(I, function(x) (sum(FIN.2$NCVf2[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.2)/nsims)))->FIN.2$P.val.NCVf0.2[I]
-unlist(lapply(I, function(x) (sum(FIN.2$NCVf1[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.1)/nsims)))->FIN.2$P.val.NCVf0.1[I]
-})
-
-unlist(lapply(temp2, function(x) (sum(FIN.2$NCVf5[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.5)/nsims)))->FIN.2$P.val.NCVf0.5[temp2]
-unlist(lapply(temp2, function(x) (sum(FIN.2$NCVf4[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.4)/nsims)))->FIN.2$P.val.NCVf0.4[temp2]
-unlist(lapply(temp2, function(x) (sum(FIN.2$NCVf3[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.3)/nsims)))->FIN.2$P.val.NCVf0.3[temp2]
-unlist(lapply(temp2, function(x) (sum(FIN.2$NCVf2[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.2)/nsims)))->FIN.2$P.val.NCVf0.2[temp2]
-unlist(lapply(temp2, function(x) (sum(FIN.2$NCVf1[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.1)/nsims)))->FIN.2$P.val.NCVf0.1[temp2]
-Store(FIN.2)
-
-##################################
-
 GBR.2<-All.Res.4.IS.prop50[[6]]
-lapply(bin.vec1.eu, function(x) (which(GBR.2$Nr.IS==x)))->temp
+TSI.2<-All.Res.4.IS.prop50[[7]]
+lapply(bin.vec1.eu, function(x) (which(GBR.2$Nr.IS==x)))->temp.GBR
+lapply(bin.vec1.eu, function(x) (which(TSI.2$Nr.IS==x)))->temp.TSI
+lapply(bin.vec1.eu, function(x) (which(FIN.2$Nr.IS==x)))->temp.FIN
+which(GBR.2$Nr.IS>=bin.vec2.eu[[1]])->temp2.GBR
+which(TSI.2$Nr.IS>=bin.vec2.eu[[1]])->temp2.TSI
+which(FIN.2$Nr.IS>=bin.vec2.eu[[1]])->temp2.FIN
 
-which(GBR.2$Nr.IS>=bin.vec2.eu[[1]])->temp2
-
-pdf('../figures/vioplots.GBR.pdf')
-par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, GBR.2[temp[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
-dev.off()
-
-system.time(for (i in 1: length(temp)){
-I<-temp[[i]]
+system.time(for (i in 1: length(temp.GBR)){
+I<-temp.GBR[[i]]
 unlist(lapply(I, function(x) (sum(GBR.2$NCVf5[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.5)/nsims)))->GBR.2$P.val.NCVf0.5[I]
 unlist(lapply(I, function(x) (sum(GBR.2$NCVf4[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.4)/nsims)))->GBR.2$P.val.NCVf0.4[I]
 unlist(lapply(I, function(x) (sum(GBR.2$NCVf3[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.3)/nsims)))->GBR.2$P.val.NCVf0.3[I]
 unlist(lapply(I, function(x) (sum(GBR.2$NCVf2[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.2)/nsims)))->GBR.2$P.val.NCVf0.2[I]
 unlist(lapply(I, function(x) (sum(GBR.2$NCVf1[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.1)/nsims)))->GBR.2$P.val.NCVf0.1[I]
 })
+unlist(lapply(temp2.GBR, function(x) (sum(GBR.2$NCVf5[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.5)/nsims)))->GBR.2$P.val.NCVf0.5[temp2.GBR]
+unlist(lapply(temp2.GBR, function(x) (sum(GBR.2$NCVf4[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.4)/nsims)))->GBR.2$P.val.NCVf0.4[temp2.GBR]
+unlist(lapply(temp2.GBR, function(x) (sum(GBR.2$NCVf3[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.3)/nsims)))->GBR.2$P.val.NCVf0.3[temp2.GBR]
+unlist(lapply(temp2.GBR, function(x) (sum(GBR.2$NCVf2[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.2)/nsims)))->GBR.2$P.val.NCVf0.2[temp2.GBR]
+unlist(lapply(temp2.GBR, function(x) (sum(GBR.2$NCVf1[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.1)/nsims)))->GBR.2$P.val.NCVf0.1[temp2.GBR]
 
-unlist(lapply(temp2, function(x) (sum(GBR.2$NCVf5[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.5)/nsims)))->GBR.2$P.val.NCVf0.5[temp2]
-unlist(lapply(temp2, function(x) (sum(GBR.2$NCVf4[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.4)/nsims)))->GBR.2$P.val.NCVf0.4[temp2]
-unlist(lapply(temp2, function(x) (sum(GBR.2$NCVf3[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.3)/nsims)))->GBR.2$P.val.NCVf0.3[temp2]
-unlist(lapply(temp2, function(x) (sum(GBR.2$NCVf2[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.2)/nsims)))->GBR.2$P.val.NCVf0.2[temp2]
-unlist(lapply(temp2, function(x) (sum(GBR.2$NCVf1[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.1)/nsims)))->GBR.2$P.val.NCVf0.1[temp2]
-Store(GBR.2)
+system.time(for (i in 1: length(temp.FIN)){
+I<-temp.FIN[[i]]
+unlist(lapply(I, function(x) (sum(FIN.2$NCVf5[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.5)/nsims)))->FIN.2$P.val.NCVf0.5[I]
+unlist(lapply(I, function(x) (sum(FIN.2$NCVf4[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.4)/nsims)))->FIN.2$P.val.NCVf0.4[I]
+unlist(lapply(I, function(x) (sum(FIN.2$NCVf3[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.3)/nsims)))->FIN.2$P.val.NCVf0.3[I]
+unlist(lapply(I, function(x) (sum(FIN.2$NCVf2[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.2)/nsims)))->FIN.2$P.val.NCVf0.2[I]
+unlist(lapply(I, function(x) (sum(FIN.2$NCVf1[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.1)/nsims)))->FIN.2$P.val.NCVf0.1[I]
+})
+unlist(lapply(temp2.FIN, function(x) (sum(FIN.2$NCVf5[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.5)/nsims)))->FIN.2$P.val.NCVf0.5[temp2.FIN]
+unlist(lapply(temp2.FIN, function(x) (sum(FIN.2$NCVf4[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.4)/nsims)))->FIN.2$P.val.NCVf0.4[temp2.FIN]
+unlist(lapply(temp2.FIN, function(x) (sum(FIN.2$NCVf3[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.3)/nsims)))->FIN.2$P.val.NCVf0.3[temp2.FIN]
+unlist(lapply(temp2.FIN, function(x) (sum(FIN.2$NCVf2[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.2)/nsims)))->FIN.2$P.val.NCVf0.2[temp2.FIN]
+unlist(lapply(temp2.FIN, function(x) (sum(FIN.2$NCVf1[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.1)/nsims)))->FIN.2$P.val.NCVf0.1[temp2.FIN]
 
-
-###############################################################################################
-
-TSI.2<-All.Res.4.IS.prop50[[7]]
-lapply(bin.vec1.eu, function(x) (which(TSI.2$Nr.IS==x)))->temp
-
-which(TSI.2$Nr.IS>=bin.vec2.eu[[1]])->temp2
-
-pdf('../figures/vioplots.TSI.pdf')
-par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, TSI.2[temp[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
-dev.off()
 system.time(for (i in 1: length(temp)){
 I<-temp[[i]]
 unlist(lapply(I, function(x) (sum(TSI.2$NCVf5[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.5)/nsims)))->TSI.2$P.val.NCVf0.5[I]
@@ -429,25 +407,42 @@ unlist(lapply(I, function(x) (sum(TSI.2$NCVf3[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.3)
 unlist(lapply(I, function(x) (sum(TSI.2$NCVf2[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.2)/nsims)))->TSI.2$P.val.NCVf0.2[I]
 unlist(lapply(I, function(x) (sum(TSI.2$NCVf1[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.1)/nsims)))->TSI.2$P.val.NCVf0.1[I]
 })
+unlist(lapply(temp2.TSI, function(x) (sum(TSI.2$NCVf5[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.5)/nsims)))->TSI.2$P.val.NCVf0.5[temp2.TSI]
+unlist(lapply(temp2.TSI, function(x) (sum(TSI.2$NCVf4[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.4)/nsims)))->TSI.2$P.val.NCVf0.4[temp2.TSI]
+unlist(lapply(temp2.TSI, function(x) (sum(TSI.2$NCVf3[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.3)/nsims)))->TSI.2$P.val.NCVf0.3[temp2.TSI]
+unlist(lapply(temp2.TSI, function(x) (sum(TSI.2$NCVf2[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.2)/nsims)))->TSI.2$P.val.NCVf0.2[temp2.TSI]
+unlist(lapply(temp2.TSI, function(x) (sum(TSI.2$NCVf1[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.1)/nsims)))->TSI.2$P.val.NCVf0.1[temp2.TSI]
 
-unlist(lapply(temp2, function(x) (sum(TSI.2$NCVf5[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.5)/nsims)))->TSI.2$P.val.NCVf0.5[temp2]
-unlist(lapply(temp2, function(x) (sum(TSI.2$NCVf4[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.4)/nsims)))->TSI.2$P.val.NCVf0.4[temp2]
-unlist(lapply(temp2, function(x) (sum(TSI.2$NCVf3[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.3)/nsims)))->TSI.2$P.val.NCVf0.3[temp2]
-unlist(lapply(temp2, function(x) (sum(TSI.2$NCVf2[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.2)/nsims)))->TSI.2$P.val.NCVf0.2[temp2]
-unlist(lapply(temp2, function(x) (sum(TSI.2$NCVf1[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.1)/nsims)))->TSI.2$P.val.NCVf0.1[temp2]
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.GBR.pdf')
+par(mfrow=c(3,4))
+sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, GBR.2[temp[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+dev.off()
+
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.FIN.pdf')
+par(mfrow=c(3,4))
+sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, FIN.2[temp.FIN[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+dev.off()
+
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.TSI.pdf')
+par(mfrow=c(3,4))
+sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, TSI.2[temp.TSI[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+dev.off()
+
+Store(FIN.2)
+Store(GBR.2)
 Store(TSI.2)
-
-
+###############################################################################################
 ####################################################################################################################################################################################
 Objects()
-list.SCAN<-vector('list', 6)
-names(list.SCAN)<-c("LWK", "YRI", "CEU", "FIN", "GBR", "TSI")
-list.SCAN[[1]]<-LWK.2
-list.SCAN[[2]]<-YRI.2
-list.SCAN[[3]]<-CEU.2
-list.SCAN[[4]]<-FIN.2
-list.SCAN[[5]]<-GBR.2
-list.SCAN[[6]]<-TSI.2
+list.SCAN<-vector('list', 7)
+names(list.SCAN)<-c("AWS","LWK", "YRI", "CEU", "FIN", "GBR", "TSI")
+list.SCAN[[1]]<-AWS.2
+list.SCAN[[2]]<-LWK.2
+list.SCAN[[3]]<-YRI.2
+list.SCAN[[4]]<-CEU.2
+list.SCAN[[5]]<-FIN.2
+list.SCAN[[6]]<-GBR.2
+list.SCAN[[7]]<-TSI.2
 
 
 ######################################################################################################################################################################################
@@ -462,30 +457,33 @@ lapply(list.SCAN, function(x) dim(x[which(x$P.val.NCVf0.5<(1/nsims)),]))-> candi
 
 lapply(list.SCAN, function(x) dim(x[which(x$P.val.NCVf0.5<=(1/nsims)),]))
 
-pdf('../figures/Nr.IS.Genomic.VS.outliers.pdf')
-par(mfrow=c(3,2));
-lapply(1:6, function(x) {hist(list.SCAN[[x]]$Nr.IS, col='lightgray', border='gray', nclass=100, lty=2, main=names(list.SCAN)[x], freq=F, xlab="Number of Informative Sites per Window");lines(density(candidate.windows[[x]]$Nr.IS),col='sienna1')})
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/Nr.IS.Genomic.VS.outliers.pdf')
+par(mfrow=c(4,2));
+lapply(1:7, function(x) {hist(list.SCAN[[x]]$Nr.IS, col='lightgray', border='gray', nclass=100, lty=2, main=names(list.SCAN)[x], freq=F, xlab="Number of Informative Sites per Window");lines(density(candidate.windows[[x]]$Nr.IS),col='sienna1')})
 dev.off()
 
 
 library(VennDiagram)
 
 
-sapply(seq(1:6), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
+sapply(seq(1:7), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
 
 
-venn.diagram(list(LWK=rownames(subset(list.SCAN[[1]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1"),alpha = c(0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='Africa.f0.5.venn.pdf')
+venn.diagram(list(LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1"),alpha = c(0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='Africa.f0.5.venn.pdf')
 #works fine til here.
 ##############################################################################################
 
+#Idea, save workspace and copy to darwin so I can use Debora's 1000G annotation.
 
-andres_2009<- read.table('andres.2009.bed')
 
-DG_genes<-read.table('DG.2014.bed')
+################################################################################################
+andres_2009<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.bed')
 
-mhc.coords<-read.table('mhc.coords.gencode.bed')
+DG_genes<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.bed')
 
-pseudogenes<-read.table('pseudogenes.bed')
+mhc.coords<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/mhc.coords.gencode.bed')
+
+pseudogenes<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/pseudogenes.bed')
 
 #MHC coordinates (by Deborah, but remember that this differs a bit from GENCODE v.19...it is just a quick way to check for HLA windows, but I will remove it after I have my own bedfile for HLA made from GENCODE directly.
 #read.table('mhc_shiina_hg19.bed', header=F)-> mhc.coords
@@ -525,7 +523,7 @@ UP.list.MHC<-list( list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC)
 
 
 system.time(
-for(j in 1:6){
+for(j in 1:7){
 for (i in 1: dim(mhc.coords)[[1]]){
 chr1<- as.numeric(unlist(strsplit(as.character(mhc.coords$chr[i]), split="chr", fixed=TRUE))[2])
 my.function(B=mhc.coords$B[i], E=mhc.coords$E[i], chr=chr1, df=list.SCAN[[j]])->UP.list.MHC[[j]][[i]]
