@@ -2,7 +2,7 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 19.12.2014
+#	Last modified: 11.02.2014
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #################################################################################################################################
@@ -188,8 +188,8 @@ unlist(lapply(temp2.YRI, function(x) (sum(YRI.2$NCVf2[x]>=l.bin.vec2[[1]]$ncvFD_
 unlist(lapply(temp2.YRI, function(x) (sum(YRI.2$NCVf1[x]>=l.bin.vec2[[1]]$ncvFD_f0.1)/nsims)))->YRI.2$P.val.NCVf0.1[temp2.YRI]
 
 pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.YRI.pdf')
-par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1[[x]]$ncvFD_f0.5, YRI.2[temp.YRI[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+par(mfrow=c(4,4))
+sapply(1:16, function(x) vioplot(l.bin.vec1[[x]]$ncvFD_f0.5, YRI.2[temp.YRI[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
 dev.off()
 
 
@@ -242,9 +242,9 @@ unlist(lapply(temp2.LWK, function(x) (sum(LWK.2$NCVf4[x]>=l.bin.vec2[[1]]$ncvFD_
 unlist(lapply(temp2.LWK, function(x) (sum(LWK.2$NCVf3[x]>=l.bin.vec2[[1]]$ncvFD_f0.3)/nsims)))->LWK.2$P.val.NCVf0.3[temp2.LWK]
 unlist(lapply(temp2.LWK, function(x) (sum(LWK.2$NCVf2[x]>=l.bin.vec2[[1]]$ncvFD_f0.2)/nsims)))->LWK.2$P.val.NCVf0.2[temp2.LWK]
 unlist(lapply(temp2.LWK, function(x) (sum(LWK.2$NCVf1[x]>=l.bin.vec2[[1]]$ncvFD_f0.1)/nsims)))->LWK.2$P.val.NCVf0.1[temp2.LWK]
-pdf('../figures/vioplots.LWK.pdf')
-par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1[[x]]$ncvFD_f0.5, LWK.2[temp[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.LWK.pdf')
+par(mfrow=c(4,4))
+sapply(1:16, function(x) vioplot(l.bin.vec1[[x]]$ncvFD_f0.5, LWK.2[temp.LWK[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
 dev.off()
 
 
@@ -314,8 +314,8 @@ unlist(lapply(temp2.AWS, function(x) (sum(AWS.2$NCVf2[x]>=l.bin.vec2[[1]]$ncvFD_
 unlist(lapply(temp2.AWS, function(x) (sum(AWS.2$NCVf1[x]>=l.bin.vec2[[1]]$ncvFD_f0.1)/nsims)))->AWS.2$P.val.NCVf0.1[temp2.AWS]
 
 pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.AWS.pdf')
-par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1[[x]]$ncvFD_f0.5, AWS.2[temp.AWS[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+par(mfrow=c(4,4))
+sapply(1:16, function(x) vioplot(l.bin.vec1[[x]]$ncvFD_f0.5, AWS.2[temp.AWS[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
 dev.off()
 
 Store(AWS.2)
@@ -340,8 +340,8 @@ lapply(bin.vec1.eu, function(x) (which(CEU.2$Nr.IS==x)))->temp.CEU
 which(CEU.2$Nr.IS>=bin.vec2.eu[[1]])->temp2.CEU
 
 pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.CEU.pdf')
-par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, CEU.2[temp.CEU[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+par(mfrow=c(4,4))
+sapply(1:16, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, CEU.2[temp.CEU[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
 dev.off()
 
 system.time(for (i in 1: length(temp.CEU)){
@@ -399,8 +399,8 @@ unlist(lapply(temp2.FIN, function(x) (sum(FIN.2$NCVf3[x]>=l.bin.vec2.eu[[1]]$ncv
 unlist(lapply(temp2.FIN, function(x) (sum(FIN.2$NCVf2[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.2)/nsims)))->FIN.2$P.val.NCVf0.2[temp2.FIN]
 unlist(lapply(temp2.FIN, function(x) (sum(FIN.2$NCVf1[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.1)/nsims)))->FIN.2$P.val.NCVf0.1[temp2.FIN]
 
-system.time(for (i in 1: length(temp)){
-I<-temp[[i]]
+system.time(for (i in 1: length(temp.TSI)){
+I<-temp.TSI[[i]]
 unlist(lapply(I, function(x) (sum(TSI.2$NCVf5[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.5)/nsims)))->TSI.2$P.val.NCVf0.5[I]
 unlist(lapply(I, function(x) (sum(TSI.2$NCVf4[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.4)/nsims)))->TSI.2$P.val.NCVf0.4[I]
 unlist(lapply(I, function(x) (sum(TSI.2$NCVf3[x]>=l.bin.vec1.eu[[i]]$ncvFD_f0.3)/nsims)))->TSI.2$P.val.NCVf0.3[I]
@@ -414,18 +414,18 @@ unlist(lapply(temp2.TSI, function(x) (sum(TSI.2$NCVf2[x]>=l.bin.vec2.eu[[1]]$ncv
 unlist(lapply(temp2.TSI, function(x) (sum(TSI.2$NCVf1[x]>=l.bin.vec2.eu[[1]]$ncvFD_f0.1)/nsims)))->TSI.2$P.val.NCVf0.1[temp2.TSI]
 
 pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.GBR.pdf')
-par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, GBR.2[temp[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+par(mfrow=c(4,4))
+sapply(1:16, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, GBR.2[temp.GBR[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
 dev.off()
 
 pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.FIN.pdf')
-par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, FIN.2[temp.FIN[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+par(mfrow=c(4,4))
+sapply(1:16, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, FIN.2[temp.FIN[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
 dev.off()
 
 pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.TSI.pdf')
-par(mfrow=c(3,4))
-sapply(1:12, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, TSI.2[temp.TSI[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
+par(mfrow=c(4,4))
+sapply(1:16, function(x) vioplot(l.bin.vec1.eu[[x]]$ncvFD_f0.5, TSI.2[temp.TSI[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')))
 dev.off()
 
 Store(FIN.2)
@@ -444,18 +444,26 @@ list.SCAN[[5]]<-FIN.2
 list.SCAN[[6]]<-GBR.2
 list.SCAN[[7]]<-TSI.2
 
-
+Store(AWS.2)
+Store(LWK.2)
+Store(YRI.2)
+Store(CEU.2)
+Store(FIN.2)
+Store(GBR.2)
+Store(TSI.2)
 ######################################################################################################################################################################################
 
 library(plyr)
-#mclapply(list.SCAN, function(x) tbl_df(x))-> list.SCAN.2
-#list.SCAN.2-> list.SCAN
-#remove(list.SCAN.2)
 
-lapply(list.SCAN, function(x) dim(x[which(x$P.val.NCVf0.5<(1/nsims)),]))-> candidate.windows
+#mclapply(list.SCAN, function(x) dim(x[which(x$P.val.NCVf0.5<(1/nsims)),]))-> candidate.windows
+
+#check if NCV in bins is normally distributed
+
+pdf('test2.pdf')
+sapply(1:226, function(x) {qqnorm(l.bin.vec1[[x]]$ncvFD_f0.5); qqline(l.bin.vec1[[x]]$ncvFD_f0.5))
+dev.off()
 
 
-lapply(list.SCAN, function(x) dim(x[which(x$P.val.NCVf0.5<=(1/nsims)),]))
 
 pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/Nr.IS.Genomic.VS.outliers.pdf')
 par(mfrow=c(4,2));
@@ -466,116 +474,236 @@ dev.off()
 library(VennDiagram)
 
 
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/')
+
 sapply(seq(1:7), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
 
-
-venn.diagram(list(LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1"),alpha = c(0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='Africa.f0.5.venn.pdf')
+venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='Africa.f0.5.venn.pdf')
 #works fine til here.
 ##############################################################################################
 
+#RANK candidate windows
+bin.list2[[j]][[length(bin.list2)]]->II
+
+system.time(lapply(list.SCAN, function(x) cbind(x, Dist.NCV.f0.5=rep(NA, dim(x)[1]),Dist.NCV.f0.4=rep(NA, dim(x)[1]),Dist.NCV.f0.3=rep(NA, dim(x)[1]),Dist.NCV.f0.2=rep(NA, dim(x)[1])))-> list.SCAN.2)
+
+bin.list2<-vector('list', 7)
+
+for (i in 1:3){
+c(lapply(bin.vec1, function(x) (which(list.SCAN.2[[i]]$Nr.IS==x))), list(which(list.SCAN.2[[i]]$Nr.IS>=bin.vec2)))->bin.list2[[i]]
+}
+
+for (j in 4:7){
+c(lapply(bin.vec1.eu, function(x) (which(list.SCAN.2[[j]]$Nr.IS==x))), list(which(list.SCAN.2[[j]]$Nr.IS>=bin.vec2.eu)))->bin.list2[[j]]
+}
+
+test.res<-vector('list', length(bin.list2[[1]]))
+
+for (j in 1:3){ #AFRICA only
+bin.list2[[j]][[length(bin.list2[[1]])]]->II
+mean(l.bin.vec2[[1]]$ncvFD_f0.5)->mean5.II
+sd(l.bin.vec2[[1]]$ncvFD_f0.5)-> sd5.II
+
+mean(l.bin.vec2[[1]]$ncvFD_f0.4)->mean4.II
+sd(l.bin.vec2[[1]]$ncvFD_f0.4)-> sd4.II
+
+mean(l.bin.vec2[[1]]$ncvFD_f0.3)->mean3.II
+sd(l.bin.vec2[[1]]$ncvFD_f0.3)-> sd3.II
+
+mean(l.bin.vec2[[1]]$ncvFD_f0.2)->mean2.II
+sd(l.bin.vec2[[1]]$ncvFD_f0.2)-> sd2.II
+
+if(length(II)>0){
+((list.SCAN.2[[j]][II,]$NCVf5-mean5.II)/sd5.II)->list.SCAN.2[[j]]$Dist.NCV.f0.5[II]
+((list.SCAN.2[[j]][II,]$NCVf4-mean4.II)/sd4.II)->list.SCAN.2[[j]]$Dist.NCV.f0.4[II]
+((list.SCAN.2[[j]][II,]$NCVf3-mean3.II)/sd3.II)->list.SCAN.2[[j]]$Dist.NCV.f0.3[II]
+((list.SCAN.2[[j]][II,]$NCVf2-mean2.II)/sd2.II)->list.SCAN.2[[j]]$Dist.NCV.f0.2[II]}
+
+for (i in 1: (length(bin.list2[[1]])-1)){
+I<-bin.list2[[j]][[i]]
+mean(l.bin.vec1[[i]]$ncvFD_f0.5)-> mean5.bin
+mean(l.bin.vec1[[i]]$ncvFD_f0.4)-> mean4.bin
+mean(l.bin.vec1[[i]]$ncvFD_f0.3)-> mean3.bin
+mean(l.bin.vec1[[i]]$ncvFD_f0.2)-> mean2.bin
+#test[I,]-> sub
+sd(l.bin.vec1[[i]]$ncvFD_f0.5)-> sd5.bin
+sd(l.bin.vec1[[i]]$ncvFD_f0.4)-> sd4.bin
+sd(l.bin.vec1[[i]]$ncvFD_f0.3)-> sd3.bin
+sd(l.bin.vec1[[i]]$ncvFD_f0.2)-> sd2.bin
+if(length(I)>0){
+((list.SCAN.2[[j]][I,]$NCVf5-mean5.bin)/sd5.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.5[I]
+((list.SCAN.2[[j]][I,]$NCVf4-mean4.bin)/sd4.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.4[I]
+((list.SCAN.2[[j]][I,]$NCVf3-mean3.bin)/sd3.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.3[I]
+((list.SCAN.2[[j]][I,]$NCVf2-mean2.bin)/sd2.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.2[I]
+}}}
+
+
+#it works. now add this as as a " distance" collumn to the candidate windows data sets.
+
+for (j in 4:7){ #Europe only
+bin.list2[[j]][[length(bin.list2[[4]])]]->II
+mean(l.bin.vec2.eu[[1]]$ncvFD_f0.5)->mean5.II
+sd(l.bin.vec2.eu[[1]]$ncvFD_f0.5)-> sd5.II
+
+mean(l.bin.vec2[[1]]$ncvFD_f0.4)->mean4.II
+sd(l.bin.vec2[[1]]$ncvFD_f0.4)-> sd4.II
+
+mean(l.bin.vec2[[1]]$ncvFD_f0.3)->mean3.II
+sd(l.bin.vec2[[1]]$ncvFD_f0.3)-> sd3.II
+
+mean(l.bin.vec2[[1]]$ncvFD_f0.2)->mean2.II
+sd(l.bin.vec2[[1]]$ncvFD_f0.2)-> sd2.II
+
+if(length(II)>0){
+((list.SCAN.2[[j]][II,]$NCVf5-mean5.II)/sd5.II)->list.SCAN.2[[j]]$Dist.NCV.f0.5[II]
+((list.SCAN.2[[j]][II,]$NCVf4-mean4.II)/sd4.II)->list.SCAN.2[[j]]$Dist.NCV.f0.4[II]
+((list.SCAN.2[[j]][II,]$NCVf3-mean3.II)/sd3.II)->list.SCAN.2[[j]]$Dist.NCV.f0.3[II]
+((list.SCAN.2[[j]][II,]$NCVf2-mean2.II)/sd2.II)->list.SCAN.2[[j]]$Dist.NCV.f0.2[II]}
+
+for (i in 1: (length(bin.list2[[4]])-1)){
+I<-bin.list2[[j]][[i]]
+mean(l.bin.vec1.eu[[i]]$ncvFD_f0.5)-> mean5.bin
+mean(l.bin.vec1.eu[[i]]$ncvFD_f0.4)-> mean4.bin
+mean(l.bin.vec1.eu[[i]]$ncvFD_f0.3)-> mean3.bin
+mean(l.bin.vec1.eu[[i]]$ncvFD_f0.2)-> mean2.bin
+#test[I,]-> sub
+sd(l.bin.vec1.eu[[i]]$ncvFD_f0.5)-> sd5.bin
+sd(l.bin.vec1.eu[[i]]$ncvFD_f0.4)-> sd4.bin
+sd(l.bin.vec1.eu[[i]]$ncvFD_f0.3)-> sd3.bin
+sd(l.bin.vec1.eu[[i]]$ncvFD_f0.2)-> sd2.bin
+if(length(I)>0){
+((list.SCAN.2[[j]][I,]$NCVf5-mean5.bin)/sd5.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.5[I]
+((list.SCAN.2[[j]][I,]$NCVf4-mean4.bin)/sd4.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.4[I]
+((list.SCAN.2[[j]][I,]$NCVf3-mean3.bin)/sd3.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.3[I]
+((list.SCAN.2[[j]][I,]$NCVf2-mean2.bin)/sd2.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.2[I]
+}}}
+#Decide which distance emeasure I will use.
+#Also, do the distance divided by the max NCV, so that NCV with different freq equilibria can be compared.
 #Idea, save workspace and copy to darwin so I can use Debora's 1000G annotation.
 
 
-################################################################################################
-andres_2009<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.bed')
+lapply(list.SCAN.2, function(x) x[which(x$P.val.NCVf0.5<(1/nsims)),])-> CANDf0.5
+lapply(list.SCAN.2, function(x) x[which(x$P.val.NCVf0.4<(1/nsims)),])-> CANDf0.4
+lapply(list.SCAN.2, function(x) x[which(x$P.val.NCVf0.3<(1/nsims)),])-> CANDf0.3
+lapply(list.SCAN.2, function(x) x[which(x$P.val.NCVf0.2<(1/nsims)),])-> CANDf0.2
 
-DG_genes<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.bed')
+#here I can start exploring these windows.
+################################################################################################
+setwd("/mnt/sequencedb/PopGen/barbara/scan_may_2014/")
+
+andres_AA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AA.bed')
+
+andres_EA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.EA.bed')
+
+andres_AAandEA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AAandEA.bed')
+
+
+DG_T2_YRI<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.YRI.bed')
+DG_T2_CEU<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.CEU.bed')
 
 mhc.coords<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/mhc.coords.gencode.bed')
 
-pseudogenes<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/pseudogenes.bed')
+#pseudogenes<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/pseudogenes.bed')
 
 #MHC coordinates (by Deborah, but remember that this differs a bit from GENCODE v.19...it is just a quick way to check for HLA windows, but I will remove it after I have my own bedfile for HLA made from GENCODE directly.
 #read.table('mhc_shiina_hg19.bed', header=F)-> mhc.coords
 
 names(mhc.coords)<-c('chr','B', 'E', 'Name')
-
-names(andres_2009)<-c('chr','B', 'E', 'Name')
-
-names(DG_genes)<-c('chr','B', 'E', 'Name')
-
-names(pseudogenes)<-c('chr', 'B', 'E', 'Name')
-
-
+names(andres_AA)<-c('chr','B', 'E', 'Name')
+names(andres_EA)<-c('chr','B', 'E', 'Name')
+names(andres_AAandEA)<-c('chr','B', 'E', 'Name')
+names(DG_T2_YRI)<-c('chr','B', 'E', 'Name')
+names(DG_T2_CEU)<-c('chr','B', 'E', 'Name')
 
 my.function<-function(B, E, df=XX, chr=6){
-
 rbind(subset(df, Chr==chr & End.Win > B & End.Win < E), subset(df, Chr==chr & Beg.Win > B & Beg.Win < E))->res
-
-
 df[rownames(res[!duplicated(res),]),]-> res2
-
 return(res2)
 }
 
 
 names(mhc.coords)<-c('chr', 'B', 'E', 'Name')
-
 list.MHC<-vector('list', dim(mhc.coords)[[1]])
-
-
 names(list.MHC)<-mhc.coords$Name
-
-
-UP.list.MHC<-list( list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC)
-
-
-
-
+UP.list.MHC<-list( list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC)
 system.time(
 for(j in 1:7){
 for (i in 1: dim(mhc.coords)[[1]]){
 chr1<- as.numeric(unlist(strsplit(as.character(mhc.coords$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=mhc.coords$B[i], E=mhc.coords$E[i], chr=chr1, df=list.SCAN[[j]])->UP.list.MHC[[j]][[i]]
-}}
-)
-
-
-
-
-
-list.Andres<-vector('list', dim(andres_2009)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
-names(list.Andres)<-andres_2009$Name
-
-UP.list.AA2009<-list(list.Andres,list.Andres,list.Andres,list.Andres,list.Andres,list.Andres)
-
-system.time(for (j in 1:6){
-for (i in 1: dim(andres_2009)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(andres_2009$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=andres_2009$B[i], E=andres_2009$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.AA2009[[j]][[i]]
+my.function(B=mhc.coords$B[i], E=mhc.coords$E[i], chr=chr1, df=list.SCAN.2[[j]])->UP.list.MHC[[j]][[i]]
+}})
+#
+list.Andres.EA<-vector('list', dim(andres_EA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
+names(list.Andres.EA)<-andres_EA$Name
+UP.list.Andres.EA<-list(list.Andres.EA,list.Andres.EA,list.Andres.EA,list.Andres.EA,list.Andres.EA,list.Andres.EA, list.Andres.EA)
+system.time(for (j in 1:7){
+for (i in 1: dim(andres_EA)[[1]]){
+chr1<- as.numeric(unlist(strsplit(as.character(andres_EA$chr[i]), split="chr", fixed=TRUE))[2])
+my.function(B=andres_EA$B[i], E=andres_EA$E[i], df=list.SCAN.2[[j]], chr=chr1)->UP.list.Andres.EA[[j]][[i]]
+}})
+#
+list.Andres.AA<-vector('list', dim(andres_AA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
+names(list.Andres.AA)<-andres_AA$Name
+UP.list.Andres.AA<-list(list.Andres.AA,list.Andres.AA,list.Andres.AA,list.Andres.AA,list.Andres.AA,list.Andres.AA, list.Andres.AA)
+system.time(for (j in 1:7){
+for (i in 1: dim(andres_AA)[[1]]){
+chr1<- as.numeric(unlist(strsplit(as.character(andres_AA$chr[i]), split="chr", fixed=TRUE))[2])
+my.function(B=andres_AA$B[i], E=andres_AA$E[i], df=list.SCAN.2[[j]], chr=chr1)->UP.list.Andres.AA[[j]][[i]]
+}})
+#
+list.Andres.AAandEA<-vector('list', dim(andres_AAandEA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
+names(list.Andres.AAandEA)<-andres_AAandEA$Name
+UP.list.Andres.AAandEA<-list(list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA, list.Andres.AAandEA)
+system.time(for (j in 1:7){
+for (i in 1: dim(andres_AAandEA)[[1]]){
+chr1<- as.numeric(unlist(strsplit(as.character(andres_AAandEA$chr[i]), split="chr", fixed=TRUE))[2])
+my.function(B=andres_AAandEA$B[i], E=andres_AAandEA$E[i], df=list.SCAN.2[[j]], chr=chr1)->UP.list.Andres.AAandEA[[j]][[i]]
 }})
 
-
-list.DG<-vector('list', dim(DG_genes)[[1]]) #this is for T2 test for YRI and CEU. I should separate them and comparte with the appropriate pops from my scan.
-names(list.DG)<-DG_genes$Name
-UP.list.DGT2YRI<-list(list.DG,list.DG,list.DG,list.DG,list.DG,list.DG)
-
+list.DG.T2.YRI<-vector('list', dim(DG_T2_YRI)[[1]]) #this is for T2 test for YRI and CEU. I should separate them and comparte with the appropriate pops from my scan.
+names(list.DG.T2.YRI)<-DG_T2_YRI$Name
+UP.list.DG.T2.YRI<-list(list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI, list.DG.T2.YRI)
 
 system.time(
-for(j in 1:6){
-for (i in 1: dim(DG_genes)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(DG_genes$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=DG_genes$B[i], E=DG_genes$E[i], df=list.SCAN[[j]],chr=chr1)->UP.list.DGT2YRI[[j]][[i]]
+for(j in 1:7){
+for (i in 1: dim(DG_T2_YRI)[[1]]){
+chr1<- as.numeric(unlist(strsplit(as.character(DG_T2_YRI$chr[i]), split="chr", fixed=TRUE))[2])
+my.function(B=DG_T2_YRI$B[i], E=DG_T2_YRI$E[i], df=list.SCAN.2[[j]],chr=chr1)->UP.list.DG.T2.YRI[[j]][[i]]
 }})
 
+list.DG.T2.CEU<-vector('list', dim(DG_T2_CEU)[[1]]) #this is for T2 test for YRI and CEU. I should separate them and comparte with the appropriate pops from my scan.
+names(list.DG.T2.CEU)<-DG_T2_CEU$Name
+UP.list.DG.T2.CEU<-list(list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU, list.DG.T2.CEU)
 
+system.time(
+for(j in 1:7){
+for (i in 1: dim(DG_T2_CEU)[[1]]){
+chr1<- as.numeric(unlist(strsplit(as.character(DG_T2_CEU$chr[i]), split="chr", fixed=TRUE))[2])
+my.function(B=DG_T2_CEU$B[i], E=DG_T2_CEU$E[i], df=list.SCAN.2[[j]],chr=chr1)->UP.list.DG.T2.CEU[[j]][[i]]
+}})
 
-#thi pseudogene needs processing...there is more then 1 hiot for each 'gene'
-pseudogenes[,c(1,2,3,4)]->pseudogenes
+Store(DG_T2_YRI)
+Store(andres_AAandEA)
+Store(andres_AA)
+Store(andres_EA)
+Store(mhc.coords)
 
+#try to optimize this...
 
-list.PSEUDOG<-vector('list', dim(pseudogenes)[[1]])
+#put al these lists in a list.
 
-names(list.PSEUDOG)<-pseudogenes$Name
+#the pseudogene needs processing...there is more then 1 hiot for each 'gene'
+#pseudogenes[,c(1,2,3,4)]->pseudogenes
+#list.PSEUDOG<-vector('list', dim(pseudogenes)[[1]])
+#names(list.PSEUDOG)<-pseudogenes$Name
+#UP.list.PSEUDOG<-list(list.PSEUDOG,list.PSEUDOG,list.PSEUDOG,list.PSEUDOG,list.PSEUDOG,list.PSEUDOG)
 
-UP.list.PSEUDOG<-list(list.PSEUDOG,list.PSEUDOG,list.PSEUDOG,list.PSEUDOG,list.PSEUDOG,list.PSEUDOG)
-
-system.time(for (j in 1:6){
-for (i in 1: dim(pseudogenes)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(pseudogenes$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=pseudogenes$B[i], E=pseudogenes$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.PSEUDOG[[j]][[i]]
-}
-})
+#system.time(for (j in 1:6){
+#for (i in 1: dim(pseudogenes)[[1]]){
+#chr1<- as.numeric(unlist(strsplit(as.character(pseudogenes$chr[i]), split="chr", fixed=TRUE))[2])
+#my.function(B=pseudogenes$B[i], E=pseudogenes$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.PSEUDOG[[j]][[i]]
+#}
+#})
 ####################################################################################################
 
 #check number of windows which overlap genes and how many don't
@@ -764,43 +892,5 @@ as.character(unique(subset(my.candidates.p.0001, type.2=='protein_coding'|type.2
 
 as.character(unique(subset(my.candidates.p.0000, type.2=='protein_coding'|type.2=='processed_transcript' & overlap>=2000)$gene.name))-> my.cand.p.0000 #2167
 
-
-
-
-
-
-list.Andres<-vector('list', dim(andres_2009)[[1]])
-names(list.Andres)<-andres_2009$Name
-
-
-for (i in 1: dim(andres_2009)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(andres_2009$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=andres_2009$B[i], E=andres_2009$E[i], chr=chr1)->list.Andres[[i]]
-}
-
-
-list.DG<-vector('list', dim(DG_genes)[[1]])
-
-names(list.DG)<-DG_genes$Name
-
-for (i in 1: dim(DG_genes)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(DG_genes$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=DG_genes$B[i], E=DG_genes$E[i], chr=chr1)->list.DG[[i]]
-}
-
-
-
-
-pseudogenes[,c(1,2,3,4)]->pseudogenes
-
-
-list.PSEUDOG<-vector('list', dim(pseudogenes)[[1]])
-
-names(list.PSEUDOG)<-pseudogenes$Name
-
-for (i in 1: dim(pseudogenes)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(pseudogenes$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=pseudogenes$B[i], E=pseudogenes$E[i], chr=chr1)->list.PSEUDOG[[i]]
-}
 
 
