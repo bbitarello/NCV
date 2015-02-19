@@ -2,7 +2,7 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 11.02.2014
+#	Last modified: 17.02.2014
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #################################################################################################################################
@@ -168,8 +168,21 @@ YRI.2<-All.Res.4.IS.prop50[[3]]
 nsims<-10000
 
 lapply(bin.vec1, function(x) (which(YRI.2$Nr.IS==x)))->temp.YRI
+lapply(temp.YRI, function(x) length(x))-> temp3.YRI
+length(which(YRI.2$Nr.IS>=bin.vec2[[1]]))->temp4.YRI
 
 which(YRI.2$Nr.IS>=bin.vec2[[1]])->temp2.YRI
+
+test<-vector('list' ,226)
+for ( i in 1:226){
+
+if(temp3.YRI[[i]]<=nsims){l.bin.vec1[[i]][sample(seq(1:nsims), temp3.YRI[[i]]),]->test[[i]]}
+if(temp3.YRI[[i]]>nsims){l.bin.vec1[[i]]->test[[i]]}}#now do vioplots with this and the real data.
+
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/vioplots.YRI.subsampled.pdf')
+par(mfrow=c(4,4))
+sapply(1:16, function(x) vioplot(test[[x]]$ncvFD_f0.5, YRI.2[temp.YRI[[x]],]$NCVf5, col='cornflowerblue', border='gray', rectCol=' white', colMed='black',names=c('sims', 'data')), main=paste0('Nr.Is=', seq(4:19))	
+dev.off()
 
 system.time(for (i in 1: length(temp.YRI)){
 I<-temp.YRI[[i]]
@@ -615,14 +628,32 @@ names(andres_AAandEA)<-c('chr','B', 'E', 'Name')
 names(DG_T2_YRI)<-c('chr','B', 'E', 'Name')
 names(DG_T2_CEU)<-c('chr','B', 'E', 'Name')
 
+read.table('/mnt/sequencedb/PopGen/cesare/hg19/bedfiles/hg19_protCoding.bed.gz')-> prot.cod.bed
+
+names(prot.cod.bed)<-c('chr', 'beg', 'end')
+
+lapply(1:22, function(x) subset(prot.cod.bed, chr==x))-> prot.cod.bed.list
+
+#########################################################################################################################
 my.function<-function(B, E, df=XX, chr=6){
 rbind(subset(df, Chr==chr & End.Win > B & End.Win < E), subset(df, Chr==chr & Beg.Win > B & Beg.Win < E))->res
 df[rownames(res[!duplicated(res),]),]-> res2
 return(res2)
 }
 
+my.fun2<-function(B, E, df=XX, chr=1, dd=1){
+for (j in 1:dd){
+my.function(B=prot.cod.bed.list[[x]]$beg[j], E=prot.cod.bed.list[[x]]$end[j], chr=i, df=list.SCAN.2[[3]])->res3
+}}
+lapply(prot.cod.bed.list, function(x)dim(x)[1])-> ll1
+lapply(ll1,function(x) vector('list',x))-> test.all.prot
 
-names(mhc.coords)<-c('chr', 'B', 'E', 'Name')
+system.time(for (x in 1:2){
+for (j in 1:ll1[[x]]){
+my.function(B=prot.cod.bed.list[[x]]$beg[j], E=prot.cod.bed.list[[x]]$end[j], chr=x, df=list.SCAN.2[[3]]) -> test.all.prot[[x]][[j]]
+}})
+#########################################################################################################################
+
 list.MHC<-vector('list', dim(mhc.coords)[[1]])
 names(list.MHC)<-mhc.coords$Name
 UP.list.MHC<-list( list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC)
@@ -659,22 +690,20 @@ for (i in 1: dim(andres_AAandEA)[[1]]){
 chr1<- as.numeric(unlist(strsplit(as.character(andres_AAandEA$chr[i]), split="chr", fixed=TRUE))[2])
 my.function(B=andres_AAandEA$B[i], E=andres_AAandEA$E[i], df=list.SCAN.2[[j]], chr=chr1)->UP.list.Andres.AAandEA[[j]][[i]]
 }})
-
+#
 list.DG.T2.YRI<-vector('list', dim(DG_T2_YRI)[[1]]) #this is for T2 test for YRI and CEU. I should separate them and comparte with the appropriate pops from my scan.
 names(list.DG.T2.YRI)<-DG_T2_YRI$Name
 UP.list.DG.T2.YRI<-list(list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI, list.DG.T2.YRI)
-
 system.time(
 for(j in 1:7){
 for (i in 1: dim(DG_T2_YRI)[[1]]){
 chr1<- as.numeric(unlist(strsplit(as.character(DG_T2_YRI$chr[i]), split="chr", fixed=TRUE))[2])
 my.function(B=DG_T2_YRI$B[i], E=DG_T2_YRI$E[i], df=list.SCAN.2[[j]],chr=chr1)->UP.list.DG.T2.YRI[[j]][[i]]
 }})
-
+#
 list.DG.T2.CEU<-vector('list', dim(DG_T2_CEU)[[1]]) #this is for T2 test for YRI and CEU. I should separate them and comparte with the appropriate pops from my scan.
 names(list.DG.T2.CEU)<-DG_T2_CEU$Name
 UP.list.DG.T2.CEU<-list(list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU, list.DG.T2.CEU)
-
 system.time(
 for(j in 1:7){
 for (i in 1: dim(DG_T2_CEU)[[1]]){
@@ -683,6 +712,7 @@ my.function(B=DG_T2_CEU$B[i], E=DG_T2_CEU$E[i], df=list.SCAN.2[[j]],chr=chr1)->U
 }})
 
 Store(DG_T2_YRI)
+Store(DG_T2_CEU)
 Store(andres_AAandEA)
 Store(andres_AA)
 Store(andres_EA)
@@ -692,20 +722,32 @@ Store(mhc.coords)
 
 #put al these lists in a list.
 
+#for each gene, take the lowest z-score, of if there is only one, take that one, and see where it falls in the distribution of z-scores (global and for that bin specfically)
+#count genes (candidates) within these sets
+#check how the results behave if we filter out windows with Nr.IS <5-20
+#check which windows are present in more than one scan with extremely low z scores, and decide which feq minimizes NCV (and z score)
+#dothe same for windows which are significant for two scans
+#figure out a way to document these results which is informative and non-overwhelming. Start with only one population. 
+#first check number of MHC, AA, DG genes etc
+#then check how these results behave to the filters for Nr.IS (which I intend to implement). Perhaps these filters will change this...or will make us remove important targets.
+
 #the pseudogene needs processing...there is more then 1 hiot for each 'gene'
 #pseudogenes[,c(1,2,3,4)]->pseudogenes
 #list.PSEUDOG<-vector('list', dim(pseudogenes)[[1]])
 #names(list.PSEUDOG)<-pseudogenes$Name
 #UP.list.PSEUDOG<-list(list.PSEUDOG,list.PSEUDOG,list.PSEUDOG,list.PSEUDOG,list.PSEUDOG,list.PSEUDOG)
 
-#system.time(for (j in 1:6){
-#for (i in 1: dim(pseudogenes)[[1]]){
-#chr1<- as.numeric(unlist(strsplit(as.character(pseudogenes$chr[i]), split="chr", fixed=TRUE))[2])
-#my.function(B=pseudogenes$B[i], E=pseudogenes$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.PSEUDOG[[j]][[i]]
-#}
-#})
 ####################################################################################################
-
+pdf('test.z.score.distrib.pdf')
+par(mfrow=c(2,1))
+plot(density(list.SCAN.2[[3]]$Dist.NCV.f0.5), col='cornflowerblue')
+lines(density(list.SCAN.2[[3]]$Dist.NCV.f0.4), col='sienna1')
+lines(density(list.SCAN.2[[3]]$Dist.NCV.f0.3), col='violetred1')
+plot(density(list.SCAN.2[[3]]$Dist.NCV.f0.5), col='cornflowerblue')
+lines(density(CANDf0.4[[3]]$Dist.NCV.f0.4), col='sienna1')
+lines(density(CANDf0.3[[3]]$Dist.NCV.f0.3), col='violetred1')
+dev.off()
+#############################################
 #check number of windows which overlap genes and how many don't
 
 
