@@ -1,8 +1,8 @@
-################################################################################################################################
+############################################################################################################################
 #
 #       Barbara D Bitarello
 #
-#       Last modified: 15.03.2014
+#       Last modified: 18.03.2014
 #	A script to read in in scan data, etc.
 #
 #################################################################################################################################
@@ -26,7 +26,7 @@ pops<-c("AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "C
 names(All.Results.Final)<-pops
 
 
-cov.win<-read.table('windows_coordinates_cov.bed.gz')
+cov.win<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/windows_coordinates_cov.bed.gz')
 
 names(cov.win)<-c('CHR', 'Beg.Win', 'End.Win', 'Nr.Map.Seg', 'Total.Cov.Leng', 'Total.Win.Leng', 'Proportion.Covered')
 
@@ -60,15 +60,28 @@ lapply(All.Res1, function(x) dim(x)) #dimensions of initial data
 # 1705970
 lapply(All.Res1, function(x) subset(x, Nr.IS>=4))->All.Res.4.IS
 #yri:1698893
+
+
+
+sort(unique(c(which(All.Res1[[3]]$Nr.IS<19), which(All.Res1[[2]]$Nr.IS<19), which(All.Res1[[1]]$Nr.IS<19), which(All.Res1[[4]]$Nr.IS<15), which(All.Res1[[5]]$Nr.IS<15),  which(All.Res1[[6]]$Nr.IS<15),  which(All.Res1[[7]]$Nr.IS<15))))->filt.Nr.IS
+mclapply(All.Res1, function(x) x[-filt.Nr.IS,])->All.Res2
+mclapply(All.Res2, function(x) subset(x, Proportion.Covered>=0.5))->All.Res.filtered
+
 lapply(All.Res.4.IS, function(x) cbind(x, P.val.NCVf0.5=rep(NA, dim(x)[1]), P.val.NCVf0.4=rep(NA, dim(x)[1]), P.val.NCVf0.3=rep(NA, dim(x)[1]), P.val.NCVf0.2=rep(NA, dim(x)[1]), P.val.NCVf0.1=rep(NA, dim(x)[1])))->All.Res.4.IS
 
 lapply(All.Res.4.IS, function(x) subset(x, Proportion.Covered>=0.5))-> All.Res.4.IS.prop50
 #dim YRI:1627870 
 
 objectName<-'All.Res.4.IS.prop50'
+objectName2<-'All.Res.filtered'
 setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/')
-save(list=objectName, file= 'All.Res.4.IS.prop50.RData')
 
+save(list=objectName, file= 'All.Res.4.IS.prop50.RData')
+save(list=objectName2, file='All.Res.filtered.RData')
+
+Store(All.Res.4.IS.prop50)
+Store(All.Res.filtered)
+Store(All.Res2)
 ###################
 ###################
 ###################

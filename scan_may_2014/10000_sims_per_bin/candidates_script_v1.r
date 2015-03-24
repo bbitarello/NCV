@@ -2,7 +2,7 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 15.03.2014
+#	Last modified: 23.03.2014
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #################################################################################################################################
@@ -26,16 +26,15 @@ pops<-c("AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "C
 #check if NCV in bins is normally distributed
 
 Objects()
-pdf('test2.pdf')
-sapply(1:226, function(x) {qqnorm(l.bin.vec1[[x]]$ncvFD_f0.5); qqline(l.bin.vec1[[x]]$ncvFD_f0.5))
-dev.off()
+#pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/march.2015.qqplot.AFR.pdf')
+#sapply(1:211, function(x) {qqnorm(l.bin.vec1[[x]]$ncvFD_f0.5); qqline(l.bin.vec1[[x]]$ncvFD_f0.5))
+#dev.off()
 
-
-
-pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/Nr.IS.Genomic.VS.outliers.pdf')
-par(mfrow=c(4,2));
-lapply(1:7, function(x) {hist(list.SCAN[[x]]$Nr.IS, col='lightgray', border='gray', nclass=100, lty=2, main=names(list.SCAN)[x], freq=F, xlab="Number of Informative Sites per Window");lines(density(candidate.windows[[x]]$Nr.IS),col='sienna1')})
-dev.off()
+#pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/march.2015.figures/march.2015.Nr.IS.Genomic.VS.outliers.pdf')
+#par(mfrow=c(4,2));
+#lapply(1:7, function(x) {hist(list.SCAN[[x]]$Nr.IS, col='lightgray', border='gray', nclass=100, lty=2, main=names(list.SCAN)[x], freq=F, xlab="Number of Informative Sites per Window");lines(density(candidate.windows[[x]]$Nr.IS),col='sienna1')})
+#l.bin.vec1[[i]]$ncvFD_f0.2)-> sd2.bin
+#dev.off()
 
 
 library(VennDiagram)
@@ -45,7 +44,7 @@ setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/')
 
 sapply(seq(1:7), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
 
-venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='Africa.f0.5.venn.pdf')
+venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Africa.f0.5.venn.pdf')
 #works fine til here.
 ##############################################################################################
 
@@ -55,56 +54,49 @@ venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),
 Objects()
 
 setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/')
-system.time(mclapply(list.SCAN, function(x) cbind(x, Dist.NCV.f0.5=rep(NA, dim(x)[1]),Dist.NCV.f0.4=rep(NA, dim(x)[1]),Dist.NCV.f0.3=rep(NA, dim(x)[1]),Dist.NCV.f0.2=rep(NA, dim(x)[1])))-> list.SCAN.2)
+#system.time(mclapply(list.SCAN, function(x) cbind(x, Dist.NCV.f0.5=rep(NA, dim(x)[1]),Dist.NCV.f0.4=rep(NA, dim(x)[1]),Dist.NCV.f0.3=rep(NA, dim(x)[1]),Dist.NCV.f0.2=rep(NA, dim(x)[1])))-> list.SCAN.2)
 
 bin.list2<-vector('list', 7)
 
 for (i in 1:3){
-c(mclapply(bin.vec1, function(x) (which(list.SCAN.2[[i]]$Nr.IS==x))), list(which(list.SCAN.2[[i]]$Nr.IS>=bin.vec2)))->bin.list2[[i]]
+c(lapply(bin.vec1, function(x) (which(list.SCAN[[i]]$Nr.IS==x))), list(which(list.SCAN[[i]]$Nr.IS>=bin.vec2)))->bin.list2[[i]]
 }
 
 for (j in 4:7){
-c(mclapply(bin.vec1.eu, function(x) (which(list.SCAN.2[[j]]$Nr.IS==x))), list(which(list.SCAN.2[[j]]$Nr.IS>=bin.vec2.eu)))->bin.list2[[j]]
+c(lapply(bin.vec1.eu, function(x) (which(list.SCAN[[j]]$Nr.IS==x))), list(which(list.SCAN[[j]]$Nr.IS>=bin.vec2.eu)))->bin.list2[[j]]
 }
 
 test.res<-vector('list', length(bin.list2[[1]]))
 
 for (j in 1:3){ #AFRICA only
-bin.list2[[j]][[length(bin.list2[[1]])]]->II
-mean(l.bin.vec2[[1]]$ncvFD_f0.5)->mean5.II
-sd(l.bin.vec2[[1]]$ncvFD_f0.5)-> sd5.II
-
-mean(l.bin.vec2[[1]]$ncvFD_f0.4)->mean4.II
-sd(l.bin.vec2[[1]]$ncvFD_f0.4)-> sd4.II
-
-mean(l.bin.vec2[[1]]$ncvFD_f0.3)->mean3.II
-sd(l.bin.vec2[[1]]$ncvFD_f0.3)-> sd3.II
-
-mean(l.bin.vec2[[1]]$ncvFD_f0.2)->mean2.II
-sd(l.bin.vec2[[1]]$ncvFD_f0.2)-> sd2.II
+bin.list2[[j]][[length(bin.list2[[1]])]]->II  #first the last bin, which collapses all the remaining ones.
+mean(l.bin.vec2[[1]]$ncvFD_f0.5)->mean5.II;sd(l.bin.vec2[[1]]$ncvFD_f0.5)-> sd5.II
+mean(l.bin.vec2[[1]]$ncvFD_f0.4)->mean4.II;sd(l.bin.vec2[[1]]$ncvFD_f0.4)-> sd4.II;mean(l.bin.vec2[[1]]$ncvFD_f0.3)->mean3.II;sd(l.bin.vec2[[1]]$ncvFD_f0.3)-> sd3.II
+mean(l.bin.vec2[[1]]$ncvFD_f0.2)->mean2.II;sd(l.bin.vec2[[1]]$ncvFD_f0.2)-> sd2.II;mean(l.bin.vec2[[1]]$ncvFD_f0.1)->mean1.II;sd(l.bin.vec2[[1]]$ncvFD_f0.1)-> sd1.II
 
 if(length(II)>0){
-((list.SCAN.2[[j]][II,]$NCVf5-mean5.II)/sd5.II)->list.SCAN.2[[j]]$Dist.NCV.f0.5[II]
-((list.SCAN.2[[j]][II,]$NCVf4-mean4.II)/sd4.II)->list.SCAN.2[[j]]$Dist.NCV.f0.4[II]
-((list.SCAN.2[[j]][II,]$NCVf3-mean3.II)/sd3.II)->list.SCAN.2[[j]]$Dist.NCV.f0.3[II]
-((list.SCAN.2[[j]][II,]$NCVf2-mean2.II)/sd2.II)->list.SCAN.2[[j]]$Dist.NCV.f0.2[II]}
+((list.SCAN[[j]][II,]$NCVf5-mean5.II)/sd5.II)->list.SCAN[[j]]$Dist.NCV.f0.5[II]
+((list.SCAN[[j]][II,]$NCVf4-mean4.II)/sd4.II)->list.SCAN[[j]]$Dist.NCV.f0.4[II];((list.SCAN[[j]][II,]$NCVf3-mean3.II)/sd3.II)->list.SCAN[[j]]$Dist.NCV.f0.3[II]
+((list.SCAN[[j]][II,]$NCVf2-mean2.II)/sd2.II)->list.SCAN[[j]]$Dist.NCV.f0.2[II];((list.SCAN[[j]][II,]$NCVf2-mean1.II)/sd1.II)->list.SCAN[[j]]$Dist.NCV.f0.1[II]}
 
-for (i in 1: (length(bin.list2[[1]])-1)){
+for (i in 1: (length(bin.list2[[1]])-1)){  #for all the other bins, except the last one
 I<-bin.list2[[j]][[i]]
 mean(l.bin.vec1[[i]]$ncvFD_f0.5)-> mean5.bin
 mean(l.bin.vec1[[i]]$ncvFD_f0.4)-> mean4.bin
 mean(l.bin.vec1[[i]]$ncvFD_f0.3)-> mean3.bin
 mean(l.bin.vec1[[i]]$ncvFD_f0.2)-> mean2.bin
-#test[I,]-> sub
+mean(l.bin.vec1[[i]]$ncvFD_f0.1)-> mean1.bin
 sd(l.bin.vec1[[i]]$ncvFD_f0.5)-> sd5.bin
 sd(l.bin.vec1[[i]]$ncvFD_f0.4)-> sd4.bin
 sd(l.bin.vec1[[i]]$ncvFD_f0.3)-> sd3.bin
 sd(l.bin.vec1[[i]]$ncvFD_f0.2)-> sd2.bin
+sd(l.bin.vec1[[i]]$ncvFD_f0.1)-> sd1.bin
 if(length(I)>0){
-((list.SCAN.2[[j]][I,]$NCVf5-mean5.bin)/sd5.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.5[I]
-((list.SCAN.2[[j]][I,]$NCVf4-mean4.bin)/sd4.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.4[I]
-((list.SCAN.2[[j]][I,]$NCVf3-mean3.bin)/sd3.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.3[I]
-((list.SCAN.2[[j]][I,]$NCVf2-mean2.bin)/sd2.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.2[I]
+((list.SCAN[[j]][I,]$NCVf5-mean5.bin)/sd5.bin)->list.SCAN[[j]]$Dist.NCV.f0.5[I]
+((list.SCAN[[j]][I,]$NCVf4-mean4.bin)/sd4.bin)->list.SCAN[[j]]$Dist.NCV.f0.4[I]
+((list.SCAN[[j]][I,]$NCVf3-mean3.bin)/sd3.bin)->list.SCAN[[j]]$Dist.NCV.f0.3[I]
+((list.SCAN[[j]][I,]$NCVf2-mean2.bin)/sd2.bin)->list.SCAN[[j]]$Dist.NCV.f0.2[I]
+((list.SCAN[[j]][I,]$NCVf2-mean1.bin)/sd1.bin)->list.SCAN[[j]]$Dist.NCV.f0.1[I]
 }}}
 
 
@@ -112,40 +104,36 @@ if(length(I)>0){
 
 for (j in 4:7){ #Europe only
 bin.list2[[j]][[length(bin.list2[[4]])]]->II
-mean(l.bin.vec2.eu[[1]]$ncvFD_f0.5)->mean5.II
-sd(l.bin.vec2.eu[[1]]$ncvFD_f0.5)-> sd5.II
+mean(l.bin.vec2.eu[[1]]$ncvFD_f0.5)->mean5.II;sd(l.bin.vec2.eu[[1]]$ncvFD_f0.5)-> sd5.II
 
-mean(l.bin.vec2[[1]]$ncvFD_f0.4)->mean4.II
-sd(l.bin.vec2[[1]]$ncvFD_f0.4)-> sd4.II
+mean(l.bin.vec2[[1]]$ncvFD_f0.4)->mean4.II;sd(l.bin.vec2[[1]]$ncvFD_f0.4)-> sd4.II
 
-mean(l.bin.vec2[[1]]$ncvFD_f0.3)->mean3.II
-sd(l.bin.vec2[[1]]$ncvFD_f0.3)-> sd3.II
+mean(l.bin.vec2[[1]]$ncvFD_f0.3)->mean3.II;sd(l.bin.vec2[[1]]$ncvFD_f0.3)-> sd3.II
 
-mean(l.bin.vec2[[1]]$ncvFD_f0.2)->mean2.II
-sd(l.bin.vec2[[1]]$ncvFD_f0.2)-> sd2.II
+mean(l.bin.vec2[[1]]$ncvFD_f0.2)->mean2.II;sd(l.bin.vec2[[1]]$ncvFD_f0.2)-> sd2.II
+
+mean(l.bin.vec2[[1]]$ncvFD_f0.1)->mean2.II;sd(l.bin.vec2[[1]]$ncvFD_f0.1)-> sd1.II
 
 if(length(II)>0){
-((list.SCAN.2[[j]][II,]$NCVf5-mean5.II)/sd5.II)->list.SCAN.2[[j]]$Dist.NCV.f0.5[II]
-((list.SCAN.2[[j]][II,]$NCVf4-mean4.II)/sd4.II)->list.SCAN.2[[j]]$Dist.NCV.f0.4[II]
-((list.SCAN.2[[j]][II,]$NCVf3-mean3.II)/sd3.II)->list.SCAN.2[[j]]$Dist.NCV.f0.3[II]
-((list.SCAN.2[[j]][II,]$NCVf2-mean2.II)/sd2.II)->list.SCAN.2[[j]]$Dist.NCV.f0.2[II]}
+((list.SCAN[[j]][II,]$NCVf5-mean5.II)/sd5.II)->list.SCAN[[j]]$Dist.NCV.f0.5[II]
+((list.SCAN[[j]][II,]$NCVf4-mean4.II)/sd4.II)->list.SCAN[[j]]$Dist.NCV.f0.4[II]
+((list.SCAN[[j]][II,]$NCVf3-mean3.II)/sd3.II)->list.SCAN[[j]]$Dist.NCV.f0.3[II]
+((list.SCAN[[j]][II,]$NCVf2-mean2.II)/sd2.II)->list.SCAN[[j]]$Dist.NCV.f0.2[II]}
 
 for (i in 1: (length(bin.list2[[4]])-1)){
 I<-bin.list2[[j]][[i]]
 mean(l.bin.vec1.eu[[i]]$ncvFD_f0.5)-> mean5.bin
-mean(l.bin.vec1.eu[[i]]$ncvFD_f0.4)-> mean4.bin
-mean(l.bin.vec1.eu[[i]]$ncvFD_f0.3)-> mean3.bin
-mean(l.bin.vec1.eu[[i]]$ncvFD_f0.2)-> mean2.bin
-#test[I,]-> sub
-sd(l.bin.vec1.eu[[i]]$ncvFD_f0.5)-> sd5.bin
-sd(l.bin.vec1.eu[[i]]$ncvFD_f0.4)-> sd4.bin
+mean(l.bin.vec1.eu[[i]]$ncvFD_f0.4)-> mean4.bin;mean(l.bin.vec1.eu[[i]]$ncvFD_f0.3)-> mean3.bin
+mean(l.bin.vec1.eu[[i]]$ncvFD_f0.2)-> mean2.bin;mean(l.bin.vec1.eu[[i]]$ncvFD_f0.1)-> mean1.bin
+sd(l.bin.vec1.eu[[i]]$ncvFD_f0.5)-> sd5.bin;sd(l.bin.vec1.eu[[i]]$ncvFD_f0.4)-> sd4.bin
 sd(l.bin.vec1.eu[[i]]$ncvFD_f0.3)-> sd3.bin
-sd(l.bin.vec1.eu[[i]]$ncvFD_f0.2)-> sd2.bin
+sd(l.bin.vec1.eu[[i]]$ncvFD_f0.2)-> sd2.bin;sd(l.bin.vec1.eu[[i]]$ncvFD_f0.1)-> sd1.bin
 if(length(I)>0){
-((list.SCAN.2[[j]][I,]$NCVf5-mean5.bin)/sd5.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.5[I]
-((list.SCAN.2[[j]][I,]$NCVf4-mean4.bin)/sd4.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.4[I]
-((list.SCAN.2[[j]][I,]$NCVf3-mean3.bin)/sd3.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.3[I]
-((list.SCAN.2[[j]][I,]$NCVf2-mean2.bin)/sd2.bin)->list.SCAN.2[[j]]$Dist.NCV.f0.2[I]
+((list.SCAN[[j]][I,]$NCVf5-mean5.bin)/sd5.bin)->list.SCAN[[j]]$Dist.NCV.f0.5[I]
+((list.SCAN[[j]][I,]$NCVf4-mean4.bin)/sd4.bin)->list.SCAN[[j]]$Dist.NCV.f0.4[I]
+((list.SCAN[[j]][I,]$NCVf3-mean3.bin)/sd3.bin)->list.SCAN[[j]]$Dist.NCV.f0.3[I]
+((list.SCAN[[j]][I,]$NCVf2-mean2.bin)/sd2.bin)->list.SCAN[[j]]$Dist.NCV.f0.2[I]
+((list.SCAN[[j]][I,]$NCVf1-mean1.bin)/sd1.bin)->list.SCAN[[j]]$Dist.NCV.f0.1[I]
 }}}
 #Decide which distance emeasure I will use.
 #Also, do the distance divided by the max NCV, so that NCV with different freq equilibria can be compared.
@@ -155,18 +143,18 @@ if(length(I)>0){
 
 
 ###########################   I STOPPE HERE!!! 15/3/2015  ###################
-#Actually, here I should use different threshold for the different populations....
-mclapply(list.SCAN.2, function(x) subset(x, Nr.IS>=19))->list.SCAN.3
-Store(list.SCAN.2)
+#mclapply(list.SCAN.2, function(x) subset(x, Nr.IS>=19))->list.SCAN.3
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/' )
+#Store(list.SCAN)
 
-mclapply(list.SCAN.3, function(x) x[which(x$P.val.NCVf0.5<(1/nsims)),])-> CANDf0.5
-mclapply(list.SCAN.3, function(x) x[which(x$P.val.NCVf0.4<(1/nsims)),])-> CANDf0.4
-mclapply(list.SCAN.3, function(x) x[which(x$P.val.NCVf0.3<(1/nsims)),])-> CANDf0.3
-mclapply(list.SCAN.3, function(x) x[which(x$P.val.NCVf0.2<(1/nsims)),])-> CANDf0.2
+mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.5<(1/nsims)),])-> CANDf0.5
+mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.4<(1/nsims)),])-> CANDf0.4
+mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.3<(1/nsims)),])-> CANDf0.3
+mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.2<(1/nsims)),])-> CANDf0.2
+mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.1<(1/nsims)),])-> CANDf0.1
 
 #here I can start exploring these windows.
 ################################################################################################
-setwd("/mnt/sequencedb/PopGen/barbara/scan_may_2014/")
 
 andres_AA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AA.bed')
 
@@ -192,12 +180,11 @@ names(andres_AAandEA)<-c('chr','B', 'E', 'Name')
 names(DG_T2_YRI)<-c('chr','B', 'E', 'Name')
 names(DG_T2_CEU)<-c('chr','B', 'E', 'Name')
 
-read.table('/mnt/sequencedb/PopGen/cesare/hg19/bedfiles/hg19_protCoding.bed.gz')-> prot.cod.bed
+read.table('/mnt/sequencedb/PopGen/cesare/hg19/bedfiles/ensembl_genes_hg19.bed.gz')->hg19.coding.coords.bed
+names(hg19.coding.coords.bed)<-c('chr', 'beg', 'end','name', 'type')
 
-names(prot.cod.bed)<-c('chr', 'beg', 'end')
-
-lapply(1:22, function(x) subset(prot.cod.bed, chr==x))-> prot.cod.bed.list
-
+#lapply(1:22, function(x) subset(prd.bed, chr==x))-> prot.cod.bed.list
+lapply(1:22, function(x) subset(hg19.coding.coords.bed, chr==x))-> coding.per.chr.list #in total thi has 42849, which is less than hg19.coding.coords, because we get rid of ' MT', 'X', and 'Y'.
 #########################################################################################################################
 my.function<-function(B, E, df=XX, chr=6){
 rbind(subset(df, Chr==chr & End.Win > B & End.Win < E), subset(df, Chr==chr & Beg.Win > B & Beg.Win < E))->res
@@ -205,15 +192,24 @@ df[rownames(res[!duplicated(res),]),]-> res2
 return(res2)
 }
 
-mclapply(prot.cod.bed.list, function(x)dim(x)[1])-> ll1
+#my.function2<-function(B, E, df=XX, chr=6, gename=nameI){
+#rbind(cbind(subset(df, Chr==chr & End.Win > B & End.Win < E), Gene.Name=nameI),cbind(subset(df, Chr==chr & Beg.Win > B & Beg.Win < E), Gene.Name=nameI))->res
+#df[rownames(res[!duplicated(res),]),]-> res2
+#return(res2)
+#} #this version included the gene name.
 
-mclapply(ll1,function(x) vector('list',x))-> test.all.prot
+lapply(coding.per.chr.list, function(x)dim(x)[1])-> ll1
+
+lapply(ll1,function(x) vector('list',x))-> test.all.prot
 
 #system.time(for (x in 1:2){
 #for (j in 1:ll1[[x]]){
 #my.function(B=prot.cod.bed.list[[x]]$beg[j], E=prot.cod.bed.list[[x]]$end[j], chr=x, df=list.SCAN.2[[3]]) -> test.all.prot[[x]][[j]]
 #}})
-
+#test<-vector('list', sum(unlist(ll1)))
+#for(j in 1:ll1[[21]]){
+#nameI<-coding.per.chr.list[[21]][j]$name
+#my.function2(B=coding.per.chr.list[[21]]$beg[j], E=coding.per.chr.list[[21]]$end[j], chr=21, df=list.SCAN[[3]], gename=nameI)-> test[[j]]}
 
 #test
 #chr21
@@ -221,13 +217,12 @@ mclapply(ll1,function(x) vector('list',x))-> test.all.prot
 
 #this is a test for chr21 and chr22, for YRI population. If it works, I still have to do all other chromosomes and pops.
 
-test<-vector('list', 22)a #YRI
+all.coding<-vector('list', 22) #YRI
 
 
 system.time(for (j in  1:22){
 chr1<-j
-
-system.time(mclapply(1:ll1[[chr1]], function(x)(my.function(B=prot.cod.bed.list[[chr1]]$beg[x], E=prot.cod.bed.list[[chr1]]$end[x], chr=chr1, df=list.SCAN.2[[3]])))-> test[[chr1]])})
+system.time(lapply(1:ll1[[chr1]], function(x)(my.function(B=coding.per.chr.list[[chr1]]$beg[x], E=coding.per.chr.list[[chr1]]$end[x], chr=chr1, df=list.SCAN[[3]])))-> all.coding[[chr1]])})
 #     user    system   elapsed 
 #71003.094   428.739 36829.092 
 
