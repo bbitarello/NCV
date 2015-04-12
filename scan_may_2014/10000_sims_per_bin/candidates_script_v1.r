@@ -164,6 +164,11 @@ andres_AAandEA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres
 
 
 DG_T2_YRI<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.YRI.bed')
+#this file has double entries for each line...
+
+
+DG_T2_YRI[1:99,]->DG_T2_YRI
+
 DG_T2_CEU<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.CEU.bed')
 
 mhc.coords<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/mhc.coords.gencode.bed')
@@ -186,36 +191,17 @@ names(hg19.coding.coords.bed)<-c('chr', 'beg', 'end','name', 'type')
 #lapply(1:22, function(x) subset(prd.bed, chr==x))-> prot.cod.bed.list
 lapply(1:22, function(x) subset(hg19.coding.coords.bed, chr==x))-> coding.per.chr.list #in total thi has 42849, which is less than hg19.coding.coords, because we get rid of ' MT', 'X', and 'Y'.
 #########################################################################################################################
+
 my.function<-function(B, E, df=XX, chr=6){
 rbind(subset(df, Chr==chr & End.Win > B & End.Win < E), subset(df, Chr==chr & Beg.Win > B & Beg.Win < E))->res
 df[rownames(res[!duplicated(res),]),]-> res2
 return(res2)
 }
 
-#my.function2<-function(B, E, df=XX, chr=6, gename=nameI){
-#rbind(cbind(subset(df, Chr==chr & End.Win > B & End.Win < E), Gene.Name=nameI),cbind(subset(df, Chr==chr & Beg.Win > B & Beg.Win < E), Gene.Name=nameI))->res
-#df[rownames(res[!duplicated(res),]),]-> res2
-#return(res2)
-#} #this version included the gene name.
-
 lapply(coding.per.chr.list, function(x)dim(x)[1])-> ll1
 
 lapply(ll1,function(x) vector('list',x))-> test.all.prot
 
-#system.time(for (x in 1:2){
-#for (j in 1:ll1[[x]]){
-#my.function(B=prot.cod.bed.list[[x]]$beg[j], E=prot.cod.bed.list[[x]]$end[j], chr=x, df=list.SCAN.2[[3]]) -> test.all.prot[[x]][[j]]
-#}})
-#test<-vector('list', sum(unlist(ll1)))
-#for(j in 1:ll1[[21]]){
-#nameI<-coding.per.chr.list[[21]][j]$name
-#my.function2(B=coding.per.chr.list[[21]]$beg[j], E=coding.per.chr.list[[21]]$end[j], chr=21, df=list.SCAN[[3]], gename=nameI)-> test[[j]]}
-
-#test
-#chr21
-#system.time(mclapply(1:ll1[[21]], function(x) my.function(B=prot.cod.bed.list[[21]]$beg[x], E=prot.cod.bed.list[[21]]$end[x], chr=21, df=list.SCAN.2[[3]])->test.all.prot[[21]][[x]]))
-
-#this is a test for chr21 and chr22, for YRI population. If it works, I still have to do all other chromosomes and pops.
 
 all.coding<-vector('list', 22) #YRI
 
@@ -225,6 +211,77 @@ chr1<-j
 system.time(lapply(1:ll1[[chr1]], function(x)(my.function(B=coding.per.chr.list[[chr1]]$beg[x], E=coding.per.chr.list[[chr1]]$end[x], chr=chr1, df=list.SCAN[[3]])))-> all.coding[[chr1]])})
 #     user    system   elapsed 
 #71003.094   428.739 36829.092 
+#alternative, with aprallel....
+#29 hours
+
+mclapply(all.coding, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
+#9 seconds
+
+#test for AWS
+
+mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[1]][y,]))-> test.AWS
+
+
+Store(test.AWS)
+
+system.time(clapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[2]][y,]))-> test.LWK)
+
+Store(test.LWK)
+
+system.time(mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[4]][y,]))-> test.CEU)
+
+Store(test.CEU)
+
+system.time(mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[5]][y,]))-> test.FIN)
+
+Store(test.FIN)
+
+system.time(mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[6]][y,]))-> test.GBR)
+
+Store(test.GBR)
+
+system.time(mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[7]][y,]))-> test.TSI)
+
+Store(test.TSI)
+
+#in order to not have to do this for every pop, I should take the row names for each gene and then index that for each population and build similar dataframes. It should be quicker.
+
+Store(all.coding)
+
+mclapply(1:22, function(x) paste0(subset(hg19.coding.coords.bed, chr==x)[,4], '.', subset(hg19.coding.coords.bed, chr==x)[,5]))->names.all.coding
+
+for (i in 1:22){names(all.coding[[i]])<-names.all.coding[[i]]}   #name the elements on each position of each chromosome with the name of the element,followed by a dot, and then followed by the type (pseudogene, protein_coding,etc)
+
+
+#WITH THIS i CAN MAKE A FUNCTION TO FIND ANY GENE!
+
+#FOR INSTANCE, IF i WANT TO FIND hla-b, i JUST NEED TO KNOW THE CHROMOSOME, WHICH IN THIS CASE IS 
+
+find.gene<-function(df, chr, name){  #df can be changes for diff pops so that we can check p-value in each population!
+
+which(unlist(mclapply(names.all.coding[[chr]], function(x) strsplit(x, '.', fixed=TRUE)[[1]][[1]]))==name)->QUERY.POS
+
+df[[chr]][[QUERY.POS]]-> QUERY.SUBSET
+
+return(list(query_subset=QUERY.SUBSET, query_pos=QUERY.POS, GENE=name))
+}
+
+#MHC
+system.time(mclapply(1: dim(mhc.coords)[1], function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(mhc.coords[x,1]),'r')[[1]][[2]]), name=as.character(mhc.coords[x,4])))-> MHC.QUERY)
+
+# 19.143 
+#AIDA
+
+system.time(mclapply(1: dim()[1], function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(mhc.coords[x,1]),'r')[[1]][[2]]), name=as.character(mhc.coords[x,4])))-> MHC.QUERY)
+
+#for two chromosomes
+
+system.time(mclapply(1:2, function(x) mclapply(1:ll1[[x]], function(y) my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list[[x]]$end[y], chr=x, df=list.SCAN[[3]])))->TEST.NESTED.LAPPLY)
+#around 6 hours
+
+Store(TEST.NESTED.LAPPLY)
+
+system.time(mclapply(3:22, function(x) mclapply(1:ll1[[x]], function(y) my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list[[x]]$end[y], chr=x, df=list.SCAN[[3]])))->TEST.NESTED.LAPPLY.2)
 
 
 all.genes.in.scan<-vector('list', 22)
@@ -248,7 +305,7 @@ system.time(
 for(j in 1:7){
 for (i in 1: dim(mhc.coords)[[1]]){
 chr1<- as.numeric(unlist(strsplit(as.character(mhc.coords$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=mhc.coords$B[i], E=mhc.coords$E[i], chr=chr1, df=list.SCAN.2[[j]])->UP.list.MHC[[j]][[i]]
+my.function(B=mhc.coords$B[i], E=mhc.coords$E[i], chr=chr1, df=list.SCAN[[j]])->UP.list.MHC[[j]][[i]]
 }})
 #
 list.Andres.EA<-vector('list', dim(andres_EA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
@@ -257,7 +314,7 @@ UP.list.Andres.EA<-list(list.Andres.EA,list.Andres.EA,list.Andres.EA,list.Andres
 system.time(for (j in 1:7){
 for (i in 1: dim(andres_EA)[[1]]){
 chr1<- as.numeric(unlist(strsplit(as.character(andres_EA$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=andres_EA$B[i], E=andres_EA$E[i], df=list.SCAN.2[[j]], chr=chr1)->UP.list.Andres.EA[[j]][[i]]
+my.function(B=andres_EA$B[i], E=andres_EA$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.Andres.EA[[j]][[i]]
 }})
 #
 list.Andres.AA<-vector('list', dim(andres_AA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
@@ -266,7 +323,7 @@ UP.list.Andres.AA<-list(list.Andres.AA,list.Andres.AA,list.Andres.AA,list.Andres
 system.time(for (j in 1:7){
 for (i in 1: dim(andres_AA)[[1]]){
 chr1<- as.numeric(unlist(strsplit(as.character(andres_AA$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=andres_AA$B[i], E=andres_AA$E[i], df=list.SCAN.2[[j]], chr=chr1)->UP.list.Andres.AA[[j]][[i]]
+my.function(B=andres_AA$B[i], E=andres_AA$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.Andres.AA[[j]][[i]]
 }})
 #
 list.Andres.AAandEA<-vector('list', dim(andres_AAandEA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
@@ -275,7 +332,7 @@ UP.list.Andres.AAandEA<-list(list.Andres.AAandEA,list.Andres.AAandEA,list.Andres
 system.time(for (j in 1:7){
 for (i in 1: dim(andres_AAandEA)[[1]]){
 chr1<- as.numeric(unlist(strsplit(as.character(andres_AAandEA$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=andres_AAandEA$B[i], E=andres_AAandEA$E[i], df=list.SCAN.2[[j]], chr=chr1)->UP.list.Andres.AAandEA[[j]][[i]]
+my.function(B=andres_AAandEA$B[i], E=andres_AAandEA$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.Andres.AAandEA[[j]][[i]]
 }})
 #
 list.DG.T2.YRI<-vector('list', dim(DG_T2_YRI)[[1]]) #this is for T2 test for YRI and CEU. I should separate them and comparte with the appropriate pops from my scan.
@@ -285,8 +342,7 @@ system.time(
 for(j in 1:7){
 for (i in 1: dim(DG_T2_YRI)[[1]]){
 chr1<- as.numeric(unlist(strsplit(as.character(DG_T2_YRI$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=DG_T2_YRI$B[i], E=DG_T2_YRI$E[i], df=list.SCAN.2[[j]],chr=chr1)->UP.list.DG.T2.YRI[[j]][[i]]
-}})
+my.function(B=DG_T2_YRI$B[i], E=DG_T2_YRI$E[i], df=list.SCAN[[j]],chr=chr1)->UP.list.DG.T2.YRI[[j]][[i]]}})
 #
 list.DG.T2.CEU<-vector('list', dim(DG_T2_CEU)[[1]]) #this is for T2 test for YRI and CEU. I should separate them and comparte with the appropriate pops from my scan.
 names(list.DG.T2.CEU)<-DG_T2_CEU$Name
@@ -295,7 +351,7 @@ system.time(
 for(j in 1:7){
 for (i in 1: dim(DG_T2_CEU)[[1]]){
 chr1<- as.numeric(unlist(strsplit(as.character(DG_T2_CEU$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=DG_T2_CEU$B[i], E=DG_T2_CEU$E[i], df=list.SCAN.2[[j]],chr=chr1)->UP.list.DG.T2.CEU[[j]][[i]]
+my.function(B=DG_T2_CEU$B[i], E=DG_T2_CEU$E[i], df=list.SCAN[[j]],chr=chr1)->UP.list.DG.T2.CEU[[j]][[i]]
 }})
 
 Store(DG_T2_YRI)
@@ -546,6 +602,17 @@ as.character(unique(subset(my.candidates, type.2=='protein_coding' & overlap>=30
 as.character(unique(subset(my.candidates.p.0001, type.2=='protein_coding'|type.2=='processed_transcript' & overlap>=2000)$gene.name))-> my.cand.p.0001 #2891
 
 as.character(unique(subset(my.candidates.p.0000, type.2=='protein_coding'|type.2=='processed_transcript' & overlap>=2000)$gene.name))-> my.cand.p.0000 #2167
+
+########################
+#generate bed files for collapsing candidate windows
+
+
+sapply(1:7, function(x) write.table(cbind(CANDf0.5[[x]], rownames(CANDf0.5[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.5.bed'), quote=F, sep='\t', col.names=F, row.names=F))
+
+sapply(1:7, function(x) write.table(cbind(CANDf0.4[[x]], rownames(CANDf0.4[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.4.bed'), quote=F, sep='\t', col.names=F, row.names=F))
+
+
+sapply(1:7, function(x) write.table(cbind(CANDf0.3[[x]], rownames(CANDf0.3[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.3.bed'), quote=F, sep='\t', col.names=F, row.names=F))
 
 
 

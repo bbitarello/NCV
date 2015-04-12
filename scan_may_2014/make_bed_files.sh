@@ -3,7 +3,7 @@
 #	Make bed file for Andres et al. (2009) candidates for balancing selection and DeGiorgio et al. (2014) candidates for balancing selection
 #	Barbara D Bitarello
 #
-#	LAst modified: 29.09.2014
+#	LAst modified: 11.12.2014
 #########################################################
 
 #HLA
@@ -17,14 +17,31 @@ grep -w $i final_encode.bed  |grep chr6| awk '$5=="gene"{print $0}' | grep  prot
 done
 
 
-#ANdres et al. (2009) #60 'aEXTREME' genes, but actually 58 in the final bed file (see comments)
+#ANdres et al. (2009) #60 'EXTREME' genes, but actually 58 in the final bed file (see comments) #some exclusive to Europeans, some exclusive to Africans and some in both populations. 
 
-for i in ADAM11 ALPK2 BTN1A1 PREX2 KRT14 LGALS8 LILRB4 LINS RCBTB1 RPS7 RTP4 TRIM22 DCAF12L2 ADAMTS7 SDR39U1 CLCNKB COL27A1 COPE FGF6 MROH2B KRT6B KRT84  LINGO1 PPP1R15A SERPINH1 TARBP1 TNS1 TRPV6 ALDH4A1 ARHGEF3 BPIFB4 CAMK2B CD200R1 CDSN AQPEP  FUT2  ZNF512B GPR111 GRIN3A HLA-B KIAA0753 RPTOR KRT6C  LHB  ACSF3 ERAP2 MYO1G NLRP13 PCDHB16 RABEP1 RIOK2 SAMM50 SERPINB5 SLC2A9 SMARCAD1 TMEM171 TSPAN10 UNC5C VARS2 ZNF415 
+for i in ADAM11 ALPK2 BTN1A1 PREX2 KRT14 LGALS8 LILRB4 LINS RCBTB1 RPS7 RTP4 TRIM22 DCAF12L2
+
+do
+
+grep -w $i final_encode.bed |awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}'|grep -v chrX >> andres.2009.AAandEA.bed
+
+
+done
+
+for i in ADAMTS7 SDR39U1 CLCNKB COL27A1 COPE FGF6 MROH2B KRT6B KRT84  LINGO1 PPP1R15A SERPINH1 TARBP1 TNS1 TRPV6
+
+do
+
+grep -w $i final_encode.bed |awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}'|grep -v chrX >> andres.2009.AA.bed
+
+done
+
+for i in ALDH4A1 ARHGEF3 BPIFB4 CAMK2B CD200R1 CDSN AQPEP  FUT2  ZNF512B GPR111 GRIN3A HLA-B KIAA0753 RPTOR KRT6C  LHB  ACSF3 ERAP2 MYO1G NLRP13 PCDHB16 RABEP1 RIOK2 SAMM50 SERPINB5 SLC2A9 SMARCAD1 TMEM171 TSPAN10 UNC5C VARS2 ZNF415 
 
 
 do
 
-grep -w $i final_encode.bed |awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}'|grep -v chrX >> andres.2009.bed
+grep -w $i final_encode.bed |awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}'|grep -v chrX >> andres.2009.EA.bed
 
 
 done
@@ -32,7 +49,7 @@ done
 
 
 
-#warning, when Andres gibves two options for a gene name, tje second one is usually the one in GENCODe, so that's what I use. in some cases, the current name was not given in Andres and I replaced it. Ex. PREX2.
+#warning, when Andres gives two options for a gene name (in the supplementary material), the second one is usually the one in GENCODe, so that's what I use. in some cases, the current name was not given in Andres and I replaced it. Ex. PREX2.
 #LINS1 (from the Andres scan) does not exist in GENCODE annotation. But I found LINS, which is also in chr15, so I assume it changed name or something.
 #WDR40C actually has a different name: DCAF12L2. SInce it is located on chromosome X, we will not consider it downstream.
 #SDR39U1 is the new name of  C14orf124
@@ -57,9 +74,10 @@ do
 
 
 
-grep -w $i  final_encode.bed |awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}'  >> DG.2014.bed
+grep -w $i  final_encode.bed |awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}'  >> DG.2014.T2.YRI.bed
 
 done
+
 
 # C1orf130 switched to NCMAP
 # C4orf37 switched to STPG2
@@ -71,9 +89,19 @@ done
 # C18orf1 switched to LDLRAD4 
 
 
+#T2 CEU
+for i in HLA-DPB1 HLA-DPA1 SLC2A9 FANK1 CPE HLA-C DMBT1 HLA-A ARPC5 CCDC169 CCDC169-SOHLH2 LGALS8 APBB1IP RGL1 TEKT4 TK32A CEP112 CPNE4 RNF144B C4orf37 MLF1IP HLA-B RGS6 ARHGAP42 POLN SLC15A2 KALRN FOPNL KIAA1267 ZNF568 HEATR1 KIAA1324L MSH3 FRAS1 EMR1 GRIN2A BNC2 HLA-DQA1 KDM4C AXDND1 MYRIP SPEF2 PLCB4 SLC38A9 ART3 CTNNA3 ERAP1 HLA-DQB1 EMID2 ADCY5 WFDC8 USP20 CCDC146 HLA-DRB1 POLR1E ADH4 OR5W2 ASB18 BICC1 SH3RF3 BMPR1B NUP88 ADAMTS12 ADH1C APOBEC4 SNX31 SGCZ PANK1 ANK3 PKD1L1 ZNF717 KLHL14 FXN MAPT TYW1 BCAS1 NTN4 THSD7B COL5A2 LRP1B SNX19 OR4C3 KRT83 LRRC16A C18orf1 HLA-DRA PTPN14 CNBD1 GPC5 MAP2K3 CSMD1 CADM2 MYO1B MYLK4 OR5I1 FHIT CUBN ULK4 ASTN2 PGLYRP4
+
+
+do
+
+grep -w $i  final_encode.bed |awk '$5=="gene"{print $0}' | grep  protein_coding| awk '{print $1, $2, $3, $4}'  >> DG.2014.T2.CEU.bed
+
+done
+
+
 #Male a bed file with pseudogene coordinates, and check their p-values on the scan
 
-awk '{print $1, $2, $3, $4}'  >> pseudogenes.bed
 
 grep pseudogene final_encode.bed |awk '$5=="gene"{print $0}'| grep -v chrX|grep -v chrY >> pseudogenes.bed
 
