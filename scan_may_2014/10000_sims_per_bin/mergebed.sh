@@ -64,4 +64,35 @@ mergeBed -i TSI.candf0.4.bed -nms|perl -pe 's/ +/ /g' |perl -pe 's/ /\t/g'| sed 
 
 mergeBed -i TSI.candf0.3.bed -nms|perl -pe 's/ +/ /g' |perl -pe 's/ /\t/g'| sed 's/^/chr/'  > merge.TSI.candf0.3.bed
 #
+############################################################
+#intersect with gencode
+bedtools intersect -wo -a merge.YRI.candf0.5.bed -b ensembl_hg19.bed > intersect.YRI.candf0.5.bed
+bedtools intersect -wo -a merge.YRI.candf0.4.bed -b ensembl_hg19.bed > intersect.YRI.candf0.4.bed
+bedtools intersect -wo -a merge.YRI.candf0.3.bed -b ensembl_hg19.bed > intersect.YRI.candf0.3.bed
+#
+bedtools intersect -wo -a merge.AWS.candf0.5.bed -b ensembl_hg19.bed > intersect.AWS.candf0.5.bed
+bedtools intersect -wo -a merge.AWS.candf0.4.bed -b ensembl_hg19.bed > intersect.AWS.candf0.4.bed
+bedtools intersect -wo -a merge.AWS.candf0.3.bed -b ensembl_hg19.bed > intersect.AWS.candf0.3.bed
+#
+bedtools intersect -wo -a merge.LWK.candf0.5.bed -b ensembl_hg19.bed > intersect.LWK.candf0.5.bed
+bedtools intersect -wo -a merge.LWK.candf0.4.bed -b ensembl_hg19.bed > intersect.LWK.candf0.4.bed
+bedtools intersect -wo -a merge.LWK.candf0.3.bed -b ensembl_hg19.bed > intersect.LWK.candf0.3.bed
+#
+bedtools intersect -wo -a merge.CEU.candf0.5.bed -b ensembl_hg19.bed > intersect.CEU.candf0.5.bed
+bedtools intersect -wo -a merge.CEU.candf0.4.bed -b ensembl_hg19.bed > intersect.CEU.candf0.4.bed
+bedtools intersect -wo -a merge.CEU.candf0.3.bed -b ensembl_hg19.bed > intersect.CEU.candf0.3.bed
+#
+bedtools intersect -wo -a merge.GBR.candf0.5.bed -b ensembl_hg19.bed > intersect.GBR.candf0.5.bed
+bedtools intersect -wo -a merge.GBR.candf0.4.bed -b ensembl_hg19.bed > intersect.GBR.candf0.4.bed
+bedtools intersect -wo -a merge.GBR.candf0.3.bed -b ensembl_hg19.bed > intersect.GBR.candf0.3.bed
+#
+bedtools intersect -wo -a merge.FIN.candf0.5.bed -b ensembl_hg19.bed > intersect.FIN.candf0.5.bed
+bedtools intersect -wo -a merge.FIN.candf0.4.bed -b ensembl_hg19.bed > intersect.FIN.candf0.4.bed
+bedtools intersect -wo -a merge.FIN.candf0.3.bed -b ensembl_hg19.bed > intersect.FIN.candf0.3.bed
+#
+bedtools intersect -wo -a merge.TSI.candf0.5.bed -b ensembl_hg19.bed > intersect.TSI.candf0.5.bed
+bedtools intersect -wo -a merge.TSI.candf0.4.bed -b ensembl_hg19.bed > intersect.TSI.candf0.4.bed
+bedtools intersect -wo -a merge.TSI.candf0.3.bed -b ensembl_hg19.bed > intersect.TSI.candf0.3.bed
+#
+
 

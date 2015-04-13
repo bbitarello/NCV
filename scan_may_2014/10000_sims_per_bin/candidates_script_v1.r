@@ -614,5 +614,23 @@ sapply(1:7, function(x) write.table(cbind(CANDf0.4[[x]], rownames(CANDf0.4[[x]])
 
 sapply(1:7, function(x) write.table(cbind(CANDf0.3[[x]], rownames(CANDf0.3[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.3.bed'), quote=F, sep='\t', col.names=F, row.names=F))
 
+#after this, I use the script mergebed.sh to merge and then intersect these bedfiles with enselbl hg19 coordinates
+#read in those files
+
+lapply(1:7, function(x) read.table(paste0('intersect.',pops[[x]],'.candf0.5.bed')))-> intsct.CANDf0.5
+lapply(1:7, function(x) read.table(paste0('intersect.',pops[[x]],'.candf0.4.bed')))-> intsct.CANDf0.4
+
+lapply(1:7, function(x) read.table(paste0('intersect.',pops[[x]],'.candf0.3.bed')))-> intsct.CANDf0.3
+for (i in 1:7){
+colnames(intsct.CANDf0.5[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
+colnames(intsct.CANDf0.4[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
+colnames(intsct.CANDf0.3[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
+                           }
+
+unlist(lapply(intsct.CANDf0.3, function(x) dim(subset(x, type=='protein_coding'))[1]))   #number of protein coding genes in the set
+
+
+length(sort(unique(c(as.character(sort(unique(unlist(lapply(intsct.CANDf0.3, function(x) subset(x, type=='protein_coding')$name))))),as.character(sort(unique(unlist(lapply(intsct.CANDf0.4, function(x) subset(x, type=='protein_coding')$name))))), as.character(sort(unique(unlist(lapply(intsct.CANDf0.5, function(x) subset(x, type=='protein_coding')$name)))))))))  #total nr of genes which are candidates forany of all pops and any of all feqs.
+
 
 
