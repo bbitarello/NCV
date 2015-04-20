@@ -203,6 +203,7 @@ lapply(coding.per.chr.list, function(x)dim(x)[1])-> ll1
 lapply(ll1,function(x) vector('list',x))-> test.all.prot
 
 
+
 all.coding<-vector('list', 22) #YRI
 
 
@@ -632,5 +633,52 @@ unlist(lapply(intsct.CANDf0.3, function(x) dim(subset(x, type=='protein_coding')
 
 length(sort(unique(c(as.character(sort(unique(unlist(lapply(intsct.CANDf0.3, function(x) subset(x, type=='protein_coding')$name))))),as.character(sort(unique(unlist(lapply(intsct.CANDf0.4, function(x) subset(x, type=='protein_coding')$name))))), as.character(sort(unique(unlist(lapply(intsct.CANDf0.5, function(x) subset(x, type=='protein_coding')$name)))))))))  #total nr of genes which are candidates forany of all pops and any of all feqs.
 
+#create files for GO analyses
+
+#for YRI, 3 feq
+write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.5[[3]], type=='protein_coding')$name)))),  file='cand.f0.5.YRI.gene.names.txt', quote=F, row.names=F)
+write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.4[[3]], type=='protein_coding')$name)))),  file='cand.f0.4.YRI.gene.names.txt', quote=F, row.names=F)
+write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.3[[3]], type=='protein_coding')$name)))),  file='cand.f0.3.YRI.gene.names.txt', quote=F, row.names=F)
+#now check for intersection
+write.table(intersect(intersect(as.character(sort(unique(subset(intsct.CANDf0.4[[3]],type=='protein_coding')$name))),as.character(sort(unique(subset(intsct.CANDf0.5[[3]],type=='protein_coding')$name)))),as.character(sort(unique(subset(intsct.CANDf0.5[[3]],type=='protein_coding')$name)))),  file='cand.intersectallfeqs.YRI.gene.names.txt', quote=F, row.names=F)
+#now the union:
+write.table(c(),, file='cand.intersectallfeqs.YRI.gene.names.txt', quote=F, row.names=F)
+
+#######
+#A naive attempt to make a manhattan plot of NCV
+
+library(qqman)
+
+#this package is actually meant for SNP-Pvalue dataframes,but I cheated and mnaged to use it.
+
+
+#do for all pops
+list.SCAN[[3]]->tes.manhattan.YRI
+
+test.manhattan.YRI<-tes.manhattan[,c(1,2,3,21)]
+
+colnames(tes.manhattan.YRI)[1]<-'CHR'
+colnames(tes.manhattan.YRI)[2]<-'BP'
+
+cbind(tes.manhattan.YRI, BP=(tes.manhattan.YRI$Beg.Win+tes.manhattan.YRI$End.Win)/2)->tes.manhattan.YRI
+arrange(tes.manhattan.YRI, Dist.NCV.f0.5)->tes.manhattan.YRI
+tes.manhattan2<-cbind(tes.manhattan.YRI, P=seq(1:nrow(tes.manhattan.YRI))/nrow(tes.manhattan.YRI))
+colnames(tes.manhattan2)[4]<-'SNP'  #t is not a snp but I didnt want to change the source code.
+pdf('test.manhattan.pdf')
+manhattan(tes.manhattan2, suggestiveline= -log(0.001000612))  #this line will be for the lower 1% P-values, i.e, Dist.NCVf0.)
+dev.off()
+
+
+tes.manhattan2<-cbind(tes.manhattan2, Annot=rep(NA, nrow(tes.manhattan2))
+top100f0.5<-head(tes.manhattan2,100)
+
+
+#now do for each chromosome
+
+for (i in 1:22){
+file.name<-paste0('manhattan.YRI.',i, '.pdf')
+pdf(file.name)
+manhattan(subset(tes.manhattan2, CHR==i), suggestiveline= -log10(0.001000612),genomewideline=-log10(0.0001006129), highlight=as.character(subset(top100f0.5, CHR==i)$SNP))
+dev.off()}
 
 
