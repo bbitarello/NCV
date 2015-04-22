@@ -2,30 +2,31 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 23.03.2014
+#	Last modified: 22.04.2014
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #################################################################################################################################
 
 #load packages
 
-library(parallel)
-library(SOAR)
-library(ggplot2)
-library(plyr)
-Sys.setenv(R_LOCAL_CACHE="estsession")
+library(parallel)  #parallelize functions
+library(SOAR)  #store objects from workspace
+library(ggplot2)  #pretty plots
+library(plyr)  #big data frames
+library(qqman)  #manhattan plot
+library(VennDiagram)  
+Sys.setenv(R_LOCAL_CACHE="estsession")  #this is for 'SOAR'
 
 #first, load the scan data
 ##########################skip the next block, as it has already been saved in the R object ############################
 pops<-c("AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "CLM","PUR")
-
+nsims<-10000
 #this stuff here is a bit obsolete...
 
 #mclapply(list.SCAN, function(x) dim(x[which(x$P.val.NCVf0.5<(1/nsims)),]))-> candidate.windows
 
 #check if NCV in bins is normally distributed
 
-Objects()
 #pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/march.2015.qqplot.AFR.pdf')
 #sapply(1:211, function(x) {qqnorm(l.bin.vec1[[x]]$ncvFD_f0.5); qqline(l.bin.vec1[[x]]$ncvFD_f0.5))
 #dev.off()
@@ -36,15 +37,15 @@ Objects()
 #l.bin.vec1[[i]]$ncvFD_f0.2)-> sd2.bin
 #dev.off()
 
-
-library(VennDiagram)
-
-
+Objects()
 setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/')
 
-sapply(seq(1:7), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
+#sapply(seq(1:7), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
 
-venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Africa.f0.5.venn.pdf')
+venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Africa.f0.5.venn.tiff')
+
+
+venn.diagram(list(CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1", "orange"),alpha = c(0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Europe.f0.5.venn.tiff')
 #works fine til here.
 ##############################################################################################
 
@@ -59,12 +60,10 @@ setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/')
 bin.list2<-vector('list', 7)
 
 for (i in 1:3){
-c(lapply(bin.vec1, function(x) (which(list.SCAN[[i]]$Nr.IS==x))), list(which(list.SCAN[[i]]$Nr.IS>=bin.vec2)))->bin.list2[[i]]
-}
+c(lapply(bin.vec1, function(x) (which(list.SCAN[[i]]$Nr.IS==x))), list(which(list.SCAN[[i]]$Nr.IS>=bin.vec2)))->bin.list2[[i]]}
 
 for (j in 4:7){
-c(lapply(bin.vec1.eu, function(x) (which(list.SCAN[[j]]$Nr.IS==x))), list(which(list.SCAN[[j]]$Nr.IS>=bin.vec2.eu)))->bin.list2[[j]]
-}
+c(lapply(bin.vec1.eu, function(x) (which(list.SCAN[[j]]$Nr.IS==x))), list(which(list.SCAN[[j]]$Nr.IS>=bin.vec2.eu)))->bin.list2[[j]]}
 
 test.res<-vector('list', length(bin.list2[[1]]))
 
@@ -142,35 +141,37 @@ if(length(I)>0){
 #now I have to store some stuff, otherwise the session crashes.
 
 
-###########################   I STOPPE HERE!!! 15/3/2015  ###################
+############################ ###################
 #mclapply(list.SCAN.2, function(x) subset(x, Nr.IS>=19))->list.SCAN.3
 setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/' )
 #Store(list.SCAN)
-
+#I have already done this block, no need to redo. Just use 'Objects()'
+lapply(list.SCAN, function(x) cbind(arrange(x, Dist.NCV.f0.5),Z.f0.5.P.val=seq(1:nrow(x))/nrow(x)))-> tmp5
+lapply(1:7, function(x) cbind(arrange(tmp5[[x]],Dist.NCV.f0.4), Z.f0.4.P.val=seq(1:nrow(tmp5[[x]]))/nrow(tmp5[[x]])))->tmp4
+remove(tmp5)
+lapply(1:7, function(x) cbind(arrange(tmp4[[x]],Dist.NCV.f0.3), Z.f0.3.P.val=seq(1:nrow(tmp4[[x]]))/nrow(tmp4[[x]])))->tmp3
+remove(tmp4)
+lapply(1:7, function(x) cbind(arrange(tmp3[[x]],Dist.NCV.f0.2), Z.f0.2.P.val=seq(1:nrow(tmp3[[x]]))/nrow(tmp3[[x]])))->tmp2
+remove(tmp3)
+lapply(1:7, function(x) cbind(arrange(tmp2[[x]],Dist.NCV.f0.1), Z.f0.1.P.val=seq(1:nrow(tmp2[[x]]))/nrow(tmp2[[x]])))->list.SCAN
+remove(tmp2)
+#
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.5<(1/nsims)),])-> CANDf0.5
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.4<(1/nsims)),])-> CANDf0.4
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.3<(1/nsims)),])-> CANDf0.3
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.2<(1/nsims)),])-> CANDf0.2
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.1<(1/nsims)),])-> CANDf0.1
-
+Store(CANDf0.5) #etc
 #here I can start exploring these windows.
 ################################################################################################
 
 andres_AA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AA.bed')
-
 andres_EA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.EA.bed')
-
 andres_AAandEA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AAandEA.bed')
-
-
 DG_T2_YRI<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.YRI.bed')
 #this file has double entries for each line...
-
-
 DG_T2_YRI[1:99,]->DG_T2_YRI
-
 DG_T2_CEU<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.CEU.bed')
-
 mhc.coords<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/mhc.coords.gencode.bed')
 
 #pseudogenes<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/pseudogenes.bed')
@@ -218,36 +219,26 @@ system.time(lapply(1:ll1[[chr1]], function(x)(my.function(B=coding.per.chr.list[
 mclapply(all.coding, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
 #9 seconds
 
-#test for AWS
+ALL.POPS<-vector('list', 7)   #currently running this blok in bionc03 (22.04.2015)
+names(ALL.POPS)<-pops[1:7]
 
-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[1]][y,]))-> test.AWS
+system.time(ALL.POPS[[1]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[1]][y,])))
 
+system.time(ALL.POPS[[2]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[2]][y,])))
 
-Store(test.AWS)
+system.time(ALL.POPS[[3]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[3]][y,])))
 
-system.time(clapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[2]][y,]))-> test.LWK)
+system.time(ALL.POPS[[4]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[4]][y,])))
 
-Store(test.LWK)
+system.time(ALL.POPS[[5]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[5]][y,])))
 
-system.time(mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[4]][y,]))-> test.CEU)
+system.time(ALL.POPS[[6]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[6]][y,])))
 
-Store(test.CEU)
-
-system.time(mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[5]][y,]))-> test.FIN)
-
-Store(test.FIN)
-
-system.time(mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[6]][y,]))-> test.GBR)
-
-Store(test.GBR)
-
-system.time(mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[7]][y,]))-> test.TSI)
-
-Store(test.TSI)
-
+system.time(ALL.POPS[[7]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[7]][y,])))
 #in order to not have to do this for every pop, I should take the row names for each gene and then index that for each population and build similar dataframes. It should be quicker.
 
 Store(all.coding)
+Store(ALL.POPS)
 
 mclapply(1:22, function(x) paste0(subset(hg19.coding.coords.bed, chr==x)[,4], '.', subset(hg19.coding.coords.bed, chr==x)[,5]))->names.all.coding
 
@@ -273,7 +264,6 @@ system.time(mclapply(1: dim(mhc.coords)[1], function(x) find.gene(all.coding, ch
 # 19.143 
 #AIDA
 
-system.time(mclapply(1: dim()[1], function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(mhc.coords[x,1]),'r')[[1]][[2]]), name=as.character(mhc.coords[x,4])))-> MHC.QUERY)
 
 #for two chromosomes
 
@@ -296,7 +286,7 @@ Store(all.genes.in.scan)
 Store(test.all.prot)
 
 ########################################################################################################################
-
+########################################################################################################################
 #now this stuff down here could serve as confirmation of the above. Also, above I don't have gene names. (but that shoudn't be that hard to add.
 
 list.MHC<-vector('list', dim(mhc.coords)[[1]])
@@ -401,18 +391,18 @@ mclapply(1:22, function(x) do.call(rbind.data.frame, all.genes[[x]]))->au
 sum(unlist(mclapply(au, function(x) dim(x[!duplicated(x),])[1])))/unlist(lapply(1:22, function(x) table(YRI.2$Chr==x)[[2]]))
 
 
-mclapply(au, function(x) x[!duplicated(x),])->auau
-do.call(rbind.data.frame, auau)->auauau
-subset(auauau, Nr.IS>=19)-> YES
-subset(YES, P.val.NCVf0.5<(1/nsims))->AHHH
-AHHH[order(AHHH$Dist.NCV.f0.5),]->AHHH.2
+#mclapply(au, function(x) x[!duplicated(x),])->auau
+#do.call(rbind.data.frame, auau)->auauau
+#subset(auauau, Nr.IS>=19)-> YES
+#subset(YES, P.val.NCVf0.5<(1/nsims))->AHHH
+#AHHH[order(AHHH$Dist.NCV.f0.5),]->AHHH.2
 ####################################################################################################
-pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/test.z.score.distrib.min.19.IS.pdf')
+pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/figures/test.z.score.distrib.min.19.IS.pdf')
 par(mfrow=c(2,1))
-plot(density(list.SCAN.3[[3]]$Dist.NCV.f0.5), col='cornflowerblue')
-lines(density(list.SCAN.3[[3]]$Dist.NCV.f0.4), col='sienna1')
-lines(density(list.SCAN.3[[3]]$Dist.NCV.f0.3), col='violetred1')
-plot(density(list.SCAN.3[[3]]$Dist.NCV.f0.5), col='cornflowerblue')
+plot(density(list.SCAN[[3]]$Dist.NCV.f0.5), col='cornflowerblue', main='Genomic')
+lines(density(list.SCAN[[3]]$Dist.NCV.f0.4), col='sienna1')
+lines(density(list.SCAN[[3]]$Dist.NCV.f0.3), col='violetred1')
+plot(density(CANDf0.5[[3]]$Dist.NCV.f0.5), col='cornflowerblue', main='Candidates')
 lines(density(CANDf0.4[[3]]$Dist.NCV.f0.4), col='sienna1')
 lines(density(CANDf0.3[[3]]$Dist.NCV.f0.3), col='violetred1')
 dev.off()
@@ -420,198 +410,96 @@ dev.off()
 #check number of windows which overlap genes and how many don't
 
 #this here is obsolete
-
-bp<-c()
-Nr.Win<-c()
-W<-3000
-
-lapply(1:22, function(x)unique(subset(my.cand, chr==paste0('chr', x))$end.pos.scan)- unique(subset(my.cand, chr==paste0('chr', x))$beg.pos.scan))->bp  #number of bp in windows which overlap genes.
-
-sapply(1:22, function(x) 2*((bp[x]-(W/2))/W))-> Nr.Win
-
-
-
-bp2<-c()
-Nr.Win2<-c()
-
-subset(YRI.2, P.val.NCVf0.5<(1/nsims))->blau
-
-sapply(1:22, function(x) sum(length(unique(subset(blau, Chr==x)$beg.pos))))->bp2
-
-sapply(1:22, function(x) 2*((bp[x]-(W/2))/W))-> Nr.Win
-
-
-
-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/pg/out2.bed')-> bbb
-names(bbb)<-c('chr', 'beg', 'end', 'wind.ID')
-
-mclapply(1:22, function(x) sort(unique(unlist(strsplit(as.character(bbb[which(bbb$chr==paste0('chr', x)),4]), ";")))))-> Nr.Win.cand #7392 which is the number of  scanned windows
-
-read.table('pg/out3.bed')-> BBB
-names(BBB)<-c('chr', 'beg', 'end', 'wind.ID')
-
-mclapply(1:22, function(x) sort(unique(unlist(strsplit(as.character(BBB[which(BBB$chr==paste0('chr', x)),4]), ";")))))-> Nr.Win.cand2   #3802
-
-
-sort(unique(unlist(strsplit(bbb[,4], ";"))))->A
+######################################
+#bp<-c();Nr.Win<-c();W<-3000
+#lapply(1:22, function(x)unique(subset(my.cand, chr==paste0('chr', x))$end.pos.scan)- unique(subset(my.cand, chr==paste0('chr', x))$beg.pos.scan))->bp  #number of bp in windows which overlap genes.
+#sapply(1:22, function(x) 2*((bp[x]-(W/2))/W))-> Nr.Win
+#bp2<-c();Nr.Win2<-c();subset(YRI.2, P.val.NCVf0.5<(1/nsims))->blau
+#sapply(1:22, function(x) sum(length(unique(subset(blau, Chr==x)$beg.pos))))->bp2;sapply(1:22, function(x) 2*((bp[x]-(W/2))/W))-> Nr.Win
+#read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/pg/out2.bed')-> bbb;names(bbb)<-c('chr', 'beg', 'end', 'wind.ID')
+#mclapply(1:22, function(x) sort(unique(unlist(strsplit(as.character(bbb[which(bbb$chr==paste0('chr', x)),4]), ";")))))-> Nr.Win.cand #7392 which is the number of  scanned windows
+#read.table('pg/out3.bed')-> BBB;names(BBB)<-c('chr', 'beg', 'end', 'wind.ID')
+#mclapply(1:22, function(x) sort(unique(unlist(strsplit(as.character(BBB[which(BBB$chr==paste0('chr', x)),4]), ";")))))-> Nr.Win.cand2   #3802;sort(unique(unlist(strsplit(bbb[,4], ";"))))->A
 #end of obsolete section.
 ##################################################################################################################
 
-pdf('figures/NCV.candidates.YRI.pdf')
+pdf('figures/NCV.candidates.NCVf0.5.YRI.pdf')
 
-plot(density(YRI.2$NCVf5), col='gray', lty=2, main='Outliers defined based on NCV (0.5)', xlab='NCV (0.5)')
-lines(density(YRI.2.p1$NCVf5), col='red')
-lines(density(YRI.2.p0$NCVf5), col='magenta', lty=2)
-legend('topleft', c('Genomic', 'P<=0.000167', 'P<0.000167'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
-
+plot(density(list.SCAN[[3]]$NCVf5), col='gray', lty=2, main='Outliers defined based on NCV (0.5)', xlab='NCV (0.5)')
+lines(density(CANDf0.5[[3]]$NCVf5), col='red')
+lines(density(arrange(CANDf0.5[[3]], Z.f0.5.P.val)[1:100,]$NCVf5), col='magenta', lty=2)
+legend('topleft', c('Genomic', 'NCV<all sims', 'Top100.Z.score'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
 dev.off()
-
-
-pdf('figures/PtoD.candidates.YRI.pdf')
-
-plot(density(log(test$PtoD)), col='red', lty=2, main='Outliers defined based on NCV (0.5)', xlab='Ln(PtoD)')
-lines(density(log(XX$PtoD)), col='gray')
-lines(density(log(testII$PtoD)), col='magenta', lty=2)
-legend('topright',  c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
-
+#
+pdf('figures/NCV.candidates.NCVf0.4.YRI.pdf')
+plot(density(list.SCAN[[3]]$NCVf4), col='gray', lty=2, main='Outliers defined based on NCV (0.4)', xlab='NCV (0.4)')
+lines(density(CANDf0.4[[3]]$NCVf4), col='red')
+lines(density(arrange(CANDf0.4[[3]], Z.f0.4.P.val)[1:100,]$NCVf4), col='magenta', lty=2)
+legend('topleft', c('Genomic', 'NCV<all sims', 'Top100.Z.score'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
 dev.off()
+#
+pdf('figures/NCV.candidates.NCVf0.3.YRI.pdf')
+plot(density(list.SCAN[[3]]$NCVf3), col='gray', lty=2, main='Outliers defined based on NCV (0.3)', xlab='NCV (0.3)')
+lines(density(CANDf0.3[[3]]$NCVf3), col='red')
+lines(density(arrange(CANDf0.3[[3]], Z.f0.3.P.val)[1:100,]$NCVf3), col='magenta', lty=2)
+legend('topleft', c('Genomic', 'NCV<all sims', 'Top100.Z.score'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
+dev.off()
+#
 
-
-
-
+#pdf('figures/PtoD.candidates.YRI.pdf')
+#plot(density(log(test$PtoD)), col='red', lty=2, main='Outliers defined based on NCV (0.5)', xlab='Ln(PtoD)')
+#lines(density(log(XX$PtoD)), col='gray')
+#lines(density(log(testII$PtoD)), col='magenta', lty=2)
+#legend('topright',  c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
+#dev.off()
 pdf('figures/PropCov.candidates.YRI.pdf')
-
 plot(density(test$Proportion.Covered), col='red', lty=2, main='Outliers defined based on NCV (0.5)', xlab='Proportion of window covered')
 lines(density(XX$Proportion.Covered), col='gray')
 lines(density(testII$Proportion.Covered), col='magenta', lty=2)
-
 legend('topleft', c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
 dev.off()
-
-
-
 pdf('figures/NCVf3.candidates.based.on.NCVf5.YRI.pdf')
 plot(density(test$NCVf3), col='red', lty=2, main='Outliers defined based on NCV (0.5)', xlab='NCV(0.3)')
 lines(density(XX$NCVf3), col='gray')
 lines(density(testII$NCVf3), col='magenta', lty=2)
-
 legend('topleft', c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
-
 dev.off()
 
 
-pdf('figures/NCVf4.candidates.based.on.NCVf5.YRI.pdf')
-
-
-plot(density(test$NCVf4), col='red', lty=2, main='Outliers defined based on NCV (0.5)', xlab='NCV (0.4)')
-lines(density(XX$NCVf4), col='gray')
-lines(density(testII$NCVf4), col='magenta', lty=2)
-
-legend('topleft', c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
-
-dev.off()
+#pdf('figures/NCVf4.candidates.based.on.NCVf5.YRI.pdf')
+#plot(density(test$NCVf4), col='red', lty=2, main='Outliers defined based on NCV (0.5)', xlab='NCV (0.4)')
+#lines(density(XX$NCVf4), col='gray')
+#lines(density(testII$NCVf4), col='magenta', lty=2)
+#legend('topleft', c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
+#dev.off()
 
 
 
-pdf('figures/Nr.IS.genomicVScandidates.pdf')
+#pdf('figures/Nr.IS.genomicVScandidates.pdf')
 #this figure shows that now our outliers have a distribution with simialr shape to the gneomic.
-
-par(mfrow=c(3,1))
-
-
-plot(as.numeric(table(XX$Nr.IS)), col='gray', ylab='Frequency', main='Genomic', xlab='Nr.IS/window')
-plot(as.numeric(table(test$Nr.IS)), col='red', lty=2, ylab='Frequency', xlim=c(0,491), main='P<=0.0001',  xlab='Nr.IS/window')
-plot(as.numeric(table(testII$Nr.IS)), col='magenta', lty=2, ylab='Frequency', xlim=c(0,491), main='P<5e-04',  xlab='Nr.IS/window')
-
-dev.off()
-
-
-#naw apply p-values to each element of the list based on the simulations.  iaIt should be faster than reading in the entire genomic scans at once.
-
-
-#now I should do some sanity checks...first check that every line in XX has a p value
-#check how many p<0.001, for instance. Before, that gave me ~8,139 windows. Hopefully now we will have less
-
-
-testII[order(testII$NCVf5),]->testBII
-
-
-objectName<-'XX'
-
-save(list=objectName, file= 'All.Res.4.IS.prop50.YRI.with.pval.RData')
-
-
-
-
-##
-
-
-#sort bed files
-
-test[order(test$Chr, test$Beg.Win),][,1:16]-> YRI.p.001.sims.bed
-
-
-testBII[order(testBII$Chr, testBII$Beg.Win),][,1:16]-> YRI.p.000.sims.bed
-
-
-
-write.table(cbind(YRI.p.001.sims.bed, rownames(YRI.p.001.sims.bed)), options(scipen=1),file = paste0('YRI','p.001.sims.bed'), quote=F, sep='\t', col.names=F, row.names=F)
-
-
-write.table(cbind(YRI.p.000.sims.bed, rownames(YRI.p.000.sims.bed)), options(scipen=1),file = paste0('YRI','p.000.sims.bed'), quote=F, sep='\t', col.names=F, row.names=F)
+#par(mfrow=c(3,1))
+#plot(as.numeric(table(XX$Nr.IS)), col='gray', ylab='Frequency', main='Genomic', xlab='Nr.IS/window')
+#plot(as.numeric(table(test$Nr.IS)), col='red', lty=2, ylab='Frequency', xlim=c(0,491), main='P<=0.0001',  xlab='Nr.IS/window')
+#plot(as.numeric(able(testII$Nr.IS)), col='magenta', lty=2, ylab='Frequency', xlim=c(0,491), main='P<5e-04',  xlab='Nr.IS/window')
+#dev.off()
 
 
 #FUN PART
-
-
-
 
 
 #MHC coordinates (by Deborah, but remember that this differs a bit from GENCODE v.19...it is just a quick way to check for HLA windows, but I will remove it after I have my own bedfile for HLA made from GENCODE directly.
 #read.table('mhc_shiina_hg19.bed', header=F)-> mhc.coords
 
 
-read.table('YRI.p.001.sims.intersect.bed') -> my.candidates
-
-bed.header<-c('chr', 'beg.pos.scan', 'end.pos.scan', 'wind.ID', 'chrb','beg.pos.genc', 'end.pos.genc', 'gene.name', 'type', 'gene_id' , 'type.2', 'overlap')
-
-names(my.candidates)<-bed.header
-
-my.candidates[,-9]-> my.candidates.p.0001
-
-read.table('YRI.p.000.sims.intersect.bed') -> my.candidates
-
-bed.header<-c('chr', 'beg.pos.scan', 'end.pos.scan', 'wind.ID', 'chrb','beg.pos.genc', 'end.pos.genc', 'gene.name', 'type', 'gene_id' , 'type.2', 'overlap')
-
-names(my.candidates)<-bed.header
-
-my.candidates[,-9]-> my.candidates.p.0000
-
-
-
-
-as.character(unique(subset(my.candidates, type.2=='protein_coding' & overlap>=1000)$gene.name)) #2272 genes
-
-as.character(unique(subset(my.candidates, type.2=='protein_coding' & overlap>=1500)$gene.name)) #2689
-
-as.character(unique(subset(my.candidates, type.2=='protein_coding' & overlap>=2000)$gene.name)) #2638
-
-as.character(unique(subset(my.candidates, type.2=='protein_coding' & overlap>=2500)$gene.name))  #2596
-
-as.character(unique(subset(my.candidates, type.2=='protein_coding' & overlap>=3000)$gene.name))  #2549 genes
-
-as.character(unique(subset(my.candidates.p.0001, type.2=='protein_coding'|type.2=='processed_transcript' & overlap>=2000)$gene.name))-> my.cand.p.0001 #2891
-
 as.character(unique(subset(my.candidates.p.0000, type.2=='protein_coding'|type.2=='processed_transcript' & overlap>=2000)$gene.name))-> my.cand.p.0000 #2167
 
-########################
+##############################
+####IMPORTANT ################
 #generate bed files for collapsing candidate windows
-
 
 sapply(1:7, function(x) write.table(cbind(CANDf0.5[[x]], rownames(CANDf0.5[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.5.bed'), quote=F, sep='\t', col.names=F, row.names=F))
 
 sapply(1:7, function(x) write.table(cbind(CANDf0.4[[x]], rownames(CANDf0.4[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.4.bed'), quote=F, sep='\t', col.names=F, row.names=F))
-
 
 sapply(1:7, function(x) write.table(cbind(CANDf0.3[[x]], rownames(CANDf0.3[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.3.bed'), quote=F, sep='\t', col.names=F, row.names=F))
 
@@ -625,8 +513,8 @@ lapply(1:7, function(x) read.table(paste0('intersect.',pops[[x]],'.candf0.3.bed'
 for (i in 1:7){
 colnames(intsct.CANDf0.5[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
 colnames(intsct.CANDf0.4[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
-colnames(intsct.CANDf0.3[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
-                           }
+colnames(intsct.CANDf0.3[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')}
+                           
 
 unlist(lapply(intsct.CANDf0.3, function(x) dim(subset(x, type=='protein_coding'))[1]))   #number of protein coding genes in the set
 
@@ -647,38 +535,60 @@ write.table(c(),, file='cand.intersectallfeqs.YRI.gene.names.txt', quote=F, row.
 #######
 #A naive attempt to make a manhattan plot of NCV
 
-library(qqman)
-
-#this package is actually meant for SNP-Pvalue dataframes,but I cheated and mnaged to use it.
-
+#the qqman package is actually meant for SNP-Pvalue dataframes,but I cheated and mnaged to use it.
 
 #do for all pops
-list.SCAN[[3]]->tes.manhattan.YRI
+mclapply(list.SCAN, function(x) x[,c(1,2,3,21,26)])->tes.manhattan.f0.5
+mclapply(list.SCAN, function(x) x[,c(1,2,3,22,27)])->tes.manhattan.f0.4
+mclapply(list.SCAN, function(x) x[,c(1,2,3,23,28)])->tes.manhattan.f0.3
 
-test.manhattan.YRI<-tes.manhattan[,c(1,2,3,21)]
-
-colnames(tes.manhattan.YRI)[1]<-'CHR'
-colnames(tes.manhattan.YRI)[2]<-'BP'
-
-cbind(tes.manhattan.YRI, BP=(tes.manhattan.YRI$Beg.Win+tes.manhattan.YRI$End.Win)/2)->tes.manhattan.YRI
-arrange(tes.manhattan.YRI, Dist.NCV.f0.5)->tes.manhattan.YRI
-tes.manhattan2<-cbind(tes.manhattan.YRI, P=seq(1:nrow(tes.manhattan.YRI))/nrow(tes.manhattan.YRI))
-colnames(tes.manhattan2)[4]<-'SNP'  #t is not a snp but I didnt want to change the source code.
-pdf('test.manhattan.pdf')
-manhattan(tes.manhattan2, suggestiveline= -log(0.001000612))  #this line will be for the lower 1% P-values, i.e, Dist.NCVf0.)
-dev.off()
+#sapply(1:7, function(x) colnames(tes.manhattan.f0.5[[x]])[1:2]<-c('CHR','BP'))
 
 
-tes.manhattan2<-cbind(tes.manhattan2, Annot=rep(NA, nrow(tes.manhattan2))
-top100f0.5<-head(tes.manhattan2,100)
+mclapply(tes.manhattan.f0.5, function(x) cbind(x, BP=(x$Beg.Win+x$End.Win)/2))->tes.manhattan.2.f0.5
+mclapply(tes.manhattan.f0.4, function(x) cbind(x, BP=(x$Beg.Win+x$End.Win)/2))->tes.manhattan.2.f0.4
+mclapply(tes.manhattan.f0.3, function(x) cbind(x, BP=(x$Beg.Win+x$End.Win)/2))->tes.manhattan.2.f0.3
+
+for (i in 1:7){
+colnames(tes.manhattan.2.f0.5[[i]])[c(1,4,5)]<-c('CHR', 'SNP', 'P')
+colnames(tes.manhattan.2.f0.4[[i]])[c(1,4,5)]<-c('CHR', 'SNP', 'P')
+colnames(tes.manhattan.2.f0.3[[i]])[c(1,4,5)]<-c('CHR', 'SNP', 'P')}
+
+mclapply(tes.manhattan.2.f0.5, function(x) arrange(x, SNP))->tes.manhattan.f0.5
+mclapply(tes.manhattan.2.f0.4, function(x) arrange(x, SNP))->tes.manhattan.f0.4
+mclapply(tes.manhattan.2.f0.3, function(x) arrange(x, SNP))->tes.manhattan.f0.3
+
+#pdf('test.manhattan.pdf')
+#manhattan(tes.manhattan2, suggestiveline= -log(0.001000612))  #this line will be for the lower 1% P-values, i.e, Dist.NCVf0.)
+#dev.off()
+
+top100f0.5<-mclapply(tes.manhattan.f0.5,function(x) head(x,100))
+top100f0.4<-mclapply(tes.manhattan.f0.4,function(x) head(x,100))
+top100f0.3<-mclapply(tes.manhattan.f0.3,function(x) head(x,100))
 
 
-#now do for each chromosome
+#now do for each chromosome and each population!
 
+for (j in 1:7){
+for(i in 1:7){
 for (i in 1:22){
-file.name<-paste0('manhattan.YRI.',i, '.pdf')
+file.name<-paste0('figures/','manhattan.','f0.5.',pops[j],'.', i, '.pdf')
 pdf(file.name)
-manhattan(subset(tes.manhattan2, CHR==i), suggestiveline= -log10(0.001000612),genomewideline=-log10(0.0001006129), highlight=as.character(subset(top100f0.5, CHR==i)$SNP))
-dev.off()}
+manhattan(subset(tes.manhattan.f0.5[[j]], CHR==i), suggestiveline= -log10(0.001000612),genomewideline=-log10(0.0001006129), highlight=as.character(subset(top100f0.5[[j]], CHR==i)$SNP))
+dev.off()}}
+
+for (j in 1:7){
+for (i in 1:22){
+file.name<-paste0('figures/','manhattan.','f0.4.',pops[j],'.', i, '.pdf')
+pdf(file.name)
+manhattan(subset(tes.manhattan.f0.4[[j]], CHR==i), suggestiveline= -log10(0.001000612),genomewideline=-log10(0.0001006129), highlight=as.character(subset(top100f0.4[[j]], CHR==i)$SNP))
+dev.off()}}
+
+for (j in 1:7){
+for (i in 1:22){
+file.name<-paste0('figures/','manhattan.','f0.3.',pops[j],'.', i, '.pdf')
+pdf(file.name)
+manhattan(subset(tes.manhattan.f0.3[[j]], CHR==i), suggestiveline= -log10(0.001000612),genomewideline=-log10(0.0001006129), highlight=as.character(subset(top100f0.3[[j]], CHR==i)$SNP))
+dev.off()}}
 
 
