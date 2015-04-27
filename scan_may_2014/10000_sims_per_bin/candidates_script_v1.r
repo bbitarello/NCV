@@ -38,9 +38,24 @@ nsims<-10000
 #dev.off()
 
 Objects()
-setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/')
-
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/figures')
 #sapply(seq(1:7), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
+
+
+#one pops, feq=0.5:
+#this funciton can onlyt hold up to 5 datsets... use vennerable or smtg else
+venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),TSI=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.5.venn.tiff')
+
+
+
+#all pops, feq=0.4
+venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5,0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.4.venn.tiff')
+
+#all pops, feq=0.3
+ feq, all pops:
+
+venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5,0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.3.venn.tiff')
+
 
 venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Africa.f0.5.venn.tiff')
 
@@ -530,10 +545,14 @@ write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.3[[3]], type
 #now check for intersection
 write.table(intersect(intersect(as.character(sort(unique(subset(intsct.CANDf0.4[[3]],type=='protein_coding')$name))),as.character(sort(unique(subset(intsct.CANDf0.5[[3]],type=='protein_coding')$name)))),as.character(sort(unique(subset(intsct.CANDf0.5[[3]],type=='protein_coding')$name)))),  file='cand.intersectallfeqs.YRI.gene.names.txt', quote=F, row.names=F)
 #now the union:
-write.table(c(),, file='cand.intersectallfeqs.YRI.gene.names.txt', quote=F, row.names=F)
 
 #######
 #A naive attempt to make a manhattan plot of NCV
+
+
+
+
+
 
 #the qqman package is actually meant for SNP-Pvalue dataframes,but I cheated and mnaged to use it.
 
@@ -566,6 +585,17 @@ top100f0.5<-mclapply(tes.manhattan.f0.5,function(x) head(x,100))
 top100f0.4<-mclapply(tes.manhattan.f0.4,function(x) head(x,100))
 top100f0.3<-mclapply(tes.manhattan.f0.3,function(x) head(x,100))
 
+top817f0.5<-mclapply(tes.manhattan.f0.5,function(x) head(x,817))
+top817f0.4<-mclapply(tes.manhattan.f0.4,function(x) head(x,817))
+top817f0.3<-mclapply(tes.manhattan.f0.3,function(x) head(x,817))
+
+mclapply(top100f0.5, function(x) arrange(x, CHR, Beg.Win))->sort.top100f0.5
+mclapply(top100f0.4, function(x) arrange(x, CHR, Beg.Win))->sort.top100f0.4
+mclapply(top100f0.3, function(x) arrange(x, CHR, Beg.Win))->sort.top100f0.3
+
+mclapply(top817f0.5, function(x) arrange(x, CHR, Beg.Win))->sort.top817f0.5  #817 is 0.5% of the distribution.
+mclapply(top817f0.4, function(x) arrange(x, CHR, Beg.Win))->sort.top817f0.4
+mclapply(top817f0.3, function(x) arrange(x, CHR, Beg.Win))->sort.top817f0.3
 
 #now do for each chromosome and each population!
 
@@ -590,5 +620,40 @@ file.name<-paste0('figures/','manhattan.','f0.3.',pops[j],'.', i, '.pdf')
 pdf(file.name)
 manhattan(subset(tes.manhattan.f0.3[[j]], CHR==i), suggestiveline= -log10(0.001000612),genomewideline=-log10(0.0001006129), highlight=as.character(subset(top100f0.3[[j]], CHR==i)$SNP))
 dev.off()}}
+
+
+for (i in 1:7){
+write.table(cbind(sort.top100f0.4[[i]], rownames(sort.top100f0.4[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top100f0.5[[i]], rownames(sort.top100f0.5[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top100f0.3[[i]], rownames(sort.top100f0.3[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
+
+for (i in 1:7){
+write.table(cbind(sort.top817f0.4[[i]], rownames(sort.top817f0.4[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top817f0.5[[i]], rownames(sort.top817f0.5[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top817f0.3[[i]], rownames(sort.top817f0.3[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
+
+#read intersect files
+
+top100intsc<-vector('list', 3)
+top817intsc<-vector('list', 3)
+
+
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.5.bed')))-> top100intsc[[1]]
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.4.bed')))-> top100intsc[[2]]
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.3.bed')))-> top100intsc[[3]]
+#
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.5.bed')))-> top817intsc[[1]]
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.4.bed')))-> top817intsc[[2]]
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.3.bed')))-> top817intsc[[3]]
+
+#
+for (j in 1:3){
+for (i in 1:7){
+colnames(top100intsc[[j]][[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'whatever','gene_id','type', 'overlap')
+colnames(top817intsc[[j]][[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'whatever','gene_id','type', 'overlap')}}
+
+
+#use the intersect function to check overlaps
+intsc(intersect(top100intsc[[1]][[1]], top100intsc[[1]][[2]]), top100intsc[[1]][[3]])
 
 
