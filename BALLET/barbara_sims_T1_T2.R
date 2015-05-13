@@ -14,8 +14,8 @@ setwd("/mnt/sequencedb/PopGen/barbara/simulations/msms/")
 sims.s <- read.ms("Tbs5_f0.5_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1)) 
 sims.n <- read.ms("neutral_n100.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1)) 
 sims.f0.4 <- read.ms("Tbs5_f0.4_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1))
-sims.f0.3 <- read.ms("Tbs5_f0.1_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1))
-sims.f0.2 <- read.ms("Tbs5_f0.1_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1))
+sims.f0.3 <- read.ms("Tbs5_f0.3_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1))
+sims.f0.2 <- read.ms("Tbs5_f0.2_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1))
 sims.f0.1 <- read.ms("Tbs5_f0.1_n100_Sbs0.01.msms.gz",multicore=TRUE, Npop=4,Nchr=c(100,100,100,1))
 
 ms2CombinedSNPFile <- function(x, pop="p1",Length=15000,Ne=7310,r=1e-8) {
@@ -49,7 +49,7 @@ ms2CombinedSNPFile <- function(x, pop="p1",Length=15000,Ne=7310,r=1e-8) {
 } 
 
 ## write 10 balancing selection simulations
-setwd('/mnt/sequencedb/PopGen/barbara/BALLET')
+setwd('/mnt/sequencedb/PopGen/barbara/BALLET/tmp/')
 
 
 #apply function to all sims
@@ -65,16 +65,17 @@ for( i in 2:2000) {
 n[[i]][[1]][,1] = n[[i]][[1]][,1]+1000000*i
 
 } 
-#we only need 1000 sims
+#we only need 1000 sim
+
 n=do.call("rbind", lapply(n[1:1000], function(x) x[[1]]))
 
 write.table(n, 'CombinedSNPFile_neu', row.names=F, quote=F, sep="\t")
 
-
+sapply(1:1000, function(x) sapply(names(b[[x]]), function(y) write.table(b[[x]][[y]], paste0("neu",y,x),row.names=F,quote=F,sep="\t")))
 sapply(1:1000, function(x) sapply(names(a[[x]]), function(y) write.table(a[[x]][[y]], paste0("bs_f0.5_",y,x),row.names=F,quote=F,sep="\t")))
 sapply(1:1000, function(x) sapply(names(a2[[x]]), function(y) write.table(a2[[x]][[y]], paste0("bs_f0.4_",y,x),row.names=F,quote=F,sep="\t")))
-sapply(1:1000, function(x) sapply(names(a3[[x]]), function(y) write.table(a3[[x]][[y]], paste0("bs_f0.4_",y,x),row.names=F,quote=F,sep="\t")))
-sapply(1:1000, function(x) sapply(names(a4[[x]]), function(y) write.table(a4[[x]][[y]], paste0("bs_f0.4_",y,x),row.names=F,quote=F,sep="\t")))
+sapply(1:1000, function(x) sapply(names(a3[[x]]), function(y) write.table(a3[[x]][[y]], paste0("bs_f0.3_",y,x),row.names=F,quote=F,sep="\t")))
+sapply(1:1000, function(x) sapply(names(a4[[x]]), function(y) write.table(a4[[x]][[y]], paste0("bs_f0.2_",y,x),row.names=F,quote=F,sep="\t")))
 sapply(1:1000, function(x) sapply(names(a5[[x]]), function(y) write.table(a5[[x]][[y]], paste0("bs_f0.1_",y,x),row.names=F,quote=F,sep="\t")))
 
 
