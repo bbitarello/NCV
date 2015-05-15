@@ -2,7 +2,7 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 22.04.2014
+#	Last modified: 28.04.2014
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #################################################################################################################################
@@ -21,8 +21,7 @@ Sys.setenv(R_LOCAL_CACHE="estsession")  #this is for 'SOAR'
 ##########################skip the next block, as it has already been saved in the R object ############################
 pops<-c("AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "CLM","PUR")
 nsims<-10000
-#this stuff here is a bit obsolete...
-
+#this stuff here is a bit obsolete...   #skip to 179 where it says START HERE
 #mclapply(list.SCAN, function(x) dim(x[which(x$P.val.NCVf0.5<(1/nsims)),]))-> candidate.windows
 
 #check if NCV in bins is normally distributed
@@ -38,12 +37,17 @@ nsims<-10000
 #dev.off()
 
 Objects()
+mclapply(list.SCAN, function(x) arrange(x, Chr, Beg.Win))-> LL
+LL->list.SCAN
+Store(list.SCAN)
+Objects()
+
 setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/figures')
 #sapply(seq(1:7), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
 
 
 #one pops, feq=0.5:
-#this funciton can onlyt hold up to 5 datsets... use vennerable or smtg else
+#this 
 venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),TSI=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.5.venn.tiff')
 
 
@@ -170,26 +174,33 @@ lapply(1:7, function(x) cbind(arrange(tmp3[[x]],Dist.NCV.f0.2), Z.f0.2.P.val=seq
 remove(tmp3)
 lapply(1:7, function(x) cbind(arrange(tmp2[[x]],Dist.NCV.f0.1), Z.f0.1.P.val=seq(1:nrow(tmp2[[x]]))/nrow(tmp2[[x]])))->list.SCAN
 remove(tmp2)
-#
+######Start Here#########################################
+#START HERE@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#####################
+
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.5<(1/nsims)),])-> CANDf0.5
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.4<(1/nsims)),])-> CANDf0.4
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.3<(1/nsims)),])-> CANDf0.3
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.2<(1/nsims)),])-> CANDf0.2
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.1<(1/nsims)),])-> CANDf0.1
-Store(CANDf0.5) #etc
+Store(CANDf0.5) #etc 
+Store(CANDf0.4); Store(CANDf0.3); Store(CANDf0.2); Store(CANDf0.1)
+
 #here I can start exploring these windows.
 ################################################################################################
 
 andres_AA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AA.bed')
+andres_AA[1:15,]->andres_AA #remove triple entries
 andres_EA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.EA.bed')
+andres_EA[1:31,]->andres_EA #remove triple entries
 andres_AAandEA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AAandEA.bed')
+andres_AAandEA[1:12,]->andres_AAandEA #remove triple entries (this is actually a problem with the inpur file)
 DG_T2_YRI<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.YRI.bed')
 #this file has double entries for each line...
 DG_T2_YRI[1:99,]->DG_T2_YRI
+DG_T2_YRI[-40,]->DG_T2_YRI
 DG_T2_CEU<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.CEU.bed')
 mhc.coords<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/mhc.coords.gencode.bed')
 
-#pseudogenes<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/pseudogenes.bed')
 
 #MHC coordinates (by Deborah, but remember that this differs a bit from GENCODE v.19...it is just a quick way to check for HLA windows, but I will remove it after I have my own bedfile for HLA made from GENCODE directly.
 #read.table('mhc_shiina_hg19.bed', header=F)-> mhc.coords
@@ -220,8 +231,8 @@ lapply(ll1,function(x) vector('list',x))-> test.all.prot
 
 
 
-all.coding<-vector('list', 22) #YRI
-
+#skip this because it is already saved#####
+#all.coding<-vector('list', 22) #YRI
 
 system.time(for (j in  1:22){
 chr1<-j
@@ -230,7 +241,7 @@ system.time(lapply(1:ll1[[chr1]], function(x)(my.function(B=coding.per.chr.list[
 #71003.094   428.739 36829.092 
 #alternative, with aprallel....
 #29 hours
-
+####33##################################################################################################################
 mclapply(all.coding, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
 #9 seconds
 
@@ -253,7 +264,7 @@ system.time(ALL.POPS[[7]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]
 #in order to not have to do this for every pop, I should take the row names for each gene and then index that for each population and build similar dataframes. It should be quicker.
 
 Store(all.coding)
-Store(ALL.POPS)
+Store(ALL.POPS) # so far I only put YRI in all pops.
 
 mclapply(1:22, function(x) paste0(subset(hg19.coding.coords.bed, chr==x)[,4], '.', subset(hg19.coding.coords.bed, chr==x)[,5]))->names.all.coding
 
@@ -279,31 +290,37 @@ system.time(mclapply(1: dim(mhc.coords)[1], function(x) find.gene(all.coding, ch
 # 19.143 
 #AIDA
 
+system.time(mclapply(1: nrow(andres_AA),function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(andres_AA[x,1]),'r')[[1]][[2]]), name=as.character(andres_AA[x,4])))->ANDRES.AA.QUERY)
 
-#for two chromosomes
+system.time(mclapply(1: nrow(andres_EA),function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(andres_EA[x,1]),'r')[[1]][[2]]), name=as.character(andres_EA[x,4])))->ANDRES.EA.QUERY)
+system.time(mclapply(1: nrow(andres_AAandEA),function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(andres_AAandEA[x,1]),'r')[[1]][[2]]), name=as.character(andres_AAandEA[x,4])))->ANDRES.AAandEA.QUERY)
 
-system.time(mclapply(1:2, function(x) mclapply(1:ll1[[x]], function(y) my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list[[x]]$end[y], chr=x, df=list.SCAN[[3]])))->TEST.NESTED.LAPPLY)
+system.time(mclapply(1: nrow(DG_T2_YRI),function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(DG_T2_YRI[x,1]),'r')[[1]][[2]]), name=as.character(DG_T2_YRI[x,4])))->DG.T2.YRI.QUERY)
+
+system.time(mclapply(1: nrow(DG_T2_CEU),function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(DG_T2_CEU[x,1]),'r')[[1]][[2]]), name=as.character(DG_T2_CEU[x,4])))->DG.T2.CEU.QUERY)
+
+
+#system.time(mclapply(1:2, function(x) mclapply(1:ll1[[x]], function(y) my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list[[x]]$end[y], chr=x, df=list.SCAN[[3]])))->TEST.NESTED.LAPPLY)
 #around 6 hours
 
-Store(TEST.NESTED.LAPPLY)
+#Store(TEST.NESTED.LAPPLY)
 
-system.time(mclapply(3:22, function(x) mclapply(1:ll1[[x]], function(y) my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list[[x]]$end[y], chr=x, df=list.SCAN[[3]])))->TEST.NESTED.LAPPLY.2)
+#system.time(mclapply(3:22, function(x) mclapply(1:ll1[[x]], function(y) my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list[[x]]$end[y], chr=x, df=list.SCAN[[3]])))->TEST.NESTED.LAPPLY.2)
 
 
-all.genes.in.scan<-vector('list', 22)
-system.time(for (j in 1:22){
-mclapply(test[[j]], function(x) subset(x, P.val.NCVf0.5<(1/nsims)))->all.genes.in.scan[[j]]
-})
+#all.genes.in.scan<-vector('list', 22)
+#system.time(for (j in 1:22){
+#mclapply(test[[j]], function(x) subset(x, P.val.NCVf0.5<(1/nsims)))->all.genes.in.scan[[j]]})
 #with this I am able to ask several questions such as, how many genes does my scan encompass and how many have at least one window with p<1/nsims? things like that.
-test->all.genes.YRI
-Store(all.genes.YRI)
-Store(all.genes.in.scan)
-Store(test.all.prot)
+#test->all.genes.YRI
+#Store(all.genes.YRI)
+#Store(all.genes.in.scan)
+#Store(test.all.prot)
 
 ########################################################################################################################
 ########################################################################################################################
 #now this stuff down here could serve as confirmation of the above. Also, above I don't have gene names. (but that shoudn't be that hard to add.
-
+#obsolete, because the block above provided this, and much faster. Skip to end of this block)
 list.MHC<-vector('list', dim(mhc.coords)[[1]])
 names(list.MHC)<-mhc.coords$Name
 UP.list.MHC<-list( list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC)
@@ -360,27 +377,11 @@ chr1<- as.numeric(unlist(strsplit(as.character(DG_T2_CEU$chr[i]), split="chr", f
 my.function(B=DG_T2_CEU$B[i], E=DG_T2_CEU$E[i], df=list.SCAN[[j]],chr=chr1)->UP.list.DG.T2.CEU[[j]][[i]]
 }})
 
-Store(DG_T2_YRI)
-Store(DG_T2_CEU)
-Store(andres_AAandEA)
-Store(andres_AA)
-Store(andres_EA)
-Store(list.Andres.AAandEA)
-Store(list.Andres.EA)
-Store(list.Andres.AA)
-Store(list.DG.T2.YRI)
-Store(list.DG.T2.CEU)
-Store(mhc.coords)
-Store(UP.list.DG.T2.YRI)
-Store(UP.list.Andres.EA)
-Store(UP.list.Andres.AA)
-Store(UP.list.Andres.AAandEA)
-Store(UP.list.DG.T2.YRI)
-Store(UP.list.DG.T2.CEU)
-Store(UP.list.MHC)
+Store(DG_T2_YRI);Store(DG_T2_CEU);Store(andres_AAandEA);Store(andres_AA);Store(andres_EA);Store(list.Andres.AAandEA);Store(list.Andres.EA);Store(list.Andres.AA)
+Store(list.DG.T2.YRI);Store(list.DG.T2.CEU);Store(mhc.coords)
+Store(UP.list.DG.T2.YRI);Store(UP.list.Andres.EA);Store(UP.list.Andres.AA);Store(UP.list.Andres.AAandEA);Store(UP.list.DG.T2.YRI);Store(UP.list.DG.T2.CEU);Store(UP.list.MHC)
 
 #try to optimize this...
-
 #put al these lists in a list.
 
 #for each gene, take the lowest z-score, of if there is only one, take that one, and see where it falls in the distribution of z-scores (global and for that bin specfically)
@@ -488,8 +489,6 @@ dev.off()
 #legend('topleft', c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
 #dev.off()
 
-
-
 #pdf('figures/Nr.IS.genomicVScandidates.pdf')
 #this figure shows that now our outliers have a distribution with simialr shape to the gneomic.
 #par(mfrow=c(3,1))
@@ -498,17 +497,6 @@ dev.off()
 #plot(as.numeric(able(testII$Nr.IS)), col='magenta', lty=2, ylab='Frequency', xlim=c(0,491), main='P<5e-04',  xlab='Nr.IS/window')
 #dev.off()
 
-
-#FUN PART
-
-
-#MHC coordinates (by Deborah, but remember that this differs a bit from GENCODE v.19...it is just a quick way to check for HLA windows, but I will remove it after I have my own bedfile for HLA made from GENCODE directly.
-#read.table('mhc_shiina_hg19.bed', header=F)-> mhc.coords
-
-
-as.character(unique(subset(my.candidates.p.0000, type.2=='protein_coding'|type.2=='processed_transcript' & overlap>=2000)$gene.name))-> my.cand.p.0000 #2167
-
-##############################
 ####IMPORTANT ################
 #generate bed files for collapsing candidate windows
 
@@ -523,7 +511,6 @@ sapply(1:7, function(x) write.table(cbind(CANDf0.3[[x]], rownames(CANDf0.3[[x]])
 
 lapply(1:7, function(x) read.table(paste0('intersect.',pops[[x]],'.candf0.5.bed')))-> intsct.CANDf0.5
 lapply(1:7, function(x) read.table(paste0('intersect.',pops[[x]],'.candf0.4.bed')))-> intsct.CANDf0.4
-
 lapply(1:7, function(x) read.table(paste0('intersect.',pops[[x]],'.candf0.3.bed')))-> intsct.CANDf0.3
 for (i in 1:7){
 colnames(intsct.CANDf0.5[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
