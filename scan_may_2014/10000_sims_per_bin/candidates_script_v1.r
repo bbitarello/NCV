@@ -2,13 +2,14 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 28.04.2014
+#	Last modified: 15.05.2015
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #################################################################################################################################
+#Recommendations: use TMUX and save objects periodically with Store() from SOAR package, to avoiding the crashing of
+#the R session.
 
-#load packages
-
+#load packages and data
 library(parallel)  #parallelize functions
 library(SOAR)  #store objects from workspace
 library(ggplot2)  #pretty plots
@@ -16,64 +17,16 @@ library(plyr)  #big data frames
 library(qqman)  #manhattan plot
 library(VennDiagram)  
 Sys.setenv(R_LOCAL_CACHE="estsession")  #this is for 'SOAR'
-
-#first, load the scan data
-##########################skip the next block, as it has already been saved in the R object ############################
 pops<-c("AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "CLM","PUR")
 nsims<-10000
-#this stuff here is a bit obsolete...   #skip to 179 where it says START HERE
-#mclapply(list.SCAN, function(x) dim(x[which(x$P.val.NCVf0.5<(1/nsims)),]))-> candidate.windows
-
-#check if NCV in bins is normally distributed
-
-#pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/march.2015.qqplot.AFR.pdf')
-#sapply(1:211, function(x) {qqnorm(l.bin.vec1[[x]]$ncvFD_f0.5); qqline(l.bin.vec1[[x]]$ncvFD_f0.5))
-#dev.off()
-
-#pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/march.2015.figures/march.2015.Nr.IS.Genomic.VS.outliers.pdf')
-#par(mfrow=c(4,2));
-#lapply(1:7, function(x) {hist(list.SCAN[[x]]$Nr.IS, col='lightgray', border='gray', nclass=100, lty=2, main=names(list.SCAN)[x], freq=F, xlab="Number of Informative Sites per Window");lines(density(candidate.windows[[x]]$Nr.IS),col='sienna1')})
-#l.bin.vec1[[i]]$ncvFD_f0.2)-> sd2.bin
-#dev.off()
-
-Objects()
-mclapply(list.SCAN, function(x) arrange(x, Chr, Beg.Win))-> LL
-LL->list.SCAN
-Store(list.SCAN)
-Objects()
-
-setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/figures')
-#sapply(seq(1:7), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
-
-
-#one pops, feq=0.5:
-#this 
-venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),TSI=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.5.venn.tiff')
-
-
-
-#all pops, feq=0.4
-venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5,0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.4.venn.tiff')
-
-#all pops, feq=0.3
- feq, all pops:
-
-venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5,0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.3.venn.tiff')
-
-
-venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Africa.f0.5.venn.tiff')
-
-
-venn.diagram(list(CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1", "orange"),alpha = c(0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Europe.f0.5.venn.tiff')
-#works fine til here.
-##############################################################################################
-
-#RANK candidate windows
-#bin.list2[[j]][[length(bin.list2)]]->II
-
-Objects()
-
 setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/')
+Objects()
+###################################################################################################
+############################################## Part I #############################################
+#This part is where I added info into the object list.SCAN. At the end of this part I stores this object, so 
+#it can be skipped (go to 'Part II')
+#RANK candidate windows
+
 #system.time(mclapply(list.SCAN, function(x) cbind(x, Dist.NCV.f0.5=rep(NA, dim(x)[1]),Dist.NCV.f0.4=rep(NA, dim(x)[1]),Dist.NCV.f0.3=rep(NA, dim(x)[1]),Dist.NCV.f0.2=rep(NA, dim(x)[1])))-> list.SCAN.2)
 
 bin.list2<-vector('list', 7)
@@ -86,6 +39,7 @@ c(lapply(bin.vec1.eu, function(x) (which(list.SCAN[[j]]$Nr.IS==x))), list(which(
 
 test.res<-vector('list', length(bin.list2[[1]]))
 
+#calculate Z-scores
 for (j in 1:3){ #AFRICA only
 bin.list2[[j]][[length(bin.list2[[1]])]]->II  #first the last bin, which collapses all the remaining ones.
 mean(l.bin.vec2[[1]]$ncvFD_f0.5)->mean5.II;sd(l.bin.vec2[[1]]$ncvFD_f0.5)-> sd5.II
@@ -153,18 +107,11 @@ if(length(I)>0){
 ((list.SCAN[[j]][I,]$NCVf2-mean2.bin)/sd2.bin)->list.SCAN[[j]]$Dist.NCV.f0.2[I]
 ((list.SCAN[[j]][I,]$NCVf1-mean1.bin)/sd1.bin)->list.SCAN[[j]]$Dist.NCV.f0.1[I]
 }}}
-#Decide which distance emeasure I will use.
-#Also, do the distance divided by the max NCV, so that NCV with different freq equilibria can be compared.
-#Idea, save workspace and copy to darwin so I can use Debora's 1000G annotation.
-
-#now I have to store some stuff, otherwise the session crashes.
-
-
-############################ ###################
-#mclapply(list.SCAN.2, function(x) subset(x, Nr.IS>=19))->list.SCAN.3
-setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/' )
-#Store(list.SCAN)
-#I have already done this block, no need to redo. Just use 'Objects()'
+Store(list.SCAN)
+#IDEA for the future: save workspace and copy to darwin so I can use Debora's 1000G annotation.
+# Sometimes it is necessary to store some stuff, otherwise the session crashes.
+#####################################################
+Objects()
 lapply(list.SCAN, function(x) cbind(arrange(x, Dist.NCV.f0.5),Z.f0.5.P.val=seq(1:nrow(x))/nrow(x)))-> tmp5
 lapply(1:7, function(x) cbind(arrange(tmp5[[x]],Dist.NCV.f0.4), Z.f0.4.P.val=seq(1:nrow(tmp5[[x]]))/nrow(tmp5[[x]])))->tmp4
 remove(tmp5)
@@ -174,50 +121,18 @@ lapply(1:7, function(x) cbind(arrange(tmp3[[x]],Dist.NCV.f0.2), Z.f0.2.P.val=seq
 remove(tmp3)
 lapply(1:7, function(x) cbind(arrange(tmp2[[x]],Dist.NCV.f0.1), Z.f0.1.P.val=seq(1:nrow(tmp2[[x]]))/nrow(tmp2[[x]])))->list.SCAN
 remove(tmp2)
-######Start Here#########################################
-#START HERE@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#####################
 
+#take simulation-based candidate windows.
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.5<(1/nsims)),])-> CANDf0.5
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.4<(1/nsims)),])-> CANDf0.4
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.3<(1/nsims)),])-> CANDf0.3
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.2<(1/nsims)),])-> CANDf0.2
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.1<(1/nsims)),])-> CANDf0.1
-Store(CANDf0.5) #etc 
-Store(CANDf0.4); Store(CANDf0.3); Store(CANDf0.2); Store(CANDf0.1)
-
-#here I can start exploring these windows.
-################################################################################################
-
-andres_AA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AA.bed')
-andres_AA[1:15,]->andres_AA #remove triple entries
-andres_EA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.EA.bed')
-andres_EA[1:31,]->andres_EA #remove triple entries
-andres_AAandEA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AAandEA.bed')
-andres_AAandEA[1:12,]->andres_AAandEA #remove triple entries (this is actually a problem with the inpur file)
-DG_T2_YRI<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.YRI.bed')
-#this file has double entries for each line...
-DG_T2_YRI[1:99,]->DG_T2_YRI
-DG_T2_YRI[-40,]->DG_T2_YRI
-DG_T2_CEU<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.CEU.bed')
-mhc.coords<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/mhc.coords.gencode.bed')
-
-
-#MHC coordinates (by Deborah, but remember that this differs a bit from GENCODE v.19...it is just a quick way to check for HLA windows, but I will remove it after I have my own bedfile for HLA made from GENCODE directly.
-#read.table('mhc_shiina_hg19.bed', header=F)-> mhc.coords
-
-names(mhc.coords)<-c('chr','B', 'E', 'Name')
-names(andres_AA)<-c('chr','B', 'E', 'Name')
-names(andres_EA)<-c('chr','B', 'E', 'Name')
-names(andres_AAandEA)<-c('chr','B', 'E', 'Name')
-names(DG_T2_YRI)<-c('chr','B', 'E', 'Name')
-names(DG_T2_CEU)<-c('chr','B', 'E', 'Name')
-
-read.table('/mnt/sequencedb/PopGen/cesare/hg19/bedfiles/ensembl_genes_hg19.bed.gz')->hg19.coding.coords.bed
-names(hg19.coding.coords.bed)<-c('chr', 'beg', 'end','name', 'type')
-
-#lapply(1:22, function(x) subset(prd.bed, chr==x))-> prot.cod.bed.list
-lapply(1:22, function(x) subset(hg19.coding.coords.bed, chr==x))-> coding.per.chr.list #in total thi has 42849, which is less than hg19.coding.coords, because we get rid of ' MT', 'X', and 'Y'.
-#########################################################################################################################
+Store(CANDf0.5); Store(CANDf0.4); Store(CANDf0.3); Store(CANDf0.2); Store(CANDf0.1)
+Store(list.SCAN) #now list.SCAN has everything I need.
+#In  the next part we can start exploring these windows.
+#
+#
 
 my.function<-function(B, E, df=XX, chr=6){
 rbind(subset(df, Chr==chr & End.Win > B & End.Win < E), subset(df, Chr==chr & Beg.Win > B & Beg.Win < E))->res
@@ -225,13 +140,20 @@ df[rownames(res[!duplicated(res),]),]-> res2
 return(res2)
 }
 
+
+read.table('/mnt/sequencedb/PopGen/cesare/hg19/bedfiles/ensembl_genes_hg19.bed.gz')->hg19.coding.coords.bed
+names(hg19.coding.coords.bed)<-c('chr', 'beg', 'end','name', 'type')
+
+#lapply(1:22, function(x) subset(prd.bed, chr==x))-> prot.cod.bed.list
+lapply(1:22, function(x) subset(hg19.coding.coords.bed, chr==x))-> coding.per.chr.list #in total thi has 42849, which is less than hg19.coding.coords, because we get rid of ' MT', 'X', and 'Y'.
+Store(coding.per.chr.list)
+#########################################
 lapply(coding.per.chr.list, function(x)dim(x)[1])-> ll1
 
-lapply(ll1,function(x) vector('list',x))-> test.all.prot
+#lapply(ll1,function(x) vector('list',x))-> test.all.prot
 
 
-
-#skip this because it is already saved#####
+########skip this because it is already saved#####
 #all.coding<-vector('list', 22) #YRI
 
 system.time(for (j in  1:22){
@@ -241,7 +163,9 @@ system.time(lapply(1:ll1[[chr1]], function(x)(my.function(B=coding.per.chr.list[
 #71003.094   428.739 36829.092 
 #alternative, with aprallel....
 #29 hours
-####33##################################################################################################################
+Store(all.coding)
+####################################################################
+Objects()
 mclapply(all.coding, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
 #9 seconds
 
@@ -263,8 +187,40 @@ system.time(ALL.POPS[[6]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]
 system.time(ALL.POPS[[7]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[7]][y,])))
 #in order to not have to do this for every pop, I should take the row names for each gene and then index that for each population and build similar dataframes. It should be quicker.
 
-Store(all.coding)
-Store(ALL.POPS) # so far I only put YRI in all pops.
+#Store(all.coding)
+Store(ALL.POPS) # so far I only put YRI in all pops. Currently trying again for all pops.
+
+################################################################################################
+################################################################################################
+################################################################################################
+############################################ Part II ###########################################
+##
+#mclapply(list.SCAN, function(x) arrange(x, Chr, Beg.Win))-> LL
+#LL->list.SCAN
+#Store(list.SCAN)
+Objects()
+andres_AA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AA.bed')
+andres_AA[1:15,]->andres_AA #remove triple entries
+andres_EA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.EA.bed')
+andres_EA[1:31,]->andres_EA #remove triple entries
+andres_AAandEA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AAandEA.bed')
+andres_AAandEA[1:12,]->andres_AAandEA #remove triple entries (this is actually a problem with the inpur file)
+DG_T2_YRI<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.YRI.bed')
+#this file has double entries for each line...
+DG_T2_YRI[1:99,]->DG_T2_YRI
+DG_T2_YRI[-40,]->DG_T2_YRI
+DG_T2_CEU<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/DG.2014.T2.CEU.bed')
+mhc.coords<-read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/mhc.coords.gencode.bed')
+#MHC coordinates (by Deborah, but remember that this differs a bit from GENCODE v.19...it is just a quick way to check for HLA windows, but I will remove it after I have my own bedfile for HLA made from GENCODE directly.
+#read.table('mhc_shiina_hg19.bed', header=F)-> mhc.coords
+names(mhc.coords)<-c('chr','B', 'E', 'Name')
+names(andres_AA)<-c('chr','B', 'E', 'Name')
+names(andres_EA)<-c('chr','B', 'E', 'Name')
+names(andres_AAandEA)<-c('chr','B', 'E', 'Name')
+names(DG_T2_YRI)<-c('chr','B', 'E', 'Name')
+names(DG_T2_CEU)<-c('chr','B', 'E', 'Name')
+################################################################################
+################################################################################
 
 mclapply(1:22, function(x) paste0(subset(hg19.coding.coords.bed, chr==x)[,4], '.', subset(hg19.coding.coords.bed, chr==x)[,5]))->names.all.coding
 
@@ -536,11 +492,6 @@ write.table(intersect(intersect(as.character(sort(unique(subset(intsct.CANDf0.4[
 #######
 #A naive attempt to make a manhattan plot of NCV
 
-
-
-
-
-
 #the qqman package is actually meant for SNP-Pvalue dataframes,but I cheated and mnaged to use it.
 
 #do for all pops
@@ -642,5 +593,49 @@ colnames(top817intsc[[j]][[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2'
 
 #use the intersect function to check overlaps
 intsc(intersect(top100intsc[[1]][[1]], top100intsc[[1]][[2]]), top100intsc[[1]][[3]])
+
+
+#############
+
+#mclapply(list.SCAN, function(x) dim(x[which(x$P.val.NCVf0.5<(1/nsims)),]))-> candidate.windows
+
+#check if NCV in bins is normally distributed
+
+#pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/march.2015.qqplot.AFR.pdf')
+#sapply(1:211, function(x) {qqnorm(l.bin.vec1[[x]]$ncvFD_f0.5); qqline(l.bin.vec1[[x]]$ncvFD_f0.5))
+#dev.off()
+
+#pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/march.2015.figures/march.2015.Nr.IS.Genomic.VS.outliers.pdf')
+#par(mfrow=c(4,2));
+#lapply(1:7, function(x) {hist(list.SCAN[[x]]$Nr.IS, col='lightgray', border='gray', nclass=100, lty=2, main=names(list.SCAN)[x], freq=F, xlab="Number of Informative Sites per Window");lines(density(candidate.windows[[x]]$Nr.IS),col='sienna1')})
+#l.bin.vec1[[i]]$ncvFD_f0.2)-> sd2.bin
+#dev.off()
+
+
+
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/figures')
+#sapply(seq(1:7), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
+
+
+#one pops, feq=0.5:
+#this 
+venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),TSI=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.5.venn.tiff')
+
+
+
+#all pops, feq=0.4
+venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5,0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.4.venn.tiff')
+
+#all pops, feq=0.3
+ feq, all pops:
+
+venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5,0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.3.venn.tiff')
+
+
+venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Africa.f0.5.venn.tiff')
+
+
+venn.diagram(list(CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1", "orange"),alpha = c(0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Europe.f0.5.venn.tiff')
+
 
 
