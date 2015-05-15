@@ -172,7 +172,7 @@ mclapply(all.coding, function(x) mclapply(x, function(y) rownames(y)))-> all.row
 ALL.POPS.AF<-vector('list', 3)   #currently running this blok in bionc03 (22.04.2015)
 names(ALL.POPS.EU)<-pops[1:3]
 
-ALL.POPS.EU<-vector('list', 3)   #currently running this blok in bionc03 (22.04.2015)
+ALL.POPS.EU<-vector('list', 4)   #currently running this blok in bionc03 (22.04.2015)
 names(ALL.POPS.EU)<-pops[4:7]
 
 system.time(ALL.POPS.AF[[1]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[1]][y,])))
