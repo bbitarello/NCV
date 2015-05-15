@@ -169,26 +169,30 @@ Objects()
 mclapply(all.coding, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
 #9 seconds
 
-ALL.POPS<-vector('list', 7)   #currently running this blok in bionc03 (22.04.2015)
-names(ALL.POPS)<-pops[1:7]
+ALL.POPS.AF<-vector('list', 3)   #currently running this blok in bionc03 (22.04.2015)
+names(ALL.POPS.EU)<-pops[1:3]
 
-system.time(ALL.POPS[[1]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[1]][y,])))
+ALL.POPS.EU<-vector('list', 3)   #currently running this blok in bionc03 (22.04.2015)
+names(ALL.POPS.EU)<-pops[4:7]
 
-system.time(ALL.POPS[[2]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[2]][y,])))
+system.time(ALL.POPS.AF[[1]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[1]][y,])))
 
-system.time(ALL.POPS[[3]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[3]][y,])))
+system.time(ALL.POPS.AF[[2]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[2]][y,])))
 
-system.time(ALL.POPS[[4]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[4]][y,])))
+system.time(ALL.POPS.AF[[3]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[3]][y,])))
 
-system.time(ALL.POPS[[5]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[5]][y,])))
+Store(ALL.POPS.AF)
 
-system.time(ALL.POPS[[6]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[6]][y,])))
+system.time(ALL.POPS.EU[[1]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[4]][y,])))
 
-system.time(ALL.POPS[[7]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[7]][y,])))
+system.time(ALL.POPS.EU[[2]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[5]][y,])))
+
+system.time(ALL.POPS.EU[[3]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[6]][y,])))
+
+system.time(ALL.POPS.EU[[4]]<-mclapply(1:22, function(x) mclapply(all.row.names[[x]], function(y) list.SCAN[[7]][y,])))
 #in order to not have to do this for every pop, I should take the row names for each gene and then index that for each population and build similar dataframes. It should be quicker.
 
-#Store(all.coding)
-Store(ALL.POPS) # so far I only put YRI in all pops. Currently trying again for all pops.
+Store(ALL.POPS.EU) # so far I only put YRI in all pops. Currently trying again for all pops.
 
 ################################################################################################
 ################################################################################################
