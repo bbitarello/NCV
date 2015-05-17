@@ -182,6 +182,7 @@ function(y)(my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list
 
 Store(all.coding)
 Store(ALL.CODING) #if this one works, the other one should be erased and code changed accordingly.
+#Stopped here: session man_plots. in bionc03
 #################################################################### I STOPPED HERE #####################
 Objects()
 mclapply(all.coding, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
@@ -469,9 +470,11 @@ dev.off()
 
 ###################################################
 ###################################################
-##BED Files #######################################
-###################################################
-###################################################
+##BED Files ##########################################################################################
+######################################################################################################
+######################################################################################################
+#this block appears to be working fine, until the part where top100 and top816 are read in.
+#
 #generate bed files for collapsing candidate windows
 #set directory
 BED.PATH<-'/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/bedfiles/'
@@ -512,28 +515,56 @@ file=paste0(BED.PATH,'cand.f0.3.' ,pops[[i]],'.gene.names.txt'), quote=F, row.na
 write.table(intersect(intersect(as.character(sort(unique(subset(intsct.CANDf0.4[[i]],type=='protein_coding')$name))),as.character(sort(unique(subset(intsct.CANDf0.5[[i]],type=='protein_coding')$name)))),as.character(sort(unique(subset(intsct.CANDf0.5[[i]],type=='protein_coding')$name)))),  file=paste0(BED.PATH,'cand.intersectallfeqs.' ,pops[i], '.gene.names.txt'), quote=F, row.names=F)}
 #now the union of all feqs (per pop)
 for (i in 1:7){
-write.table(c(as.character(sort(unique(subset(intsct.CANDf0.5[[i]],type=='protein_coding')$name))),
+write.table(
+sort(unique(c(as.character(sort(unique(subset(intsct.CANDf0.5[[i]],type=='protein_coding')$name))),
 as.character(sort(unique(subset(intsct.CANDf0.4[[i]],type=='protein_coding')$name))),
-as.character(sort(unique(subset(intsct.CANDf0.3[[i]],type=='protein_coding')$name)))),
+as.character(sort(unique(subset(intsct.CANDf0.3[[i]],type=='protein_coding')$name)))))),
 file=paste0(BED.PATH,'cand.unionallfeqs.' ,pops[i], '.gene.names.txt'), quote=F, row.names=F)
+}
 
 #there are other possible combinations, but I will only do then if and when needed.
 
 ##########                           
 #top817 and top100
+#top100
+top100f0.5<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.5.P.val)[1:100,]) #top 100 windows ranked by feq=0.5
+top100f0.4<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.4.P.val)[1:100,]) #top 100 windows ranked by feq=0.4
+top100f0.3<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.3.P.val)[1:100,]) #top 100 windows ranked by feq=0.3
+top816f0.2<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.2.P.val)[1:100,]) #top 100 windows ranked by feq=0.2
+top816f0.5<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.5.P.val)[1:816,]) #top 816 windows ranked by feq=0.5
+top816f0.4<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.4.P.val)[1:816,]) #top 816 windows ranked by feq=0.4
+top816f0.3<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.3.P.val)[1:816,]) #top 816 windows ranked by feq=0.3
+top816f0.2<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.2.P.val)[1:816,]) #top 816 windows ranked by feq=0.2
+#sorting for merge and intersect bed
+sort.top100f0.5<-mclapply(top100f0.5, function(x) arrange(x, Chr, Beg.Win))
+sort.top100f0.4<-mclapply(top100f0.4, function(x) arrange(x, Chr, Beg.Win))
+sort.top100f0.3<-mclapply(top100f0.3, function(x) arrange(x, Chr, Beg.Win))
+sort.top100f0.2<-mclapply(top100f0.2, function(x) arrange(x, Chr, Beg.Win))
+#
+sort.top816f0.5<-mclapply(top816f0.5, function(x) arrange(x, Chr, Beg.Win))
+sort.top816f0.4<-mclapply(top816f0.4, function(x) arrange(x, Chr, Beg.Win))
+sort.top816f0.3<-mclapply(top816f0.3, function(x) arrange(x, Chr, Beg.Win))
+sort.top816f0.2<-mclapply(top816f0.2, function(x) arrange(x, Chr, Beg.Win))
+
+#top816 (why this number? nrwo(list.SCAN[[3]]*(1/2000), i.e, 0.05% of the empirical distribution.
+
 
 for (i in 1:7){
 write.table(cbind(sort.top100f0.4[[i]], rownames(sort.top100f0.4[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top100.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
 write.table(cbind(sort.top100f0.5[[i]], rownames(sort.top100f0.5[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top100.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
-write.table(cbind(sort.top100f0.3[[i]], rownames(sort.top100f0.3[[i]])),  options(scipen=1),file = paste0(BED.pATH,pops[i],'.top100.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
-write.table(cbind(sort.top817f0.4[[i]], rownames(sort.top817f0.4[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top817.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
-write.table(cbind(sort.top817f0.5[[i]], rownames(sort.top817f0.5[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top817.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
-write.table(cbind(sort.top817f0.3[[i]], rownames(sort.top817f0.3[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top817.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
+write.table(cbind(sort.top100f0.3[[i]], rownames(sort.top100f0.3[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top100.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top816f0.4[[i]], rownames(sort.top816f0.4[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top816.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top816f0.5[[i]], rownames(sort.top816f0.5[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top816.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top816f0.3[[i]], rownames(sort.top816f0.3[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top816.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+}
 
-#read intersect files (which file??)
+#read intersect files: merge_intersect_script.sh
+#Note: find out what the difference between ensenbl_hg19.bed and final_encode.bed . I know the former came from Cesare and the latter from me,
+#but I am not sure they are the same.
 
+#Stopped here. Session new_16_05_2015 in bionc02.
 top100intsc<-vector('list', 3)
-top817intsc<-vector('list', 3)
+top816intsc<-vector('list', 3)
 
 
 lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top100.f0.5.bed')))-> top100intsc[[1]]
