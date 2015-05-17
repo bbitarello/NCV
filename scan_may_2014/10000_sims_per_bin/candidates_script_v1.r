@@ -2,13 +2,14 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 15.05.2015
+#	Last modified: 17.05.2015
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
+#                          Last comment: I am currently trying to fix an issue between lines 158 and 176 (all.coding/ALL.CODING)
 #################################################################################################################################
 #Recommendations: use TMUX and save objects periodically with Store() from SOAR package, to avoiding the crashing of
 #the R session.
-
+#Always run all the lines in this block before anything else.
 #load packages and data
 library(parallel)  #parallelize functions
 library(SOAR)  #store objects from workspace
@@ -17,9 +18,27 @@ library(plyr)  #big data frames
 library(qqman)  #manhattan plot
 library(VennDiagram)  
 Sys.setenv(R_LOCAL_CACHE="estsession")  #this is for 'SOAR'
-pops<-c("AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "CLM","PUR")
-nsims<-10000
-setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/')
+pops<-c("AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "CLM","PUR") #pops from 1000G phase I.
+nsims<-10000 #number of simulations per bin. Used a lot.
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/') #working directory for most purposes.
+##########
+#Functions
+##########
+#My.Function - not a very creative name.
+my.function<-function(B, E, df=XX, chr=6){
+rbind(subset(df, Chr==chr & End.Win > B & End.Win < E), subset(df, Chr==chr & Beg.Win > B & Beg.Win < E))->res
+df[rownames(res[!duplicated(res),]),]-> res2
+return(res2)
+}
+# find.gene - that's literally what it does. But not just protein coding genes.
+#E.g,  to find hla-b, 
+#find.gene(df, chr=6, name='HLA-B')
+find.gene<-function(df, chr, name){  #df can be changes for diff pops so that we can check p-value in each population!
+which(unlist(mclapply(names.all.coding[[chr]], function(x) strsplit(x, '.', fixed=TRUE)[[1]][[1]]))==name)->QUERY.POS
+df[[chr]][[QUERY.POS]]-> QUERY.SUBSET
+return(list(query_subset=QUERY.SUBSET, query_pos=QUERY.POS, GENE=name))
+}  #currently this gives me correct results for all.coding, but not for the ALL.POPS.AF datasets. I am trying to fix this.
+#
 Objects()
 ###################################################################################################
 ############################################## Part I #############################################
@@ -134,40 +153,47 @@ Store(list.SCAN) #now list.SCAN has everything I need.
 #
 #
 
-my.function<-function(B, E, df=XX, chr=6){
-rbind(subset(df, Chr==chr & End.Win > B & End.Win < E), subset(df, Chr==chr & Beg.Win > B & Beg.Win < E))->res
-df[rownames(res[!duplicated(res),]),]-> res2
-return(res2)
-}
-
-
 read.table('/mnt/sequencedb/PopGen/cesare/hg19/bedfiles/ensembl_genes_hg19.bed.gz')->hg19.coding.coords.bed
 names(hg19.coding.coords.bed)<-c('chr', 'beg', 'end','name', 'type')
 
 #lapply(1:22, function(x) subset(prd.bed, chr==x))-> prot.cod.bed.list
 lapply(1:22, function(x) subset(hg19.coding.coords.bed, chr==x))-> coding.per.chr.list #in total thi has 42849, which is less than hg19.coding.coords, because we get rid of ' MT', 'X', and 'Y'.
-Store(coding.per.chr.list)
-#########################################
-lapply(coding.per.chr.list, function(x)dim(x)[1])-> ll1
 
+
+lapply(coding.per.chr.list, function(x)dim(x)[1])-> ll1
+Store(coding.per.chr.list)
 #lapply(ll1,function(x) vector('list',x))-> test.all.prot
 
-
-########skip this because it is already saved#####
+########Currently re-running all.coding/ALL.CODING because the function find.gene is not working properly.#####
 #all.coding<-vector('list', 22) #YRI
 
 system.time(for (j in  1:22){
 chr1<-j
 system.time(lapply(1:ll1[[chr1]], function(x)(my.function(B=coding.per.chr.list[[chr1]]$beg[x], E=coding.per.chr.list[[chr1]]$end[x], chr=chr1, df=list.SCAN[[3]])))-> all.coding[[chr1]])})
+
 #     user    system   elapsed 
 #71003.094   428.739 36829.092 
 #alternative, with aprallel....
-#29 hours
+#29 hours was my first try, then this loop took 10 hours. Now trying to avoid the loops...
+
+system.time(mclapply(1:22, function(x) mclapply(1:ll1[[x]], 
+function(y)(my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list[[x]]$end[y], chr=x, df=list.SCAN[[3]]))))->ALL.CODING)
+#
+
 Store(all.coding)
-####################################################################
+Store(ALL.CODING) #if this one works, the other one should be erased and code changed accordingly.
+#################################################################### I STOPPED HERE #####################
 Objects()
 mclapply(all.coding, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
 #9 seconds
+
+mclapply(1:22, function(x) paste0(subset(hg19.coding.coords.bed, chr==x)[,4], '.', subset(hg19.coding.coords.bed, chr==x)[,5]))->names.all.coding
+
+#This is also done for all.coding, so I will comment to avoid problems.
+
+#for (i in 1:22){names(all.coding[[i]])<-names.all.coding[[i]]}   #name the elements on each position of each chromosome with the name of the element,followed by a dot, and then followed by the type (pseudogene, protein_coding,etc)
+
+Store(names.all.coding)
 
 ALL.POPS.AF<-vector('list', 3)   #currently running this blok in bionc03 (22.04.2015)
 names(ALL.POPS.EU)<-pops[1:3]
@@ -202,6 +228,7 @@ Store(ALL.POPS.EU) # so far I only put YRI in all pops. Currently trying again f
 #mclapply(list.SCAN, function(x) arrange(x, Chr, Beg.Win))-> LL
 #LL->list.SCAN
 #Store(list.SCAN)
+#Load lists od genes from  other scans.
 Objects()
 andres_AA<- read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/andres.2009.AA.bed')
 andres_AA[1:15,]->andres_AA #remove triple entries
@@ -225,38 +252,22 @@ names(DG_T2_YRI)<-c('chr','B', 'E', 'Name')
 names(DG_T2_CEU)<-c('chr','B', 'E', 'Name')
 ################################################################################
 ################################################################################
-
-mclapply(1:22, function(x) paste0(subset(hg19.coding.coords.bed, chr==x)[,4], '.', subset(hg19.coding.coords.bed, chr==x)[,5]))->names.all.coding
-
-for (i in 1:22){names(all.coding[[i]])<-names.all.coding[[i]]}   #name the elements on each position of each chromosome with the name of the element,followed by a dot, and then followed by the type (pseudogene, protein_coding,etc)
-
-
-#WITH THIS i CAN MAKE A FUNCTION TO FIND ANY GENE!
-
-#FOR INSTANCE, IF i WANT TO FIND hla-b, i JUST NEED TO KNOW THE CHROMOSOME, WHICH IN THIS CASE IS 
-
-find.gene<-function(df, chr, name){  #df can be changes for diff pops so that we can check p-value in each population!
-
-which(unlist(mclapply(names.all.coding[[chr]], function(x) strsplit(x, '.', fixed=TRUE)[[1]][[1]]))==name)->QUERY.POS
-
-df[[chr]][[QUERY.POS]]-> QUERY.SUBSET
-
-return(list(query_subset=QUERY.SUBSET, query_pos=QUERY.POS, GENE=name))
-}
-
+#Function find.genes
+#TO DO!
+#this function is not working properly... the datasets all.coding and ALL.POPS.AF are correct and matching, but the function does
+#not work propertly on the latter. Because of that I am trying to re-run the datasets ALL.POPS.AF after I re-run all.coding, because
+#I think that's where the problem is. When I first ran all.coding, list.SCAN[[3]] was a different dataset (other filters)
+######################################
+#After I fix the above issues I can re-run this:
 #MHC
 system.time(mclapply(1: dim(mhc.coords)[1], function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(mhc.coords[x,1]),'r')[[1]][[2]]), name=as.character(mhc.coords[x,4])))-> MHC.QUERY)
-
 # 19.143 
 #AIDA
-
 system.time(mclapply(1: nrow(andres_AA),function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(andres_AA[x,1]),'r')[[1]][[2]]), name=as.character(andres_AA[x,4])))->ANDRES.AA.QUERY)
-
 system.time(mclapply(1: nrow(andres_EA),function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(andres_EA[x,1]),'r')[[1]][[2]]), name=as.character(andres_EA[x,4])))->ANDRES.EA.QUERY)
 system.time(mclapply(1: nrow(andres_AAandEA),function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(andres_AAandEA[x,1]),'r')[[1]][[2]]), name=as.character(andres_AAandEA[x,4])))->ANDRES.AAandEA.QUERY)
-
+#DeGiorgio
 system.time(mclapply(1: nrow(DG_T2_YRI),function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(DG_T2_YRI[x,1]),'r')[[1]][[2]]), name=as.character(DG_T2_YRI[x,4])))->DG.T2.YRI.QUERY)
-
 system.time(mclapply(1: nrow(DG_T2_CEU),function(x) find.gene(all.coding, chr=as.numeric(strsplit(as.character(DG_T2_CEU[x,1]),'r')[[1]][[2]]), name=as.character(DG_T2_CEU[x,4])))->DG.T2.CEU.QUERY)
 
 
@@ -386,7 +397,6 @@ dev.off()
 #check number of windows which overlap genes and how many don't
 
 #this here is obsolete
-######################################
 #bp<-c();Nr.Win<-c();W<-3000
 #lapply(1:22, function(x)unique(subset(my.cand, chr==paste0('chr', x))$end.pos.scan)- unique(subset(my.cand, chr==paste0('chr', x))$beg.pos.scan))->bp  #number of bp in windows which overlap genes.
 #sapply(1:22, function(x) 2*((bp[x]-(W/2))/W))-> Nr.Win
@@ -459,13 +469,13 @@ dev.off()
 
 ####IMPORTANT ################
 #generate bed files for collapsing candidate windows
+#set directory
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/bedfiles')
+#simulation-based candidates
 
 sapply(1:7, function(x) write.table(cbind(CANDf0.5[[x]], rownames(CANDf0.5[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.5.bed'), quote=F, sep='\t', col.names=F, row.names=F))
-
 sapply(1:7, function(x) write.table(cbind(CANDf0.4[[x]], rownames(CANDf0.4[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.4.bed'), quote=F, sep='\t', col.names=F, row.names=F))
-
 sapply(1:7, function(x) write.table(cbind(CANDf0.3[[x]], rownames(CANDf0.3[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.3.bed'), quote=F, sep='\t', col.names=F, row.names=F))
-
 #after this, I use the script mergebed.sh to merge and then intersect these bedfiles with enselbl hg19 coordinates
 #read in those files
 
@@ -476,27 +486,68 @@ for (i in 1:7){
 colnames(intsct.CANDf0.5[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
 colnames(intsct.CANDf0.4[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
 colnames(intsct.CANDf0.3[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')}
-                           
+
+#create files for GO analyses
+#for all pops, 3 feq:
+for (i in 1:7){
+write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.5[[i]], type=='protein_coding')$name)))),  file='cand.f0.5.', pops[[i]]'.gene.names.txt', quote=F, row.names=F)
+write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.4[[i]], type=='protein_coding')$name)))),  file='cand.f0.4.', pops[[i]]'.gene.names.txt', quote=F, row.names=F)
+write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.3[[i]], type=='protein_coding')$name)))),  file='cand.f0.3.' ,pops[[i]]'.gene.names.txt', quote=F, row.names=F)
+#now check for intersection
+write.table(intersect(intersect(as.character(sort(unique(subset(intsct.CANDf0.4[[i]],type=='protein_coding')$name))),as.character(sort(unique(subset(intsct.CANDf0.5[[i]],type=='protein_coding')$name)))),as.character(sort(unique(subset(intsct.CANDf0.5[[i]],type=='protein_coding')$name)))),  file='cand.intersectallfeqs.' ,pops[i], '.gene.names.txt', quote=F, row.names=F)
+#now the union:
+
+
+#HOW??
+
+
+
+##########                           
+#top817 and top100
+
+for (i in 1:7){
+write.table(cbind(sort.top100f0.4[[i]], rownames(sort.top100f0.4[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top100f0.5[[i]], rownames(sort.top100f0.5[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top100f0.3[[i]], rownames(sort.top100f0.3[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
+
+for (i in 1:7){
+write.table(cbind(sort.top817f0.4[[i]], rownames(sort.top817f0.4[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top817f0.5[[i]], rownames(sort.top817f0.5[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top817f0.3[[i]], rownames(sort.top817f0.3[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
+
+#read intersect files
+
+top100intsc<-vector('list', 3)
+top817intsc<-vector('list', 3)
+
+
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.5.bed')))-> top100intsc[[1]]
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.4.bed')))-> top100intsc[[2]]
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.3.bed')))-> top100intsc[[3]]
+#
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.5.bed')))-> top817intsc[[1]]
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.4.bed')))-> top817intsc[[2]]
+lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.3.bed')))-> top817intsc[[3]]
+
+#
+for (j in 1:3){
+for (i in 1:7){
+colnames(top100intsc[[j]][[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'whatever','gene_id','type', 'overlap')
+colnames(top817intsc[[j]][[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'whatever','gene_id','type', 'overlap')}}
+
+#set directory back to where it was
+setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/')
+#########
+#stuff
 
 unlist(lapply(intsct.CANDf0.3, function(x) dim(subset(x, type=='protein_coding'))[1]))   #number of protein coding genes in the set
 
-
 length(sort(unique(c(as.character(sort(unique(unlist(lapply(intsct.CANDf0.3, function(x) subset(x, type=='protein_coding')$name))))),as.character(sort(unique(unlist(lapply(intsct.CANDf0.4, function(x) subset(x, type=='protein_coding')$name))))), as.character(sort(unique(unlist(lapply(intsct.CANDf0.5, function(x) subset(x, type=='protein_coding')$name)))))))))  #total nr of genes which are candidates forany of all pops and any of all feqs.
-
-#create files for GO analyses
-
-#for YRI, 3 feq
-write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.5[[3]], type=='protein_coding')$name)))),  file='cand.f0.5.YRI.gene.names.txt', quote=F, row.names=F)
-write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.4[[3]], type=='protein_coding')$name)))),  file='cand.f0.4.YRI.gene.names.txt', quote=F, row.names=F)
-write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.3[[3]], type=='protein_coding')$name)))),  file='cand.f0.3.YRI.gene.names.txt', quote=F, row.names=F)
-#now check for intersection
-write.table(intersect(intersect(as.character(sort(unique(subset(intsct.CANDf0.4[[3]],type=='protein_coding')$name))),as.character(sort(unique(subset(intsct.CANDf0.5[[3]],type=='protein_coding')$name)))),as.character(sort(unique(subset(intsct.CANDf0.5[[3]],type=='protein_coding')$name)))),  file='cand.intersectallfeqs.YRI.gene.names.txt', quote=F, row.names=F)
-#now the union:
-
-#######
-#A naive attempt to make a manhattan plot of NCV
-
-#the qqman package is actually meant for SNP-Pvalue dataframes,but I cheated and mnaged to use it.
+################################################################################
+################################################################################
+#Manhattan Plots
+#the qqman package is actually meant for SNP-Pvalue dataframes,but I adapt its usage for a window-based approach. The position
+#is the middleof the window and the 'SNP' value is the window NCV z-score (for a given feq)
 
 #do for all pops
 mclapply(list.SCAN, function(x) x[,c(1,2,3,21,26)])->tes.manhattan.f0.5
@@ -564,35 +615,6 @@ manhattan(subset(tes.manhattan.f0.3[[j]], CHR==i), suggestiveline= -log10(0.0010
 dev.off()}}
 
 
-for (i in 1:7){
-write.table(cbind(sort.top100f0.4[[i]], rownames(sort.top100f0.4[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
-write.table(cbind(sort.top100f0.5[[i]], rownames(sort.top100f0.5[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
-write.table(cbind(sort.top100f0.3[[i]], rownames(sort.top100f0.3[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
-
-for (i in 1:7){
-write.table(cbind(sort.top817f0.4[[i]], rownames(sort.top817f0.4[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
-write.table(cbind(sort.top817f0.5[[i]], rownames(sort.top817f0.5[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
-write.table(cbind(sort.top817f0.3[[i]], rownames(sort.top817f0.3[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
-
-#read intersect files
-
-top100intsc<-vector('list', 3)
-top817intsc<-vector('list', 3)
-
-
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.5.bed')))-> top100intsc[[1]]
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.4.bed')))-> top100intsc[[2]]
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.3.bed')))-> top100intsc[[3]]
-#
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.5.bed')))-> top817intsc[[1]]
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.4.bed')))-> top817intsc[[2]]
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.3.bed')))-> top817intsc[[3]]
-
-#
-for (j in 1:3){
-for (i in 1:7){
-colnames(top100intsc[[j]][[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'whatever','gene_id','type', 'overlap')
-colnames(top817intsc[[j]][[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'whatever','gene_id','type', 'overlap')}}
 
 
 #use the intersect function to check overlaps
