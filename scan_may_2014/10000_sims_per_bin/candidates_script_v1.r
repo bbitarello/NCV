@@ -431,25 +431,25 @@ lines(density(arrange(CANDf0.3[[3]], Z.f0.3.P.val)[1:100,]$NCVf3), col='magenta'
 legend('topleft', c('Genomic', 'NCV<all sims', 'Top100.Z.score'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
 dev.off()
 #
-
+#also obsolete, but may be useful so I will keep the code here.
 #pdf('figures/PtoD.candidates.YRI.pdf')
 #plot(density(log(test$PtoD)), col='red', lty=2, main='Outliers defined based on NCV (0.5)', xlab='Ln(PtoD)')
 #lines(density(log(XX$PtoD)), col='gray')
 #lines(density(log(testII$PtoD)), col='magenta', lty=2)
 #legend('topright',  c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
 #dev.off()
-pdf('figures/PropCov.candidates.YRI.pdf')
-plot(density(test$Proportion.Covered), col='red', lty=2, main='Outliers defined based on NCV (0.5)', xlab='Proportion of window covered')
-lines(density(XX$Proportion.Covered), col='gray')
-lines(density(testII$Proportion.Covered), col='magenta', lty=2)
-legend('topleft', c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
-dev.off()
-pdf('figures/NCVf3.candidates.based.on.NCVf5.YRI.pdf')
-plot(density(test$NCVf3), col='red', lty=2, main='Outliers defined based on NCV (0.5)', xlab='NCV(0.3)')
-lines(density(XX$NCVf3), col='gray')
-lines(density(testII$NCVf3), col='magenta', lty=2)
-legend('topleft', c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
-dev.off()
+#pdf('figures/PropCov.candidates.YRI.pdf')
+#plot(density(test$Proportion.Covered), col='red', lty=2, main='Outliers defined based on NCV (0.5)', xlab='Proportion of window covered')
+#lines(density(XX$Proportion.Covered), col='gray')
+#lines(density(testII$Proportion.Covered), col='magenta', lty=2)
+#legend('topleft', c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
+#dev.off()
+#pdf('figures/NCVf3.candidates.based.on.NCVf5.YRI.pdf')
+#plot(density(test$NCVf3), col='red', lty=2, main='Outliers defined based on NCV (0.5)', xlab='NCV(0.3)')
+#lines(density(XX$NCVf3), col='gray')
+#lines(density(testII$NCVf3), col='magenta', lty=2)
+#legend('topleft', c('Genomic', 'P<=0.0005', 'P<0.0005'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
+#dev.off()
 
 
 #pdf('figures/NCVf4.candidates.based.on.NCVf5.YRI.pdf')
@@ -467,67 +467,82 @@ dev.off()
 #plot(as.numeric(able(testII$Nr.IS)), col='magenta', lty=2, ylab='Frequency', xlim=c(0,491), main='P<5e-04',  xlab='Nr.IS/window')
 #dev.off()
 
-####IMPORTANT ################
+###################################################
+###################################################
+##BED Files #######################################
+###################################################
+###################################################
 #generate bed files for collapsing candidate windows
 #set directory
-setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/bedfiles')
+BED.PATH<-'/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/bedfiles/'
+
+#generate a background bed file (all scanned genes)
+
+write.table(list.SCAN[[3]][,c(1,2,3,4,5)], options(scipen=1), 
+file=paste0(BED.PATH,'background.scanned.list.of.genes.txt'), quote=F, sep="\t", col.names=F, row.names=F)
 #simulation-based candidates
 
-sapply(1:7, function(x) write.table(cbind(CANDf0.5[[x]], rownames(CANDf0.5[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.5.bed'), quote=F, sep='\t', col.names=F, row.names=F))
-sapply(1:7, function(x) write.table(cbind(CANDf0.4[[x]], rownames(CANDf0.4[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.4.bed'), quote=F, sep='\t', col.names=F, row.names=F))
-sapply(1:7, function(x) write.table(cbind(CANDf0.3[[x]], rownames(CANDf0.3[[x]])), options(scipen=1),file = paste0(pops[[x]],'.candf0.3.bed'), quote=F, sep='\t', col.names=F, row.names=F))
+sapply(1:7, function(x) write.table(cbind(CANDf0.5[[x]], rownames(CANDf0.5[[x]])), options(scipen=1),file = paste0(BED.PATH,pops[[x]],'.candf0.5.bed'), quote=F, sep='\t', col.names=F, row.names=F))
+sapply(1:7, function(x) write.table(cbind(CANDf0.4[[x]], rownames(CANDf0.4[[x]])), options(scipen=1),file = paste0(BED.PATH,pops[[x]],'.candf0.4.bed'), quote=F, sep='\t', col.names=F, row.names=F))
+sapply(1:7, function(x) write.table(cbind(CANDf0.3[[x]], rownames(CANDf0.3[[x]])), options(scipen=1),file = paste0(BED.PATH,pops[[x]],'.candf0.3.bed'), quote=F, sep='\t', col.names=F, row.names=F))
 #after this, I use the script mergebed.sh to merge and then intersect these bedfiles with enselbl hg19 coordinates
 #read in those files
-
-lapply(1:7, function(x) read.table(paste0('intersect.',pops[[x]],'.candf0.5.bed')))-> intsct.CANDf0.5
-lapply(1:7, function(x) read.table(paste0('intersect.',pops[[x]],'.candf0.4.bed')))-> intsct.CANDf0.4
-lapply(1:7, function(x) read.table(paste0('intersect.',pops[[x]],'.candf0.3.bed')))-> intsct.CANDf0.3
+#go to /mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/bedfiles/ and execute ./mergebed.sh
+#next, read in all these intersected bed files.
+#############################################
+read.table(paste0(BED.PATH,'intersect.background.bed'))->background.all.genes
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intersect.',pops[[x]],'.candf0.5.bed')))-> intsct.CANDf0.5
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intersect.',pops[[x]],'.candf0.4.bed')))-> intsct.CANDf0.4
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intersect.',pops[[x]],'.candf0.3.bed')))-> intsct.CANDf0.3
 for (i in 1:7){
 colnames(intsct.CANDf0.5[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
 colnames(intsct.CANDf0.4[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
 colnames(intsct.CANDf0.3[[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')}
 
-#create files for GO analyses
+#create files for GO analyses, only with PROTEIN CODING genes among the simulation-based candidate windows.
 #for all pops, 3 feq:
 for (i in 1:7){
-write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.5[[i]], type=='protein_coding')$name)))),  file='cand.f0.5.', pops[[i]]'.gene.names.txt', quote=F, row.names=F)
-write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.4[[i]], type=='protein_coding')$name)))),  file='cand.f0.4.', pops[[i]]'.gene.names.txt', quote=F, row.names=F)
-write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.3[[i]], type=='protein_coding')$name)))),  file='cand.f0.3.' ,pops[[i]]'.gene.names.txt', quote=F, row.names=F)
-#now check for intersection
-write.table(intersect(intersect(as.character(sort(unique(subset(intsct.CANDf0.4[[i]],type=='protein_coding')$name))),as.character(sort(unique(subset(intsct.CANDf0.5[[i]],type=='protein_coding')$name)))),as.character(sort(unique(subset(intsct.CANDf0.5[[i]],type=='protein_coding')$name)))),  file='cand.intersectallfeqs.' ,pops[i], '.gene.names.txt', quote=F, row.names=F)
-#now the union:
+write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.5[[i]], 
+type=='protein_coding')$name)))),  file=paste0(BED.PATH,'cand.f0.5.', pops[[i]],'.gene.names.txt'), quote=F, row.names=F)
+write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.4[[i]], type=='protein_coding')$name)))),  
+file=paste0(BED.PATH,'cand.f0.4.', pops[[i]],'.gene.names.txt'), quote=F, row.names=F)
+write.table(as.matrix(as.character(sort(unique(subset(intsct.CANDf0.3[[i]], type=='protein_coding')$name)))),  
+file=paste0(BED.PATH,'cand.f0.3.' ,pops[[i]],'.gene.names.txt'), quote=F, row.names=F)
+#now check for intersection of all feqs (per pop)
+write.table(intersect(intersect(as.character(sort(unique(subset(intsct.CANDf0.4[[i]],type=='protein_coding')$name))),as.character(sort(unique(subset(intsct.CANDf0.5[[i]],type=='protein_coding')$name)))),as.character(sort(unique(subset(intsct.CANDf0.5[[i]],type=='protein_coding')$name)))),  file=paste0(BED.PATH,'cand.intersectallfeqs.' ,pops[i], '.gene.names.txt'), quote=F, row.names=F)}
+#now the union of all feqs (per pop)
+for (i in 1:7){
+write.table(c(as.character(sort(unique(subset(intsct.CANDf0.5[[i]],type=='protein_coding')$name))),
+as.character(sort(unique(subset(intsct.CANDf0.4[[i]],type=='protein_coding')$name))),
+as.character(sort(unique(subset(intsct.CANDf0.3[[i]],type=='protein_coding')$name)))),
+file=paste0(BED.PATH,'cand.unionallfeqs.' ,pops[i], '.gene.names.txt'), quote=F, row.names=F)
 
-
-#HOW??
-
-
+#there are other possible combinations, but I will only do then if and when needed.
 
 ##########                           
 #top817 and top100
 
 for (i in 1:7){
-write.table(cbind(sort.top100f0.4[[i]], rownames(sort.top100f0.4[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
-write.table(cbind(sort.top100f0.5[[i]], rownames(sort.top100f0.5[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
-write.table(cbind(sort.top100f0.3[[i]], rownames(sort.top100f0.3[[i]])),  options(scipen=1),file = paste0(pops[i],'.top100.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
+write.table(cbind(sort.top100f0.4[[i]], rownames(sort.top100f0.4[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top100.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top100f0.5[[i]], rownames(sort.top100f0.5[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top100.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top100f0.3[[i]], rownames(sort.top100f0.3[[i]])),  options(scipen=1),file = paste0(BED.pATH,pops[i],'.top100.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
+write.table(cbind(sort.top817f0.4[[i]], rownames(sort.top817f0.4[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top817.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top817f0.5[[i]], rownames(sort.top817f0.5[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top817.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
+write.table(cbind(sort.top817f0.3[[i]], rownames(sort.top817f0.3[[i]])),  options(scipen=1),file = paste0(BED.PATH,pops[i],'.top817.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
 
-for (i in 1:7){
-write.table(cbind(sort.top817f0.4[[i]], rownames(sort.top817f0.4[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.4.bed'),quote=F, sep='\t', col.names=F, row.names=F)
-write.table(cbind(sort.top817f0.5[[i]], rownames(sort.top817f0.5[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.5.bed'),quote=F, sep='\t', col.names=F, row.names=F)
-write.table(cbind(sort.top817f0.3[[i]], rownames(sort.top817f0.3[[i]])),  options(scipen=1),file = paste0(pops[i],'.top817.f0.3.bed'),quote=F, sep='\t', col.names=F, row.names=F)}
-
-#read intersect files
+#read intersect files (which file??)
 
 top100intsc<-vector('list', 3)
 top817intsc<-vector('list', 3)
 
 
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.5.bed')))-> top100intsc[[1]]
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.4.bed')))-> top100intsc[[2]]
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top100.f0.3.bed')))-> top100intsc[[3]]
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top100.f0.5.bed')))-> top100intsc[[1]]
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top100.f0.4.bed')))-> top100intsc[[2]]
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top100.f0.3.bed')))-> top100intsc[[3]]
 #
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.5.bed')))-> top817intsc[[1]]
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.4.bed')))-> top817intsc[[2]]
-lapply(1:7, function(x) read.table(paste0('intsc.',pops[[x]],'.top817.f0.3.bed')))-> top817intsc[[3]]
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top817.f0.5.bed')))-> top817intsc[[1]]
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top817.f0.4.bed')))-> top817intsc[[2]]
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top817.f0.3.bed')))-> top817intsc[[3]]
 
 #
 for (j in 1:3){
