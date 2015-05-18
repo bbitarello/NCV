@@ -167,9 +167,9 @@ Store(coding.per.chr.list)
 ########Currently re-running all.coding/ALL.CODING because the function find.gene is not working properly.#####
 #all.coding<-vector('list', 22) #YRI
 
-system.time(for (j in  1:22){
-chr1<-j
-system.time(lapply(1:ll1[[chr1]], function(x)(my.function(B=coding.per.chr.list[[chr1]]$beg[x], E=coding.per.chr.list[[chr1]]$end[x], chr=chr1, df=list.SCAN[[3]])))-> all.coding[[chr1]])})
+#system.time(for (j in  1:22){
+#chr1<-j
+#system.time(lapply(1:ll1[[chr1]], function(x)(my.function(B=coding.per.chr.list[[chr1]]$beg[x], E=coding.per.chr.list[[chr1]]$end[x], chr=chr1, df=list.SCAN[[3]])))-> all.coding[[chr1]])})
 
 #     user    system   elapsed 
 #71003.094   428.739 36829.092 
@@ -178,11 +178,13 @@ system.time(lapply(1:ll1[[chr1]], function(x)(my.function(B=coding.per.chr.list[
 
 system.time(mclapply(1:22, function(x) mclapply(1:ll1[[x]], 
 function(y)(my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list[[x]]$end[y], chr=x, df=list.SCAN[[3]]))))->ALL.CODING)
-#
+#     user     system    elapsed 
+#134006.588    798.046  76795.063    #21 hours!
 
-Store(all.coding)
-Store(ALL.CODING) #if this one works, the other one should be erased and code changed accordingly.
-#Stopped here: session man_plots. in bionc03
+
+Store(all.coding);Store(ALL.CODING) 
+
+#17.05.2015:it did work! So from this point on I will adjust the script for ALL.CODING instead of all.coding.
 #################################################################### I STOPPED HERE #####################
 Objects()
 mclapply(all.coding, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
@@ -220,7 +222,7 @@ system.time(ALL.POPS.EU[[4]]<-mclapply(1:22, function(x) mclapply(all.row.names[
 #in order to not have to do this for every pop, I should take the row names for each gene and then index that for each population and build similar dataframes. It should be quicker.
 
 Store(ALL.POPS.EU) # so far I only put YRI in all pops. Currently trying again for all pops.
-
+#Stopped here: session man_plots. in bionc03
 ################################################################################################
 ################################################################################################
 ################################################################################################
