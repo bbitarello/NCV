@@ -668,8 +668,8 @@ dev.off()}}
 
 pdf('bedfiles/my.man.test.pdf')
 my.manhattan(tes.manhattan.f0.5[[3]], 
-highlight=c(as.character(top100f0.4[[3]]$BP),as.character(top100f0.3[[3]]$BP))
-)
+highlight=c(as.character(top816f0.4[[3]]$BP),
+as.character(top816f0.3[[3]]$BP)),suggestiveline=-log10(6.129810e-05),genomewideline=-log10(0.0005001925))
 dev.off()
 
 
@@ -695,7 +695,6 @@ intsc(intersect(top100intsc[[1]][[1]], top100intsc[[1]][[2]]), top100intsc[[1]][
 #dev.off()
 
 
-
 setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/figures')
 #sapply(seq(1:7), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
 
@@ -705,12 +704,11 @@ setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/figures')
 venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),TSI=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.5.venn.tiff')
 
 
-
 #all pops, feq=0.4
 venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5,0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.4.venn.tiff')
 
 #all pops, feq=0.3
- feq, all pops:
+#feq, all pops:
 
 venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5,0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.3.venn.tiff')
 
