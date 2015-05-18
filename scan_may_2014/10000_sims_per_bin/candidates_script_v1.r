@@ -2,7 +2,7 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 17.05.2015
+#	Last modified: 18.05.2015
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #                          Last comment: I am currently trying to fix an issue between lines 158 and 176 (all.coding/ALL.CODING)
@@ -184,7 +184,7 @@ function(y)(my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list
 
 Store(all.coding);Store(ALL.CODING) 
 
-#17.05.2015:it did work! So from this point on I will adjust the script for ALL.CODING instead of all.coding.
+#18.05.2015:it did work! So from this point on I will adjust the script for ALL.CODING instead of all.coding.
 #################################################################### I STOPPED HERE #####################
 Objects()
 mclapply(all.coding, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
@@ -222,7 +222,7 @@ system.time(ALL.POPS.EU[[4]]<-mclapply(1:22, function(x) mclapply(all.row.names[
 #in order to not have to do this for every pop, I should take the row names for each gene and then index that for each population and build similar dataframes. It should be quicker.
 
 Store(ALL.POPS.EU) # so far I only put YRI in all pops. Currently trying again for all pops.
-#Stopped here: session man_plots. in bionc03
+#Stopped here (18.05.2015): session man_plots. in bionc03
 ################################################################################################
 ################################################################################################
 ################################################################################################
@@ -564,7 +564,7 @@ write.table(cbind(sort.top816f0.3[[i]], rownames(sort.top816f0.3[[i]])),  option
 #Note: find out what the difference between ensenbl_hg19.bed and final_encode.bed . I know the former came from Cesare and the latter from me,
 #but I am not sure they are the same.
 
-#Stopped here. Session new_16_05_2015 in bionc02.
+
 top100intsc<-vector('list', 3)
 top816intsc<-vector('list', 3)
 
@@ -573,24 +573,21 @@ lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top100.f
 lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top100.f0.4.bed')))-> top100intsc[[2]]
 lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top100.f0.3.bed')))-> top100intsc[[3]]
 #
-lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top817.f0.5.bed')))-> top817intsc[[1]]
-lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top817.f0.4.bed')))-> top817intsc[[2]]
-lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top817.f0.3.bed')))-> top817intsc[[3]]
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top816.f0.5.bed')))-> top816intsc[[1]]
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top816.f0.4.bed')))-> top816intsc[[2]]
+lapply(1:7, function(x) read.table(paste0(BED.PATH,'intsc.',pops[[x]],'.top816.f0.3.bed')))-> top816intsc[[3]]
 
 #
 for (j in 1:3){
 for (i in 1:7){
-colnames(top100intsc[[j]][[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'whatever','gene_id','type', 'overlap')
-colnames(top817intsc[[j]][[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'whatever','gene_id','type', 'overlap')}}
-
-#set directory back to where it was
-setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/')
+colnames(top100intsc[[j]][[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')
+colnames(top816intsc[[j]][[i]])<-c('chr', 'beg', 'end', 'win.ID', 'chr2', 'beg2', 'end2', 'name', 'type', 'overlap')}}
+#18.05.2015:works fine til here.
+#skip to man plots
 #########
-#stuff
-
-unlist(lapply(intsct.CANDf0.3, function(x) dim(subset(x, type=='protein_coding'))[1]))   #number of protein coding genes in the set
-
-length(sort(unique(c(as.character(sort(unique(unlist(lapply(intsct.CANDf0.3, function(x) subset(x, type=='protein_coding')$name))))),as.character(sort(unique(unlist(lapply(intsct.CANDf0.4, function(x) subset(x, type=='protein_coding')$name))))), as.character(sort(unique(unlist(lapply(intsct.CANDf0.5, function(x) subset(x, type=='protein_coding')$name)))))))))  #total nr of genes which are candidates forany of all pops and any of all feqs.
+#stuff (obsolete?) skip to manhattan plots.
+#unlist(lapply(intsct.CANDf0.3, function(x) dim(subset(x, type=='protein_coding'))[1]))   #number of protein coding genes in the set
+#length(sort(unique(c(as.character(sort(unique(unlist(lapply(intsct.CANDf0.3, function(x) subset(x, type=='protein_coding')$name))))),as.character(sort(unique(unlist(lapply(intsct.CANDf0.4, function(x) subset(x, type=='protein_coding')$name))))), as.character(sort(unique(unlist(lapply(intsct.CANDf0.5, function(x) subset(x, type=='protein_coding')$name)))))))))  #total nr of genes which are candidates forany of all pops and any of all feqs.
 ################################################################################
 ################################################################################
 #Manhattan Plots
@@ -626,20 +623,20 @@ top100f0.5<-mclapply(tes.manhattan.f0.5,function(x) head(x,100))
 top100f0.4<-mclapply(tes.manhattan.f0.4,function(x) head(x,100))
 top100f0.3<-mclapply(tes.manhattan.f0.3,function(x) head(x,100))
 
-top817f0.5<-mclapply(tes.manhattan.f0.5,function(x) head(x,817))
-top817f0.4<-mclapply(tes.manhattan.f0.4,function(x) head(x,817))
-top817f0.3<-mclapply(tes.manhattan.f0.3,function(x) head(x,817))
+top816f0.5<-mclapply(tes.manhattan.f0.5,function(x) head(x,816))
+top816f0.4<-mclapply(tes.manhattan.f0.4,function(x) head(x,816))
+top816f0.3<-mclapply(tes.manhattan.f0.3,function(x) head(x,816))
 
 mclapply(top100f0.5, function(x) arrange(x, CHR, Beg.Win))->sort.top100f0.5
 mclapply(top100f0.4, function(x) arrange(x, CHR, Beg.Win))->sort.top100f0.4
 mclapply(top100f0.3, function(x) arrange(x, CHR, Beg.Win))->sort.top100f0.3
 
-mclapply(top817f0.5, function(x) arrange(x, CHR, Beg.Win))->sort.top817f0.5  #817 is 0.5% of the distribution.
-mclapply(top817f0.4, function(x) arrange(x, CHR, Beg.Win))->sort.top817f0.4
-mclapply(top817f0.3, function(x) arrange(x, CHR, Beg.Win))->sort.top817f0.3
+mclapply(top816f0.5, function(x) arrange(x, CHR, Beg.Win))->sort.top816f0.5  #817 is 0.5% of the distribution.
+mclapply(top816f0.4, function(x) arrange(x, CHR, Beg.Win))->sort.top816f0.4
+mclapply(top816f0.3, function(x) arrange(x, CHR, Beg.Win))->sort.top816f0.3
 
 #now do for each chromosome and each population!
-
+#This block of plots I already know it works, so do not replot. 
 for (j in 1:7){
 for(i in 1:7){
 for (i in 1:22){
@@ -662,9 +659,21 @@ pdf(file.name)
 manhattan(subset(tes.manhattan.f0.3[[j]], CHR==i), suggestiveline= -log10(0.001000612),genomewideline=-log10(0.0001006129), highlight=as.character(subset(top100f0.3[[j]], CHR==i)$SNP))
 dev.off()}}
 
+##########################################################################
+#now I have to find a wat to do a manhattan plot for feq=0.5, and then highlight the 
+#maybe something like this
+
+#Stopped here. Session new_16_05_2015 in bionc02. (18.05.2015)
+#i changed the source code for the manhattan plot and called it my.manhattan. Check the bedfiles directory.
+
+pdf('bedfiles/my.man.test.pdf')
+my.manhattan(tes.manhattan.f0.5[[3]], 
+highlight=c(as.character(top100f0.4[[3]]$BP),as.character(top100f0.3[[3]]$BP))
+)
+dev.off()
 
 
-
+###################################################
 #use the intersect function to check overlaps
 intsc(intersect(top100intsc[[1]][[1]], top100intsc[[1]][[2]]), top100intsc[[1]][[3]])
 
