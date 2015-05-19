@@ -665,12 +665,17 @@ dev.off()}}
 
 #Stopped here. Session new_16_05_2015 in bionc02. (18.05.2015)
 #i changed the source code for the manhattan plot and called it my.manhattan. Check the bedfiles directory.
-
-pdf('bedfiles/my.man.test.pdf')
+#I also added legend to the plot in the script.
+#I also modified the 'highlight' parameter and subdivided it into highlight1 and highlight2 (could be more)
+pdf('bedfiles/top816.my.man.test.pdf')
 my.manhattan(tes.manhattan.f0.5[[3]], 
-highlight=c(as.character(top816f0.4[[3]]$BP),
-as.character(top816f0.3[[3]]$BP)),suggestiveline=-log10(6.129810e-05),genomewideline=-log10(0.0005001925))
+highlight1=as.character(top816f0.4[[3]]$BP), 
+highlight2=as.character(top816f0.3[[3]]$BP),suggestiveline=-log10(6.129810e-05),genomewideline=-log10(0.0005001925))
 dev.off()
+
+pdf('bedfiles/top100.my.man.test.pdf')
+
+
 
 
 ###################################################
