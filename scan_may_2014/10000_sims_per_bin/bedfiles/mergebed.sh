@@ -1,7 +1,7 @@
 ################################################################
 #	Author: Barbara Bitarello
 #
-#	Last modified: 13.04.2015
+#	Last modified: 31.05.2015
 #	Merge and intersect bed files from candidate windows
 ################################################################
 
@@ -96,6 +96,6 @@ bedtools intersect -wo -a merge.TSI.candf0.3.bed -b ../ensembl_hg19.bed > inters
 #
 
 
-mergeBed -i background.scanned.list.of.genes.txt -nms|perl -pe 's/ +/ /g' |perl -pe 's/ /\t/g'| sed 's/^/chr/'  > merge.background.bed
+mergeBed -i background.bed -nms|perl -pe 's/ +/ /g' |perl -pe 's/ /\t/g'| sed 's/^/chr/'  > merge.background.bed
 
 bedtools intersect -wo -a merge.background.bed -b ../ensembl_hg19.bed > intersect.background.bed
