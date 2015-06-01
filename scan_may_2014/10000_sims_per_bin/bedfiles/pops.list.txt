@@ -1,0 +1,7 @@
+AWS
+LWK
+YRI
+CEU
+FIN
+GBR
+TSI
