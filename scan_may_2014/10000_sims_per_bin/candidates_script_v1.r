@@ -2,7 +2,7 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 31.05.2015
+#	Last modified: 08.07.2015
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #                          Last comment: I am currently trying to fix an issue between lines 158 and 176 (all.coding/ALL.CODING)
@@ -162,9 +162,15 @@ lapply(1:22, function(x) subset(hg19.coding.coords.bed, chr==x))-> coding.per.ch
 mclapply(coding.per.chr.list, function(x) subset(x, type=='protein_coding'))->prot.cod.per.chr.list # 19,430 prot.cod genes in hg19 which are in chr 1-22
 mclapply(coding.per.chr.list, function(x) subset(x, type=='pseudogene'))->pseudog.cod.per.chr.list #12,745
 mclapply(coding.per.chr.list, function(x) subset(x, type=='lincRNA'))->lincRNA.cod.per.chr.list #6,932
+do.call("rbind", prot.cod.per.chr.list)->all.prot.cod
+colnames(all.prot.cod)<-c('chr', 'B', 'E', 'Name', 'type')
+all.prot.cod[,-5]->all.prot.cod #this will  be used with 'find.gene' further below
+sapply(1:nrow(all.prot.cod), function(x) all.prot.cod[x,1]<-paste0('chr',all.prot.cod[x,1]))-> test
+all.prot.cod[,1]<-test
 
 lapply(coding.per.chr.list, function(x)dim(x)[1])-> ll1
 Store(coding.per.chr.list); Store(prot.cod.per.chr.list);Store(pseudog.cod.per.chr.list); Store(lincRNA.cod.per.chr.list)
+Store(all.prot.cod)
 #lapply(ll1,function(x) vector('list',x))-> test.all.prot
 
 ########Currently re-running all.coding/ALL.CODING because the function find.gene is not working properly.#####
@@ -190,7 +196,7 @@ Store(all.coding);Store(ALL.CODING)
 #18.05.2015:it did work! So from this point on I will adjust the script for ALL.CODING instead of all.coding.
 #################################################################### I STOPPED HERE #####################
 Objects()
-mclapply(all.coding, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
+mclapply(ALL.CODING, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
 #9 seconds
 
 mclapply(1:22, function(x) paste0(subset(hg19.coding.coords.bed, chr==x)[,4], '.', subset(hg19.coding.coords.bed, chr==x)[,5]))->names.all.coding
@@ -200,7 +206,7 @@ mclapply(1:22, function(x) paste0(subset(hg19.coding.coords.bed, chr==x)[,4], '.
 #for (i in 1:22){names(all.coding[[i]])<-names.all.coding[[i]]}   #name the elements on each position of each chromosome with the name of the element,followed by a dot, and then followed by the type (pseudogene, protein_coding,etc)
 
 Store(names.all.coding)
-
+#08.07.2015: currently re-running the block below in bionc03 (man_plots session)
 ALL.POPS.AF<-vector('list', 3)  
 names(ALL.POPS.EU)<-pops[1:3]
 
@@ -277,7 +283,15 @@ system.time(mclapply(1: nrow(andres_AAandEA),function(x) try(find.gene(ALL.CODIN
 system.time(mclapply(1: nrow(DG_T2_YRI),function(x) try(find.gene(ALL.CODING, chr=as.numeric(strsplit(as.character(DG_T2_YRI[x,1]),'r')[[1]][[2]]), name=as.character(DG_T2_YRI[x,4]))))->DG.T2.YRI.QUERY)
 system.time(mclapply(1: nrow(DG_T2_CEU),function(x) try(find.gene(ALL.CODING, chr=as.numeric(strsplit(as.character(DG_T2_CEU[x,1]),'r')[[1]][[2]]), name=as.character(DG_T2_CEU[x,4]))))->DG.T2.CEU.QUERY)
 
+#ALL. GENES (19,430)
 
+#currently running this in bionc02 (new_16_05 tmux session)
+system.time(mclapply(1:nrow(all.prot.cod), function(x) try(find.gene(ALL.CODING, chr=as.numeric(strsplit(as.character(all.prot.cod[x,1]),'r')[[1]][[2]]), name=as.character(all.prot.cod[x,4]))))->ALL.PROT.COD.QUERY)
+
+
+
+
+################obsolete###########################
 #system.time(mclapply(1:2, function(x) mclapply(1:ll1[[x]], function(y) my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list[[x]]$end[y], chr=x, df=list.SCAN[[3]])))->TEST.NESTED.LAPPLY)
 #around 6 hours
 
@@ -299,65 +313,61 @@ system.time(mclapply(1: nrow(DG_T2_CEU),function(x) try(find.gene(ALL.CODING, ch
 ########################################################################################################################
 #now this stuff down here could serve as confirmation of the above. Also, above I don't have gene names. (but that shoudn't be that hard to add.
 #obsolete, because the block above provided this, and much faster. Skip to end of this block)
-list.MHC<-vector('list', dim(mhc.coords)[[1]])
-names(list.MHC)<-mhc.coords$Name
-UP.list.MHC<-list( list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC)
-system.time(
-for(j in 1:7){
-for (i in 1: dim(mhc.coords)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(mhc.coords$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=mhc.coords$B[i], E=mhc.coords$E[i], chr=chr1, df=list.SCAN[[j]])->UP.list.MHC[[j]][[i]]
-}})
+#list.MHC<-vector('list', dim(mhc.coords)[[1]])
+#names(list.MHC)<-mhc.coords$Name
+#UP.list.MHC<-list( list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC, list.MHC)
+#system.time(
+#for(j in 1:7){
+#for (i in 1: dim(mhc.coords)[[1]]){
+#chr1<- as.numeric(unlist(strsplit(as.character(mhc.coords$chr[i]), split="chr", fixed=TRUE))[2])
+#my.function(B=mhc.coords$B[i], E=mhc.coords$E[i], chr=chr1, df=list.SCAN[[j]])->UP.list.MHC[[j]][[i]]
+#}})
 #
-list.Andres.EA<-vector('list', dim(andres_EA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
-names(list.Andres.EA)<-andres_EA$Name
-UP.list.Andres.EA<-list(list.Andres.EA,list.Andres.EA,list.Andres.EA,list.Andres.EA,list.Andres.EA,list.Andres.EA, list.Andres.EA)
-system.time(for (j in 1:7){
-for (i in 1: dim(andres_EA)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(andres_EA$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=andres_EA$B[i], E=andres_EA$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.Andres.EA[[j]][[i]]
-}})
+#list.Andres.EA<-vector('list', dim(andres_EA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
+#names(list.Andres.EA)<-andres_EA$Name
+#UP.list.Andres.EA<-list(list.Andres.EA,list.Andres.EA,list.Andres.EA,list.Andres.EA,list.Andres.EA,list.Andres.EA, list.Andres.EA)
+#system.time(for (j in 1:7){
+#for (i in 1: dim(andres_EA)[[1]]){
+#chr1<- as.numeric(unlist(strsplit(as.character(andres_EA$chr[i]), split="chr", fixed=TRUE))[2])
+#my.function(B=andres_EA$B[i], E=andres_EA$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.Andres.EA[[j]][[i]]}})
 #
-list.Andres.AA<-vector('list', dim(andres_AA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
-names(list.Andres.AA)<-andres_AA$Name
-UP.list.Andres.AA<-list(list.Andres.AA,list.Andres.AA,list.Andres.AA,list.Andres.AA,list.Andres.AA,list.Andres.AA, list.Andres.AA)
-system.time(for (j in 1:7){
-for (i in 1: dim(andres_AA)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(andres_AA$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=andres_AA$B[i], E=andres_AA$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.Andres.AA[[j]][[i]]
-}})
+#list.Andres.AA<-vector('list', dim(andres_AA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
+#names(list.Andres.AA)<-andres_AA$Name
+#UP.list.Andres.AA<-list(list.Andres.AA,list.Andres.AA,list.Andres.AA,list.Andres.AA,list.Andres.AA,list.Andres.AA, list.Andres.AA)
+#system.time(for (j in 1:7){
+#for (i in 1: dim(andres_AA)[[1]]){
+#chr1<- as.numeric(unlist(strsplit(as.character(andres_AA$chr[i]), split="chr", fixed=TRUE))[2])
+#my.function(B=andres_AA$B[i], E=andres_AA$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.Andres.AA[[j]][[i]]}})
 #
-list.Andres.AAandEA<-vector('list', dim(andres_AAandEA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
-names(list.Andres.AAandEA)<-andres_AAandEA$Name
-UP.list.Andres.AAandEA<-list(list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA, list.Andres.AAandEA)
-system.time(for (j in 1:7){
-for (i in 1: dim(andres_AAandEA)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(andres_AAandEA$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=andres_AAandEA$B[i], E=andres_AAandEA$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.Andres.AAandEA[[j]][[i]]
-}})
+#list.Andres.AAandEA<-vector('list', dim(andres_AAandEA)[[1]])  #this is for AA and EA. I should separate them and comparte with the appropriate pops from my scan.
+#names(list.Andres.AAandEA)<-andres_AAandEA$Name
+#UP.list.Andres.AAandEA<-list(list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA,list.Andres.AAandEA, list.Andres.AAandEA)
+#system.time(for (j in 1:7){
+#for (i in 1: dim(andres_AAandEA)[[1]]){
+#chr1<- as.numeric(unlist(strsplit(as.character(andres_AAandEA$chr[i]), split="chr", fixed=TRUE))[2])
+#my.function(B=andres_AAandEA$B[i], E=andres_AAandEA$E[i], df=list.SCAN[[j]], chr=chr1)->UP.list.Andres.AAandEA[[j]][[i]]}})
 #
-list.DG.T2.YRI<-vector('list', dim(DG_T2_YRI)[[1]]) #this is for T2 test for YRI and CEU. I should separate them and comparte with the appropriate pops from my scan.
-names(list.DG.T2.YRI)<-DG_T2_YRI$Name
-UP.list.DG.T2.YRI<-list(list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI, list.DG.T2.YRI)
-system.time(
-for(j in 1:7){
-for (i in 1: dim(DG_T2_YRI)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(DG_T2_YRI$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=DG_T2_YRI$B[i], E=DG_T2_YRI$E[i], df=list.SCAN[[j]],chr=chr1)->UP.list.DG.T2.YRI[[j]][[i]]}})
+#list.DG.T2.YRI<-vector('list', dim(DG_T2_YRI)[[1]]) #this is for T2 test for YRI and CEU. I should separate them and comparte with the appropriate pops from my scan.
+#names(list.DG.T2.YRI)<-DG_T2_YRI$Name
+#UP.list.DG.T2.YRI<-list(list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI,list.DG.T2.YRI, list.DG.T2.YRI)
+#system.time(
+#for(j in 1:7){
+#for (i in 1: dim(DG_T2_YRI)[[1]]){
+#chr1<- as.numeric(unlist(strsplit(as.character(DG_T2_YRI$chr[i]), split="chr", fixed=TRUE))[2])
+#my.function(B=DG_T2_YRI$B[i], E=DG_T2_YRI$E[i], df=list.SCAN[[j]],chr=chr1)->UP.list.DG.T2.YRI[[j]][[i]]}})
 #
-list.DG.T2.CEU<-vector('list', dim(DG_T2_CEU)[[1]]) #this is for T2 test for YRI and CEU. I should separate them and comparte with the appropriate pops from my scan.
-names(list.DG.T2.CEU)<-DG_T2_CEU$Name
-UP.list.DG.T2.CEU<-list(list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU, list.DG.T2.CEU)
-system.time(
-for(j in 1:7){
-for (i in 1: dim(DG_T2_CEU)[[1]]){
-chr1<- as.numeric(unlist(strsplit(as.character(DG_T2_CEU$chr[i]), split="chr", fixed=TRUE))[2])
-my.function(B=DG_T2_CEU$B[i], E=DG_T2_CEU$E[i], df=list.SCAN[[j]],chr=chr1)->UP.list.DG.T2.CEU[[j]][[i]]
-}})
+#list.DG.T2.CEU<-vector('list', dim(DG_T2_CEU)[[1]]) #this is for T2 test for YRI and CEU. I should separate them and comparte with the appropriate pops from my scan.
+#names(list.DG.T2.CEU)<-DG_T2_CEU$Name
+#UP.list.DG.T2.CEU<-list(list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU,list.DG.T2.CEU, list.DG.T2.CEU)
+#system.time(
+#for(j in 1:7){
+#for (i in 1: dim(DG_T2_CEU)[[1]]){
+#chr1<- as.numeric(unlist(strsplit(as.character(DG_T2_CEU$chr[i]), split="chr", fixed=TRUE))[2])
+#my.function(B=DG_T2_CEU$B[i], E=DG_T2_CEU$E[i], df=list.SCAN[[j]],chr=chr1)->UP.list.DG.T2.CEU[[j]][[i]]}})
 
-Store(DG_T2_YRI);Store(DG_T2_CEU);Store(andres_AAandEA);Store(andres_AA);Store(andres_EA);Store(list.Andres.AAandEA);Store(list.Andres.EA);Store(list.Andres.AA)
-Store(list.DG.T2.YRI);Store(list.DG.T2.CEU);Store(mhc.coords)
-Store(UP.list.DG.T2.YRI);Store(UP.list.Andres.EA);Store(UP.list.Andres.AA);Store(UP.list.Andres.AAandEA);Store(UP.list.DG.T2.YRI);Store(UP.list.DG.T2.CEU);Store(UP.list.MHC)
+#Store(DG_T2_YRI);Store(DG_T2_CEU);Store(andres_AAandEA);Store(andres_AA);Store(andres_EA);Store(list.Andres.AAandEA);Store(list.Andres.EA);Store(list.Andres.AA)
+#Store(list.DG.T2.YRI);Store(list.DG.T2.CEU);Store(mhc.coords)
+#Store(UP.list.DG.T2.YRI);Store(UP.list.Andres.EA);Store(UP.list.Andres.AA);Store(UP.list.Andres.AAandEA);Store(UP.list.DG.T2.YRI);Store(UP.list.DG.T2.CEU);Store(UP.list.MHC)
 
 #try to optimize this...
 #put al these lists in a list.
