@@ -165,6 +165,7 @@ mclapply(coding.per.chr.list, function(x) subset(x, type=='lincRNA'))->lincRNA.c
 do.call("rbind", prot.cod.per.chr.list)->all.prot.cod
 colnames(all.prot.cod)<-c('chr', 'B', 'E', 'Name', 'type')
 all.prot.cod[,-5]->all.prot.cod #this will  be used with 'find.gene' further below
+all.prot.cod[-which(duplicated(all.prot.cod$Name)),]-> all.prot.cod
 sapply(1:nrow(all.prot.cod), function(x) all.prot.cod[x,1]<-paste0('chr',all.prot.cod[x,1]))-> test
 all.prot.cod[,1]<-test
 
@@ -288,7 +289,7 @@ system.time(mclapply(1: nrow(DG_T2_CEU),function(x) try(find.gene(ALL.CODING, ch
 #currently running this in bionc02 (new_16_05 tmux session)
 system.time(mclapply(1:nrow(all.prot.cod), function(x) try(find.gene(ALL.CODING, chr=as.numeric(strsplit(as.character(all.prot.cod[x,1]),'r')[[1]][[2]]), name=as.character(all.prot.cod[x,4]))))->ALL.PROT.COD.QUERY)
 
-
+names(ALL.PROT.COD.QUERY)<-all.prot.cod$Name
 
 
 ################obsolete###########################
