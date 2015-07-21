@@ -1,0 +1,161 @@
+** 26.02.2014 **
+****************
+
+Filter the 1000Genomes allele counts (AC_13pops*) files for:
+1. Regions of unique mappability
+2. TRF
+3. Segmental duplications
+4. Mapped to the chimp genome (pantro2) [this is an extra filter]
+
+Two files will begenerated in the folders /mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr*/:
+1. AC_13pops.Map50_100.TRF.SDs.tsv.gz
+2. AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz
+
+for i in {1..22}; do
+    cd /mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr${i}/ 
+    BED=/mnt/scratch/cee/bs_genomescan/bedfiles/Map50_100.TRF.SDs.hg19_pantro2.${i}.bed.gz
+    intersectBed -a <(zcat AC_13pops.tsv.gz ) -b <(tabix -p bed /mnt/scratch/cee/bs_genomescan/bedfiles/Map50_100.TRF.SDs.bed.gz ${i}) | bgzip -cf > AC_13pops.Map50_100.TRF.SDs.tsv.gz
+    tabix -p vcf AC_13pops.Map50_100.TRF.SDs.tsv.gz 
+    intersectBed -a <(zcat AC_13pops.tsv.gz ) -b ${BED} | bgzip -cf > AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz
+    tabix -p vcf AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz
+done
+
+
+
+#with FDs (macaque)
+
+
+for i in {1..22}; do
+    cd /mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr${i}/
+    BED=/mnt/sequencedb/PopGen/cesare/bs_genomescan/Map50_100.TRF.SDs.hg19_rhemac2.${i}.bed
+    intersectBed -a <(zcat AC_13pops.tsv.gz ) -b ${BED} | bgzip -cf > AC_13pops.Map50_100.TRF.SDs.rhemac2.tsv.gz
+    tabix -p vcf AC_13pops.Map50_100.TRF.SDs.rhemac2.tsv.gz
+done
+
+
+
+********************
+*** Run the scan ***
+********************
+
+
+#with FDs (chimp)
+BP=3000
+SLIDE=1500
+LOGS=/mnt/scratch/barbara/ncv/logs/
+for CHROM in {1..22}; do
+    INPUT=/mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr${CHROM}/AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz
+     CHIMPfd=/mnt/scratch/cee/bs_genomescan/fds_hg19_pantro2/fds.hg19_pantro2.$CHROM.tsv
+    POSITIONS=/mnt/scratch/cee/bs_genomescan/bins/scan_bin3Mb_chr${CHROM}.pos
+    NBINS=$(wc -l ${POSITIONS} | cut -f 1 -d ' ') # the number of bins for the chromosome
+    for i in `seq 1 ${NBINS}`; do 
+#       TMPDIR=/mnt/scratch/cee/bs_genomescan/ncv_run/chr${CHROM}/bin${i}/
+	TMPDIR=/mnt/scratch/barbara/ncv/${CHROM}/bin${i}/
+       POS=$(sed -n ${i}p ${POSITIONS})
+       qsub -e ${LOGS} -o ${LOGS} run_ncv.sge ${INPUT} ${POS} ${BP} ${SLIDE} ${TMPDIR} ${CHIMPfd} ${i}
+    done
+done
+
+#without FDs
+
+BP=3000
+SLIDE=1500
+LOGS=/mnt/scratch/barbara/ncv_wout_FD/logs/
+for CHROM in {1..22}; do
+    INPUT=/mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr${CHROM}/AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz
+     CHIMPfd=/mnt/scratch/cee/bs_genomescan/fds_hg19_pantro2/fds.hg19_pantro2.$CHROM.tsv
+    POSITIONS=/mnt/scratch/cee/bs_genomescan/bins/scan_bin3Mb_chr${CHROM}.pos
+    NBINS=$(wc -l ${POSITIONS} | cut -f 1 -d ' ') # the number of bins for the chromosome
+    for i in `seq 1 ${NBINS}`; do
+#       TMPDIR=/mnt/scratch/cee/bs_genomescan/ncv_run/chr${CHROM}/bin${i}/
+        TMPDIR=/mnt/scratch/barbara/ncv_wout_FD/${CHROM}/bin${i}/
+       POS=$(sed -n ${i}p ${POSITIONS})
+       qsub -e ${LOGS} -o ${LOGS} run_ncv_noFDs.sge ${INPUT} ${POS} ${BP} ${SLIDE} ${TMPDIR} ${CHIMPfd} ${i}
+    done
+done
+
+#with FDs (macaque)
+
+BP=3000
+SLIDE=1500
+LOGS=/mnt/scratch/barbara/ncv_macaque_FD/logs/
+for CHROM in {1..22}; do
+    INPUT=/mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr${CHROM}/AC_13pops.Map50_100.TRF.SDs.rhemac2.tsv.gz
+    CHIMPfd=/mnt/sequencedb/PopGen/cesare/bs_genomescan/fds.hg19_rhemac2.$CHROM.tsv
+    POSITIONS=/mnt/scratch/cee/bs_genomescan/bins/scan_bin3Mb_chr${CHROM}.pos
+    NBINS=$(wc -l ${POSITIONS} | cut -f 1 -d ' ') # the number of bins for the chromosome
+    for i in `seq 1 ${NBINS}`; do
+#       TMPDIR=/mnt/scratch/cee/bs_genomescan/ncv_run/chr${CHROM}/bin${i}/
+        TMPDIR=/mnt/scratch/barbara/ncv_macaque_FD/${CHROM}/bin${i}/
+       POS=$(sed -n ${i}p ${POSITIONS})
+       qsub -e ${LOGS} -o ${LOGS} run_ncv_macaque.sge ${INPUT} ${POS} ${BP} ${SLIDE} ${TMPDIR} ${CHIMPfd} ${i}
+    done
+done
+
+###############################
+
+#NCV w/FD (chimp)-ALL POPS (test)
+
+
+BP=3000
+SLIDE=1500
+LOGS=/mnt/scratch/barbara/ncv_allpops/logs/
+for CHROM in {1..22}; do
+    INPUT=/mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr${CHROM}/AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz
+    CHIMPfd=/mnt/sequencedb/PopGen/cesare/bs_genomescan/fds.hg19_pantro2.$CHROM.tsv.gz 
+    POSITIONS=/mnt/scratch/cee/bs_genomescan/bins/scan_bin3Mb_chr${CHROM}.pos
+    NBINS=$(wc -l ${POSITIONS} | cut -f 1 -d ' ') # the number of bins for the chromosome
+    for i in `seq 1 ${NBINS}`; do
+#       TMPDIR=/mnt/scratch/cee/bs_genomescan/ncv_run/chr${CHROM}/bin${i}/
+        TMPDIR=/mnt/scratch/barbara/ncv_allpops/${CHROM}/bin${i}/
+       POS=$(sed -n ${i}p ${POSITIONS})
+       qsub -e ${LOGS} -o ${LOGS} run_ncv_allpops.sge ${INPUT} ${POS} ${BP} ${SLIDE} ${TMPDIR} ${CHIMPfd} ${i}
+    done
+done
+
+
+
+#NCV w/FD (chimp)-ALL POPS (test)- WITH RSCRIPT INSTEAD OF LITTLE R
+
+
+
+BP=3000
+SLIDE=1500
+LOGS=/mnt/scratch/barbara/ncv_allpops/logs/
+for CHROM in {1..22}; do
+    INPUT=/mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr${CHROM}/AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz
+    CHIMPfd=/mnt/sequencedb/PopGen/cesare/bs_genomescan/fds.hg19_pantro2.$CHROM.tsv.gz
+    POSITIONS=/mnt/scratch/cee/bs_genomescan/bins/scan_bin3Mb_chr${CHROM}.pos
+    NBINS=$(wc -l ${POSITIONS} | cut -f 1 -d ' ') # the number of bins for the chromosome
+    for i in `seq 1 ${NBINS}`; do
+#       TMPDIR=/mnt/scratch/cee/bs_genomescan/ncv_run/chr${CHROM}/bin${i}/
+        TMPDIR=/mnt/scratch/barbara/ncv_allpops/${CHROM}/bin${i}/
+       POS=$(sed -n ${i}p ${POSITIONS})
+       qsub -e ${LOGS} -o ${LOGS} run_ncv_allpops_Rscript.sge ${INPUT} ${POS} ${BP} ${SLIDE} ${TMPDIR} ${CHIMPfd} ${i}
+    done
+done
+
+
+
+
+
+#NCV without FD-ALL POPS (test)- WITH RSCRIPT INSTEAD OF LITTLE R
+
+
+
+BP=3000
+SLIDE=1500
+LOGS=/mnt/scratch/barbara/ncv_allpops_no_FD/logs/
+for CHROM in {1..22}; do
+    INPUT=/mnt/scratch/cee/1000G/allele_freq/LcovEx_50inds/chr${CHROM}/AC_13pops.Map50_100.TRF.SDs.pantro2.tsv.gz
+   # CHIMPfd=/mnt/sequencedb/PopGen/cesare/bs_genomescan/fds.hg19_pantro2.$CHROM.tsv.gz
+    POSITIONS=/mnt/scratch/cee/bs_genomescan/bins/scan_bin3Mb_chr${CHROM}.pos
+    NBINS=$(wc -l ${POSITIONS} | cut -f 1 -d ' ') # the number of bins for the chromosome
+    for i in `seq 1 ${NBINS}`; do
+#       TMPDIR=/mnt/scratch/cee/bs_genomescan/ncv_run/chr${CHROM}/bin${i}/
+        TMPDIR=/mnt/scratch/barbara/ncv_allpops_no_FD/${CHROM}/bin${i}/
+       POS=$(sed -n ${i}p ${POSITIONS})
+       qsub -e ${LOGS} -o ${LOGS} run_ncv_allpops_Rscript_no_FD.sge ${INPUT} ${POS} ${BP} ${SLIDE} ${TMPDIR} ${i}
+    done
+done
+

@@ -1,0 +1,56 @@
+ncv_scan.sge*
+ms_tools.R*
+NCV_scanv5.r
+run_ncv_4args_barbara.r*
+-rw-r--r--  1 nobody nogroup  3215 Mar 13 21:17 NCV.scanv4_cee.r
+-rwxr-xr-x  1 nobody nogroup  7492 Mar 13 21:16 run_ncv_4args_cee.r*
+-rwxr--r--  1 nobody nogroup   678 Feb 27 21:20 run_ncv.sge*
+-rw-r--r--  1 nobody nogroup  1820 Feb 27 21:16 README
+-rwxrwxrwx  1 nobody nogroup  6584 Feb 27 21:05 run_ncv_4args.r*
+-rw-r--r--  1 nobody nogroup  3114 Feb 27 04:31 NCV.scanv4.r
+-rw-r--r--  1 nobody nogroup  1470 Feb 25 05:18 script_read_scan_res.r
+-rw-r--r--  1 nobody nogroup 15614 Feb 24 19:36 read_1000g_filtered_dtsets.R
+-rw-r--r--  1 nobody nogroup  4254 Feb 24 01:41 NCV.scanv3.r
+-rw-r--r--  1 nobody nogroup   612 Feb 23 23:54 take.snps.r
+-rwxrwxrwx  1 nobody nogroup  8717 Feb 23 23:51 run_ncv_scan_v2.r*
+-rwxr--r--  1 nobody nogroup  8858 Feb 17 19:45 run_ncv_scan.r*
+-rwxr--r--  1 nobody nogroup   369 Jan 24 18:16 slim.sge*
+-rw-r--r--  1 nobody nogroup  4946 Jan 24 17:59 NCV.scanv3.r~
+-rwxr--r--  1 nobody nogroup  8297 Jan 24 17:18 run_ncv_scan.r~*
+-rwxr--r--  1 nobody nogroup  1667 Jan 23 15:29 another_attempt.sge*
+-rwxr--r--  1 nobody nogroup  1668 Jan 23 15:24 another_attempt.sge~*
+-rw-r--r--  1 nobody nogroup  1131 Jan 23 15:22 master_job_splitting_scan.sh
+-rw-r--r--  1 nobody nogroup  1132 Jan 23 15:22 master_job_splitting_scan.sh~
+-rwxr--r--  1 nobody nogroup  1802 Jan 23 11:31 ncv_scan.sge~*
+-rwxr--r--  1 nobody nogroup   369 Jan 21 17:51 slim.sge~*
+-rw-r--r--  1 nobody nogroup  5220 Jan 20 16:40 scan_scriptv2.R
+-rw-r--r--  1 nobody nogroup  5141 Jan 20 16:28 scan_scriptv2.R~
+-rw-r--r--  1 nobody nogroup  1100 Jan 20 10:59 test_chr21.r
+-rw-r--r--  1 nobody nogroup  1100 Jan 20 10:59 test_chr21.r~
+-rw-r--r--  1 nobody nogroup 15614 Jan 17 11:32 read_1000g.R
+-rw-r--r--  1 nobody nogroup 15614 Jan 17 11:31 read_1000g.R~
+-rw-r--r--  1 nobody nogroup   476 Jan 16 20:54 make_positions_file_for_NCV.pl
+-rw-r--r--  1 nobody nogroup   266 Jan 16 19:59 make_positions_file_for_NCV.pl~
+-rw-r--r--  1 nobody nogroup  2746 Jan 15 17:49 NCV.scanv2.r
+-rw-r--r--  1 nobody nogroup   612 Jan 15 15:18 take.snps.r~
+-rw-r--r--  1 nobody nogroup  2746 Dec 18 16:24 NCV.scanv2.r~
+-rwxr-xr-x  1 nobody nogroup  6398 Dec 13 14:50 NCV5.r*
+-rwxr-xr-x  1 nobody nogroup  6398 Dec 10 17:09 NCV5.r~*
+-rw-r--r--  1 nobody nogroup  5472 Dec  6 18:41 scan_script.R
+-rw-r--r--  1 nobody nogroup  1356 Nov  7 16:44 get_power.r
+-rwxrwxrwx  1 nobody nogroup   224 Sep 16  2013 bash_test.sh*
+SLiM_neutral.r*
+master.sh*
+SLiM_2pop_wOUT_trick_neutral.r*
+perl_test2.pl*
+perl_test.pl*
+basic_sed_command.sed*
+master_2.sh*
+SLiM_2pop_wOUT_trick_barbara.r*
+SLiM_2pop_wOUT_trick_barbara.r~
+bash_slim.sh*
+sample_chr.pl*
+perl_testv2.pl*
+SLiM_2pop_wOUT_trick_sample.r*
+SLiM_2pop_wOUT_trick.r*
+run_SLiM.r*

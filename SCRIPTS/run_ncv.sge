@@ -1,0 +1,31 @@
+#!/bin/bash
+# Cesare de Filippo, MPI-EVA
+# modified on 12-August-2013 
+#$ -S /bin/bash
+#$ -cwd
+#$ -q all.q
+# load personal profile
+#$ -V
+#$ -R y
+#$ -M barbara_domingues@eva.mpg.de
+#$ -m e
+#$ -l h_vmem=1G,s_vmem=1G
+
+#SIM=${SGE_TASK_ID}
+RSCRIPT=/mnt/sequencedb/PopGen/barbara/simulations/scripts/run_ncv_v2.r
+INPUT=${1} # the imput file as allele counts such as (AC_13pops.tsv.gz)
+POSITIONS=${2} # the interval to use as CHROMOSOME, START and END positions
+WINDOW=${3} # the window length in bp
+SLIDE=${4}
+TMPDIR=${5}
+CHIMPfd=${6}
+BIN=${7}
+mkdir -p ${TMPDIR}
+cd ${TMPDIR}
+
+tabix -p vcf ${INPUT} ${POSITIONS} > tmp.ac 
+
+${RSCRIPT} tmp.ac ${WINDOW} ${SLIDE} ${BIN} ${CHIMPfd}
+
+echo DONE
+
