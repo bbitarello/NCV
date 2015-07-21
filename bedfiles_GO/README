@@ -1,0 +1,27 @@
+##########################################
+##	Bed Files for Go analyses, etc.###
+##	                                #
+##	Last modified: 21.07.2015       ##
+##	Author: Barbara Bitarello       ##
+##########################################
+
+#To understand file names:
+
+YRI refers to Yoruba, LWK to Luhya, etc, following 1000 Genomes nomenclature.
+
+top816 refers to the lower 0.05% tail of the empirical Z-score (Corrected NCV), which yields 816 windows. After merging, this adds up to ~ 400 regions, and ~ 100 genes (this varies between data sets)
+
+These files where generated elsewhere, and are copied here solely for the purpose of GO analyses.
+
+AND means intersection
+
+OR means union
+
+to define "Afr", YRI and LWK were considered
+to define "Eur", GBR and TSI were considered
+
+e.g. YRIandLWKf0.4.genes.txt , means that the intersection of YRI feq=0.4 and LWK feq=0.4 genes was taken.
+
+
+More info on how these files were generated can be found in /mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/bedfiles/R_candidates_intersect_feqs_and_pops.r
+#background file contains all genes for which there is at least one window overlapping its coordinates in our scan. This should be useful for GO analyses, whereby an appropriate background list of genes is useful.
