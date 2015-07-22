@@ -1,7 +1,7 @@
 ##########################################
 ##	Bed Files for Go analyses, etc.###
-##	                                #
-##	Last modified: 21.07.2015       ##
+##	For Joao                         #
+##	Last modified: 22.07.2015       ##
 ##	Author: Barbara Bitarello       ##
 ##########################################
 
@@ -24,4 +24,7 @@ e.g. YRIandLWKf0.4.genes.txt , means that the intersection of YRI feq=0.4 and LW
 
 
 More info on how these files were generated can be found in /mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/bedfiles/R_candidates_intersect_feqs_and_pops.r
+
+The file I used for intersectBed (to get the gene names) was 
+/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed
 #background file contains all genes for which there is at least one window overlapping its coordinates in our scan. This should be useful for GO analyses, whereby an appropriate background list of genes is useful.
