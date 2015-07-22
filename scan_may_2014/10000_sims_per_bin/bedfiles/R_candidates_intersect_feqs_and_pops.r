@@ -1,7 +1,7 @@
 #######################################
 ##	Bárbara Bitarello
 ##
-##	Last modified: 08.07.2015
+##	Last modified: 22.07.2015
 ##
 #######################################
 
@@ -131,4 +131,22 @@ write.table(sort(intersect(intersect(unique(c(as.character(YRI.f0.3[,1]), as.cha
 
 
 
+#BEDFILES for non-coding regions analyses
 
+#in bash
+
+
+while read i;
+do
+
+mergeBed -i <(sortBed -i <(cat $i.top816.f0.5.bed $i.top816.f0.4.bed $i.top816.f0.3.bed|awk '{print $1, $2, $3}'|perl -pe 's/ +/ /g'|perl -pe 's/ /\t/g'| sed 's/^/chr/'|sort -k1,1V|awk '!seen[$0]++')) > m.$i.top816.union.allfeqs.bed 
+done < pops.list.txt
+
+mergeBed -i <(sortBed -i <(cat m.YRI.top816.union.allfeqs.bed m.LWK.top816.union.allfeqs.bed|sort -k1,1V|awk '!seen[$0]++'))|sort -k1,1V > YRIorLWK.unionAllFeqs.bed
+
+mergeBed -i <(sortBed -i <(cat m.GBR.top816.union.allfeqs.bed m.TSI.top816.union.allfeqs.bed|sort -k1,1V|awk '!seen[$0]++'))|sort -k1,1V > GBRorTSI.unionAllFeqs.bed
+
+while read i;
+do
+bedtools intersect -wo -a m.$i.top816.union.allfeqs.bed  -b ../ensembl_hg19.bed > $i.ints.top816.union.allfeqs.bed
+done < pops.list.txt
