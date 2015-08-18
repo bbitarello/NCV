@@ -1,297 +1,90 @@
-#################################################################################
+##############################################################################
+#	Barbara Bitarello
+#Created: 18.08.2015
+#	Last modified: 18.08.2015
+#
+#############################################################################
+library(parallel)
+library(SOAR)
+library(ROCR)
 
 ###############################################################################
 #3000bp, Tbs=5
-pdf('ROC_all_AFR_3000bp.pdf')
+
+
+pdf('ROCS_for_paper/ROC_NCV_AFR_3000bp_Tbs5.pdf')
 plot(perf.NCV.3000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(perf.NCV.3000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(perf.NCV.3000bp.f0.3, lwd=3, col='violetred1',add=T)
 plot(perf.NCV.3000bp.f0.2, lwd=3, col='darkolivegreen', add=T)
-plot(perf.NCV.3000bp.no.FD.f0.5, col='cornflowerblue', add=T, lty=1, lwd=1)
-plot(perf.NCV.3000bp.no.FD.f0.4, col='sienna1', add=T, lty=1, lwd=1)
-plot(perf.NCV.3000bp.no.FD.f0.3, col='violetred1',add=T, lty=1, lwd=1)
-plot(perf.NCV.3000bp.no.FD.f0.2, col='darkolivegreen', add=T, lty=1, lwd=1)
-plot(perf.T2.f0.2, lwd=2, col='darkolivegreen', add=T, lty=2)
-plot(perf.T2.f0.3, lwd=2, col='violetred1', add=T, lty=2)
-plot(perf.T2.f0.4, lwd=2, col='sienna1', add=T, lty=2)
-plot(perf.T2.f0.5, lwd=2, col='cornflowerblue', add=T, lty=2)
-plot(perf.T1.f0.2, lwd=1, col='darkolivegreen', add=T, lty=2)
-plot(perf.T1.f0.3, lwd=1, col='violetred1', add=T, lty=2)
-plot(perf.T1.f0.4, lwd=1, col='sienna1', add=T, lty=2)
-plot(perf.T1.f0.5, lwd=1, col='cornflowerblue', add=T, lty=2)
-plot(perf.hka.3000bp.f0.5, lwd=1, col='cornflowerblue', add=T, lty=3)
-plot(perf.hka.3000bp.f0.4, lwd=1, col='sienna1', add=T, lty=3)
-plot(perf.hka.3000bp.f0.3, lwd=1, col='violetred1',add=T, lty=3)
-plot(perf.hka.3000bp.f0.2, lwd=1, col='darkolivegreen', add=T, lty=3)
-#
-plot(perf.tajd.3000bp.f0.5, lwd=2, col='cornflowerblue', add=T, lty=3)
-plot(perf.tajd.3000bp.f0.4, lwd=2, col='sienna1', add=T, lty=3)
-plot(perf.tajd.3000bp.f0.3, lwd=2, col='violetred1',add=T, lty=3)
-plot(perf.tajd.3000bp.f0.2, lwd=2, col='darkolivegreen', add=T, lty=3)
-#
-#legend('bottom', c(c('NCV', ' NCV-no-FD', ' T2', 'T1', 'HKA','TajD'), '0.5', '0.4', '0.3', '0.2'), col=c('black',' black', 'black','black', 'black', 'black','cornflowerblue', 'sienna1','violetred1','darkolivegreen'), lty=c(1,1,2,2,3,3,NA,NA,NA,NA), lwd=c(3,1,2,1,1,2,NA,NA,NA,NA), bty='n',pch=c(NA,NA,NA,NA,NA,NA,19,19,19,19), xpd=T, horiz=T, cex=0.35)
 dev.off()
 
-###########################333
-#6000bp, Tbs=5pdf('ROC_all_AFR_3000bp.pdf')
-pdf('ROC_all_AFR_6000bp.pdf')
+pdf('ROCS_for_paper/ROC_NCV_AFR_6000bp_Tbs5.pdf')
 plot(perf.NCV.6000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(perf.NCV.6000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(perf.NCV.6000bp.f0.3, lwd=3, col='violetred1',add=T)
-plot(perf.NCV.6000bp.f0.2, lwd=3, col='darkolivegreen', add=T)
-plot(perf.NCV.6000bp.no.FD.f0.5, col='cornflowerblue', add=T, lty=1, lwd=1)
-plot(perf.NCV.6000bp.no.FD.f0.4, col='sienna1', add=T, lty=1, lwd=1)
-plot(perf.NCV.6000bp.no.FD.f0.3, col='violetred1',add=T, lty=1, lwd=1)
-plot(perf.NCV.6000bp.no.FD.f0.2, col='darkolivegreen', add=T, lty=1, lwd=1)
-#plot(perf.T2.f0.2, lwd=2, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T2.f0.3, lwd=2, col='violetred1', add=T, lty=2)
-#plot(perf.T2.f0.4, lwd=2, col='sienna1', add=T, lty=2)
-#plot(perf.T2.f0.5, lwd=2, col='cornflowerblue', add=T, lty=2)
-#plot(perf.T1.f0.2, lwd=1, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T1.f0.3, lwd=1, col='violetred1', add=T, lty=2)
-#plot(perf.T1.f0.4, lwd=1, col='sienna1', add=T, lty=2)
-#plot(perf.T1.f0.5, lwd=1, col='cornflowerblue', add=T, lty=2)
-plot(perf.hka.6000bp.f0.5, lwd=1, col='cornflowerblue', add=T, lty=3)
-plot(perf.hka.6000bp.f0.4, lwd=1, col='sienna1', add=T, lty=3)
-plot(perf.hka.6000bp.f0.3, lwd=1, col='violetred1',add=T, lty=3)
-plot(perf.hka.6000bp.f0.2, lwd=1, col='darkolivegreen', add=T, lty=3)
-#
-plot(perf.tajd.6000bp.f0.5, lwd=2, col='cornflowerblue', add=T, lty=3)
-plot(perf.tajd.6000bp.f0.4, lwd=2, col='sienna1', add=T, lty=3)
-plot(perf.tajd.6000bp.f0.3, lwd=2, col='violetred1',add=T, lty=3)
-plot(perf.tajd.6000bp.f0.2, lwd=2, col='darkolivegreen', add=T, lty=3)
-#
-#legend('bottom', c(c('NCV', ' NCV-no-FD', 'T2', 'T1', 'HKA','TajD'), '0.5', '0.4', '0.3', '0.2'), col=c('black',' black', 'black','black', 'black', 'black','cornflowerblue', 'sienna1','violetred1','darkolivegreen'), lty=c(1,1,2,2,3,3,NA,NA,NA,NA), lwd=c(3,1,2,1,1,2,NA,NA,NA,NA), bty='n',pch=c(NA,NA,NA,NA,NA,NA,19,19,19,19), xpd=T, horiz=T, inset=c(0,0), cex=0.35)
-dev.off()
+plot(perf.NCV.6000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
 
 #################
 #12000bp, Tbs=5
-pdf('ROC_all_AFR_12000bp.pdf')
+pdf('ROCS_for_paper/ROC_NCV_AFR_12000bp_Tbs5.pdf')
 plot(perf.NCV.12000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(perf.NCV.12000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(perf.NCV.12000bp.f0.3, lwd=3, col='violetred1',add=T)
-plot(perf.NCV.12000bp.f0.2, lwd=3, col='darkolivegreen', add=T)
-plot(perf.NCV.12000bp.no.FD.f0.5, col='cornflowerblue', add=T, lty=1, lwd=1)
-plot(perf.NCV.12000bp.no.FD.f0.4, col='sienna1', add=T, lty=1, lwd=1)
-plot(perf.NCV.12000bp.no.FD.f0.3, col='violetred1',add=T, lty=1, lwd=1)
-plot(perf.NCV.12000bp.no.FD.f0.2, col='darkolivegreen', add=T, lty=1, lwd=1)
-#plot(perf.T2.f0.2, lwd=2, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T2.f0.3, lwd=2, col='violetred1', add=T, lty=2)
-#plot(perf.T2.f0.4, lwd=2, col='sienna1', add=T, lty=2)
-#plot(perf.T2.f0.5, lwd=2, col='cornflowerblue', add=T, lty=2)
-#plot(perf.T1.f0.2, lwd=1, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T1.f0.3, lwd=1, col='violetred1', add=T, lty=2)
-#plot(perf.T1.f0.4, lwd=1, col='sienna1', add=T, lty=2)
-#plot(perf.T1.f0.5, lwd=1, col='cornflowerblue', add=T, lty=2)
-plot(perf.hka.12000bp.f0.5, lwd=1, col='cornflowerblue', add=T, lty=3)
-plot(perf.hka.12000bp.f0.4, lwd=1, col='sienna1', add=T, lty=3)
-plot(perf.hka.12000bp.f0.3, lwd=1, col='violetred1',add=T, lty=3)
-plot(perf.hka.12000bp.f0.2, lwd=1, col='darkolivegreen', add=T, lty=3)
-#
-plot(perf.tajd.12000bp.f0.5, lwd=2, col='cornflowerblue', add=T, lty=3)
-plot(perf.tajd.12000bp.f0.4, lwd=2, col='sienna1', add=T, lty=3)
-plot(perf.tajd.12000bp.f0.3, lwd=2, col='violetred1',add=T, lty=3)
-plot(perf.tajd.12000bp.f0.2, lwd=2, col='darkolivegreen', add=T, lty=3)
-#
-#legend('bottom', c(c('NCV', ' NCV-no-FD', 'T2', 'T1', 'HKA','TajD'), '0.5', '0.4', '0.3', '0.2'), col=c('black',' black', 'black','black', 'black', 'black','cornflowerblue', 'sienna1','violetred1','darkolivegreen'), lty=c(1,1,2,2,3,3,NA,NA,NA,NA), lwd=c(3,1,2,1,1,2,NA,NA,NA,NA), bty='n',pch=c(NA,NA,NA,NA,NA,NA,19,19,19,19), xpd=T, horiz=T, inset=c(0,0), cex=0.35)
-dev.off()
-
+plot(perf.NCV.12000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
 
 ##################################3
 #Tbs3
 
 #3000bp
-pdf('ROC_all_AFR_3000bp.tbs3.pdf')
+pdf('ROCS_for_paper/ROC_NCV_AFR_3000bp.tbs3.pdf')
 plot(tbs3.perf.NCV.3000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(tbs3.perf.NCV.3000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs3.perf.NCV.3000bp.f0.3, lwd=3, col='violetred1',add=T)
-plot(tbs3.perf.NCV.3000bp.f0.2, lwd=3, col='darkolivegreen', add=T)
-plot(tbs3.perf.NCV.3000bp.no.FD.f0.5, col='cornflowerblue', add=T, lty=1, lwd=1)
-plot(tbs3.perf.NCV.3000bp.no.FD.f0.4, col='sienna1', add=T, lty=1, lwd=1)
-plot(tbs3.perf.NCV.3000bp.no.FD.f0.3, col='violetred1',add=T, lty=1, lwd=1)
-plot(tbs3.perf.NCV.3000bp.no.FD.f0.2, col='darkolivegreen', add=T, lty=1, lwd=1)
-plot(perf.T2.f0.2, lwd=2, col='darkolivegreen', add=T, lty=2)
-plot(perf.T2.f0.3, lwd=2, col='violetred1', add=T, lty=2)
-plot(perf.T2.f0.4, lwd=2, col='sienna1', add=T, lty=2)
-plot(perf.T2.f0.5, lwd=2, col='cornflowerblue', add=T, lty=2)
-plot(perf.T1.f0.2, lwd=1, col='darkolivegreen', add=T, lty=2)
-plot(perf.T1.f0.3, lwd=1, col='violetred1', add=T, lty=2)
-plot(perf.T1.f0.4, lwd=1, col='sienna1', add=T, lty=2)
-plot(perf.T1.f0.5, lwd=1, col='cornflowerblue', add=T, lty=2)
-plot(tbs3.perf.hka.3000bp.f0.5, lwd=1, col='cornflowerblue', add=T, lty=3)
-plot(tbs3.perf.hka.3000bp.f0.4, lwd=1, col='sienna1', add=T, lty=3)
-plot(tbs3.perf.hka.3000bp.f0.3, lwd=1, col='violetred1',add=T, lty=3)
-plot(tbs3.perf.hka.3000bp.f0.2, lwd=1, col='darkolivegreen', add=T, lty=3)
-#
-plot(tbs3.perf.tajd.3000bp.f0.5, lwd=2, col='cornflowerblue', add=T, lty=3)
-plot(tbs3.perf.tajd.3000bp.f0.4, lwd=2, col='sienna1', add=T, lty=3)
-plot(tbs3.perf.tajd.3000bp.f0.3, lwd=2, col='violetred1',add=T, lty=3)
-plot(tbs3.perf.tajd.3000bp.f0.2, lwd=2, col='darkolivegreen', add=T, lty=3)
-#
-#legend('bottom', c(c('NCV', ' NCV-no-FD', ' T2', 'T1', 'HKA','TajD'), '0.5', '0.4', '0.3', '0.2'), col=c('black',' black', 'black','black', 'black', 'black','cornflowerblue', 'sienna1','violetred1','darkolivegreen'), lty=c(1,1,2,2,3,3,NA,NA,NA,NA), lwd=c(3,1,2,1,1,2,NA,NA,NA,NA), bty='n',pch=c(NA,NA,NA,NA,NA,NA,19,19,19,19), xpd=T, horiz=T, cex=0.35)
-dev.off()
+plot(tbs3.perf.NCV.3000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
+
 
 ###########################333
 #6000bp, Tbs=3
-pdf('ROC_all_AFR_6000bp.tbs3.pdf')
+pdf('ROCS_for_paper/ROC_NCV_AFR_6000bp.tbs3.pdf')
 plot(tbs3.perf.NCV.6000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(tbs3.perf.NCV.6000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs3.perf.NCV.6000bp.f0.3, lwd=3, col='violetred1',add=T)
-plot(tbs3.perf.NCV.6000bp.f0.2, lwd=3, col='darkolivegreen', add=T)
-plot(tbs3.perf.NCV.6000bp.no.FD.f0.5, col='cornflowerblue', add=T, lty=1, lwd=1)
-plot(tbs3.perf.NCV.6000bp.no.FD.f0.4, col='sienna1', add=T, lty=1, lwd=1)
-plot(tbs3.perf.NCV.6000bp.no.FD.f0.3, col='violetred1',add=T, lty=1, lwd=1)
-plot(tbs3.perf.NCV.6000bp.no.FD.f0.2, col='darkolivegreen', add=T, lty=1, lwd=1)
-#plot(perf.T2.f0.2, lwd=2, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T2.f0.3, lwd=2, col='violetred1', add=T, lty=2)
-#plot(perf.T2.f0.4, lwd=2, col='sienna1', add=T, lty=2)
-#plot(perf.T2.f0.5, lwd=2, col='cornflowerblue', add=T, lty=2)
-#plot(perf.T1.f0.2, lwd=1, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T1.f0.3, lwd=1, col='violetred1', add=T, lty=2)
-#plot(perf.T1.f0.4, lwd=1, col='sienna1', add=T, lty=2)
-#plot(perf.T1.f0.5, lwd=1, col='cornflowerblue', add=T, lty=2)
-plot(tbs3.perf.hka.6000bp.f0.5, lwd=1, col='cornflowerblue', add=T, lty=3)
-plot(tbs3.perf.hka.6000bp.f0.4, lwd=1, col='sienna1', add=T, lty=3)
-plot(tbs3.perf.hka.6000bp.f0.3, lwd=1, col='violetred1',add=T, lty=3)
-plot(tbs3.perf.hka.6000bp.f0.2, lwd=1, col='darkolivegreen', add=T, lty=3)
-#
-plot(tbs3.perf.tajd.6000bp.f0.5, lwd=2, col='cornflowerblue', add=T, lty=3)
-plot(tbs3.perf.tajd.6000bp.f0.4, lwd=2, col='sienna1', add=T, lty=3)
-plot(tbs3.perf.tajd.6000bp.f0.3, lwd=2, col='violetred1',add=T, lty=3)
-plot(tbs3.perf.tajd.6000bp.f0.2, lwd=2, col='darkolivegreen', add=T, lty=3)
-#
-#legend('bottom', c(c('NCV', ' NCV-no-FD', 'T2', 'T1', 'HKA','TajD'), '0.5', '0.4', '0.3', '0.2'), col=c('black',' black', 'black','black', 'black', 'black','cornflowerblue', 'sienna1','violetred1','darkolivegreen'), lty=c(1,1,2,2,3,3,NA,NA,NA,NA), lwd=c(3,1,2,1,1,2,NA,NA,NA,NA), bty='n',pch=c(NA,NA,NA,NA,NA,NA,19,19,19,19), xpd=T, horiz=T, inset=c(0,0), cex=0.35)
-dev.off()
+plot(tbs3.perf.NCV.6000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
+
 
 #################
 #12000bp, Tbs=3
-pdf('ROC_all_AFR_12000bp.tbs3.pdf')
+pdf('ROCS_for_paper/ROC_NCV_AFR_12000bp.tbs3.pdf')
 plot(tbs3.perf.NCV.12000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(tbs3.perf.NCV.12000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs3.perf.NCV.12000bp.f0.3, lwd=3, col='violetred1',add=T)
-plot(tbs3.perf.NCV.12000bp.f0.2, lwd=3, col='darkolivegreen', add=T)
-plot(tbs3.perf.NCV.12000bp.no.FD.f0.5, col='cornflowerblue', add=T, lty=1, lwd=1)
-plot(tbs3.perf.NCV.12000bp.no.FD.f0.4, col='sienna1', add=T, lty=1, lwd=1)
-plot(tbs3.perf.NCV.12000bp.no.FD.f0.3, col='violetred1',add=T, lty=1, lwd=1)
-plot(tbs3.perf.NCV.12000bp.no.FD.f0.2, col='darkolivegreen', add=T, lty=1, lwd=1)
-#plot(perf.T2.f0.2, lwd=2, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T2.f0.3, lwd=2, col='violetred1', add=T, lty=2)
-#plot(perf.T2.f0.4, lwd=2, col='sienna1', add=T, lty=2)
-#plot(perf.T2.f0.5, lwd=2, col='cornflowerblue', add=T, lty=2)
-#plot(perf.T1.f0.2, lwd=1, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T1.f0.3, lwd=1, col='violetred1', add=T, lty=2)
-#plot(perf.T1.f0.4, lwd=1, col='sienna1', add=T, lty=2)
-#plot(perf.T1.f0.5, lwd=1, col='cornflowerblue', add=T, lty=2)
-plot(tbs3.perf.hka.12000bp.f0.5, lwd=1, col='cornflowerblue', add=T, lty=3)
-plot(tbs3.perf.hka.12000bp.f0.4, lwd=1, col='sienna1', add=T, lty=3)
-plot(tbs3.perf.hka.12000bp.f0.3, lwd=1, col='violetred1',add=T, lty=3)
-plot(tbs3.perf.hka.12000bp.f0.2, lwd=1, col='darkolivegreen', add=T, lty=3)
-#
-plot(tbs3.perf.tajd.12000bp.f0.5, lwd=2, col='cornflowerblue', add=T, lty=3)
-plot(tbs3.perf.tajd.12000bp.f0.4, lwd=2, col='sienna1', add=T, lty=3)
-plot(tbs3.perf.tajd.12000bp.f0.3, lwd=2, col='violetred1',add=T, lty=3)
-plot(tbs3.perf.tajd.12000bp.f0.2, lwd=2, col='darkolivegreen', add=T, lty=3)
-#
-#legend('bottom', c(c('NCV', ' NCV-no-FD', 'T2', 'T1', 'HKA','TajD'), '0.5', '0.4', '0.3', '0.2'), col=c('black',' black', 'black','black', 'black', 'black','cornflowerblue', 'sienna1','violetred1','darkolivegreen'), lty=c(1,1,2,2,3,3,NA,NA,NA,NA), lwd=c(3,1,2,1,1,2,NA,NA,NA,NA), bty='n',pch=c(NA,NA,NA,NA,NA,NA,19,19,19,19), xpd=T, horiz=T, inset=c(0,0), cex=0.35)
-dev.off()
+plot(tbs3.perf.NCV.12000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
 
 
 ############################33
 #Tbs1
 
-
-
 #3000bp, Tbs=1
-pdf('ROC_all_AFR_3000bp.tbs1.pdf')
+pdf('ROCS_for_paper/ROC_NCV_AFR_3000bp.tbs1.pdf')
 plot(tbs1.perf.NCV.3000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(tbs1.perf.NCV.3000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs1.perf.NCV.3000bp.f0.3, lwd=3, col='violetred1',add=T)
-plot(tbs1.perf.NCV.3000bp.f0.2, lwd=3, col='darkolivegreen', add=T)
-plot(tbs1.perf.NCV.3000bp.no.FD.f0.5, col='cornflowerblue', add=T, lty=1, lwd=1)
-plot(tbs1.perf.NCV.3000bp.no.FD.f0.4, col='sienna1', add=T, lty=1, lwd=1)
-plot(tbs1.perf.NCV.3000bp.no.FD.f0.3, col='violetred1',add=T, lty=1, lwd=1)
-plot(tbs1.perf.NCV.3000bp.no.FD.f0.2, col='darkolivegreen', add=T, lty=1, lwd=1)
-plot(perf.T2.f0.2, lwd=2, col='darkolivegreen', add=T, lty=2)
-plot(perf.T2.f0.3, lwd=2, col='violetred1', add=T, lty=2)
-plot(perf.T2.f0.4, lwd=2, col='sienna1', add=T, lty=2)
-plot(perf.T2.f0.5, lwd=2, col='cornflowerblue', add=T, lty=2)
-plot(perf.T1.f0.2, lwd=1, col='darkolivegreen', add=T, lty=2)
-plot(perf.T1.f0.3, lwd=1, col='violetred1', add=T, lty=2)
-plot(perf.T1.f0.4, lwd=1, col='sienna1', add=T, lty=2)
-plot(perf.T1.f0.5, lwd=1, col='cornflowerblue', add=T, lty=2)
-plot(tbs1.perf.hka.3000bp.f0.5, lwd=1, col='cornflowerblue', add=T, lty=3)
-plot(tbs1.perf.hka.3000bp.f0.4, lwd=1, col='sienna1', add=T, lty=3)
-plot(tbs1.perf.hka.3000bp.f0.3, lwd=1, col='violetred1',add=T, lty=3)
-plot(tbs1.perf.hka.3000bp.f0.2, lwd=1, col='darkolivegreen', add=T, lty=3)
-#
-plot(tbs1.perf.tajd.3000bp.f0.5, lwd=2, col='cornflowerblue', add=T, lty=3)
-plot(tbs1.perf.tajd.3000bp.f0.4, lwd=2, col='sienna1', add=T, lty=3)
-plot(tbs1.perf.tajd.3000bp.f0.3, lwd=2, col='violetred1',add=T, lty=3)
-plot(tbs1.perf.tajd.3000bp.f0.2, lwd=2, col='darkolivegreen', add=T, lty=3)
-#
-#legend('bottom', c(c('NCV', ' NCV-no-FD', ' T2', 'T1', 'HKA','TajD'), '0.5', '0.4', '0.3', '0.2'), col=c('black',' black', 'black','black', 'black', 'black','cornflowerblue', 'sienna1','violetred1','darkolivegreen'), lty=c(1,1,2,2,3,3,NA,NA,NA,NA), lwd=c(3,1,2,1,1,2,NA,NA,NA,NA), bty='n',pch=c(NA,NA,NA,NA,NA,NA,19,19,19,19), xpd=T, horiz=T, cex=0.35)
-dev.off()
+plot(tbs1.perf.NCV.3000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
 
 ###########################333
 #6000bp, Tbs=1
-pdf('ROC_all_AFR_6000bp.tbs1.pdf')
+pdf('ROCS_for_paper/ROC_NCV_AFR_6000bp.tbs1.pdf')
 plot(tbs1.perf.NCV.6000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(tbs1.perf.NCV.6000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs1.perf.NCV.6000bp.f0.3, lwd=3, col='violetred1',add=T)
-plot(tbs1.perf.NCV.6000bp.f0.2, lwd=3, col='darkolivegreen', add=T)
-plot(tbs1.perf.NCV.6000bp.no.FD.f0.5, col='cornflowerblue', add=T, lty=1, lwd=1)
-plot(tbs1.perf.NCV.6000bp.no.FD.f0.4, col='sienna1', add=T, lty=1, lwd=1)
-plot(tbs1.perf.NCV.6000bp.no.FD.f0.3, col='violetred1',add=T, lty=1, lwd=1)
-plot(tbs1.perf.NCV.6000bp.no.FD.f0.2, col='darkolivegreen', add=T, lty=1, lwd=1)
-#plot(perf.T2.f0.2, lwd=2, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T2.f0.3, lwd=2, col='violetred1', add=T, lty=2)
-#plot(perf.T2.f0.4, lwd=2, col='sienna1', add=T, lty=2)
-#plot(perf.T2.f0.5, lwd=2, col='cornflowerblue', add=T, lty=2)
-#plot(perf.T1.f0.2, lwd=1, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T1.f0.3, lwd=1, col='violetred1', add=T, lty=2)
-#plot(perf.T1.f0.4, lwd=1, col='sienna1', add=T, lty=2)
-#plot(perf.T1.f0.5, lwd=1, col='cornflowerblue', add=T, lty=2)
-plot(tbs1.perf.hka.6000bp.f0.5, lwd=1, col='cornflowerblue', add=T, lty=3)
-plot(tbs1.perf.hka.6000bp.f0.4, lwd=1, col='sienna1', add=T, lty=3)
-plot(tbs1.perf.hka.6000bp.f0.3, lwd=1, col='violetred1',add=T, lty=3)
-plot(tbs1.perf.hka.6000bp.f0.2, lwd=1, col='darkolivegreen', add=T, lty=3)
-#
-plot(tbs1.perf.tajd.6000bp.f0.5, lwd=2, col='cornflowerblue', add=T, lty=3)
-plot(tbs1.perf.tajd.6000bp.f0.4, lwd=2, col='sienna1', add=T, lty=3)
-plot(tbs1.perf.tajd.6000bp.f0.3, lwd=2, col='violetred1',add=T, lty=3)
-plot(tbs1.perf.tajd.6000bp.f0.2, lwd=2, col='darkolivegreen', add=T, lty=3)
-#
-#legend('bottom', c(c('NCV', ' NCV-no-FD', 'T2', 'T1', 'HKA','TajD'), '0.5', '0.4', '0.3', '0.2'), col=c('black',' black', 'black','black', 'black', 'black','cornflowerblue', 'sienna1','violetred1','darkolivegreen'), lty=c(1,1,2,2,3,3,NA,NA,NA,NA), lwd=c(3,1,2,1,1,2,NA,NA,NA,NA), bty='n',pch=c(NA,NA,NA,NA,NA,NA,19,19,19,19), xpd=T, horiz=T, inset=c(0,0), cex=0.35)
-dev.off()
+plot(tbs1.perf.NCV.6000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
+
 
 #################
 #12000bp, Tbs=1
-pdf('ROC_all_AFR_12000bp.tbs1.pdf')
+pdf('ROCS_for_paper/ROC_NCV_AFR_12000bp.tbs1.pdf')
 plot(tbs1.perf.NCV.12000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(tbs1.perf.NCV.12000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs1.perf.NCV.12000bp.f0.3, lwd=3, col='violetred1',add=T)
-plot(tbs1.perf.NCV.12000bp.f0.2, lwd=3, col='darkolivegreen', add=T)
-plot(tbs1.perf.NCV.12000bp.no.FD.f0.5, col='cornflowerblue', add=T, lty=1, lwd=1)
-plot(tbs1.perf.NCV.12000bp.no.FD.f0.4, col='sienna1', add=T, lty=1, lwd=1)
-plot(tbs1.perf.NCV.12000bp.no.FD.f0.3, col='violetred1',add=T, lty=1, lwd=1)
-plot(tbs1.perf.NCV.12000bp.no.FD.f0.2, col='darkolivegreen', add=T, lty=1, lwd=1)
-#plot(per.T2.f0.2, lwd=2, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T2.f0.3, lwd=2, col='violetred1', add=T, lty=2)
-#plot(perf.T2.f0.4, lwd=2, col='sienna1', add=T, lty=2)
-#plot(perf.T2.f0.5, lwd=2, col='cornflowerblue', add=T, lty=2)
-#plot(perf.T1.f0.2, lwd=1, col='darkolivegreen', add=T, lty=2)
-#plot(perf.T1.f0.3, lwd=1, col='violetred1', add=T, lty=2)
-#plot(perf.T1.f0.4, lwd=1, col='sienna1', add=T, lty=2)
-#plot(perf.T1.f0.5, lwd=1, col='cornflowerblue', add=T, lty=2)
-plot(tbs1.perf.hka.12000bp.f0.5, lwd=1, col='cornflowerblue', add=T, lty=3)
-plot(tbs1.perf.hka.12000bp.f0.4, lwd=1, col='sienna1', add=T, lty=3)
-plot(tbs1.perf.hka.12000bp.f0.3, lwd=1, col='violetred1',add=T, lty=3)
-plot(tbs1.perf.hka.12000bp.f0.2, lwd=1, col='darkolivegreen', add=T, lty=3)
-#
-plot(tbs1.perf.tajd.12000bp.f0.5, lwd=2, col='cornflowerblue', add=T, lty=3)
-plot(tbs1.perf.tajd.12000bp.f0.4, lwd=2, col='sienna1', add=T, lty=3)
-plot(tbs1.perf.tajd.12000bp.f0.3, lwd=2, col='violetred1',add=T, lty=3)
-plot(tbs1.perf.tajd.12000bp.f0.2, lwd=2, col='darkolivegreen', add=T, lty=3)
-#
-#legend('bottom', c(c('NCV', ' NCV-no-FD', 'T2', 'T1', 'HKA','TajD'), '0.5', '0.4', '0.3', '0.2'), col=c('black',' black', 'black','black', 'black', 'black','cornflowerblue', 'sienna1','violetred1','darkolivegreen'), lty=c(1,1,2,2,3,3,NA,NA,NA,NA), lwd=c(3,1,2,1,1,2,NA,NA,NA,NA), bty='n',pch=c(NA,NA,NA,NA,NA,NA,19,19,19,19), xpd=T, horiz=T, inset=c(0,0), cex=0.35)
-dev.off()
+plot(tbs1.perf.NCV.12000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
