@@ -113,9 +113,11 @@ as.matrix(unique(c(as.character(YRI.f0.4[,1]), as.character(LWK.f0.4[,1])))) #16
 as.matrix(unique(c(as.character(YRI.f0.5[,1]), as.character(LWK.f0.5[,1])))) #187 genes
 
 
-intersect(unique(c(as.character(YRI.f0.3[,1]), as.character(YRI.f0.4[,1], as.character(YRI.f0.5[,1])))), unique(c(as.character(LWK.f0.3[,1]), as.character(LWK.f0.4[,1], as.character(LWK.f0.5[,1])))))  #116 genes (union of feqs, intersection of pops per continent)
+ #116 genes (union of feqs, intersection of pops per continent)
+write.table(intersect(unique(c(as.character(YRI.f0.3[,1]), as.character(YRI.f0.4[,1], as.character(YRI.f0.5[,1])))), unique(c(as.character(LWK.f0.3[,1]), as.character(LWK.f0.4[,1], as.character(LWK.f0.5[,1]))))), file="YRIandLWKunionallfeqs.txt", quote=F, row.names=F, col.names=F)
 
-intersect(unique(c(as.character(GBR.f0.3[,1]), as.character(GBR.f0.4[,1], as.character(GBR.f0.5[,1])))), unique(c(as.character(TSI.f0.3[,1]), as.character(TSI.f0.4[,1], as.character(TSI.f0.5[,1])))))   #124 genes
+
+write.table(intersect(unique(c(as.character(GBR.f0.3[,1]), as.character(GBR.f0.4[,1], as.character(GBR.f0.5[,1])))), unique(c(as.character(TSI.f0.3[,1]), as.character(TSI.f0.4[,1], as.character(TSI.f0.5[,1]))))), file="GBRandTSIunionallfeqs.txt", quote=F,  row.names=F, col.names=F)  #124 genes
 
 
 
@@ -124,10 +126,22 @@ unique(c(intersect(unique(c(as.character(YRI.f0.3[,1]), as.character(YRI.f0.4[,1
 intersect(intersect(unique(c(as.character(YRI.f0.3[,1]), as.character(YRI.f0.4[,1], as.character(YRI.f0.5[,1])))), unique(c(as.character(LWK.f0.3[,1]), as.character(LWK.f0.4[,1], as.character(LWK.f0.5[,1]))))), intersect(unique(c(as.character(GBR.f0.3[,1]), as.character(GBR.f0.4[,1], as.character(GBR.f0.5[,1])))), unique(c(as.character(TSI.f0.3[,1]), as.character(TSI.f0.4[,1], as.character(TSI.f0.5[,1]))))))  #62 genes, with evidence for BalSel in any feq in BOTH Afr AND Eur
 
 
-write.table(unique(c(intersect(unique(c(as.character(YRI.f0.3[,1]), as.character(YRI.f0.4[,1], as.character(YRI.f0.5[,1])))), unique(c(as.character(LWK.f0.3[,1]), as.character(LWK.f0.4[,1], as.character(LWK.f0.5[,1]))))), intersect(unique(c(as.character(GBR.f0.3[,1]), as.character(GBR.f0.4[,1], as.character(GBR.f0.5[,1])))), unique(c(as.character(TSI.f0.3[,1]), as.character(TSI.f0.4[,1], as.character(TSI.f0.5[,1]))))))), file="AfrOREurUnionAllFeqs.txt", quote=F, row.names=F, col.names=F)
+#write.table(unique(c(intersect(unique(c(as.character(YRI.f0.3[,1]), as.character(YRI.f0.4[,1], as.character(YRI.f0.5[,1])))), unique(c(as.character(LWK.f0.3[,1]), as.character(LWK.f0.4[,1], as.character(LWK.f0.5[,1]))))), intersect(unique(c(as.character(GBR.f0.3[,1]), as.character(GBR.f0.4[,1], as.character(GBR.f0.5[,1])))), unique(c(as.character(TSI.f0.3[,1]), as.character(TSI.f0.4[,1], as.character(TSI.f0.5[,1]))))))), file="AfrOREurUnionAllFeqs.txt", quote=F, row.names=F, col.names=F)
 
 
-write.table(sort(intersect(intersect(unique(c(as.character(YRI.f0.3[,1]), as.character(YRI.f0.4[,1], as.character(YRI.f0.5[,1])))), unique(c(as.character(LWK.f0.3[,1]), as.character(LWK.f0.4[,1], as.character(LWK.f0.5[,1]))))), intersect(unique(c(as.character(GBR.f0.3[,1]), as.character(GBR.f0.4[,1], as.character(GBR.f0.5[,1])))), unique(c(as.character(TSI.f0.3[,1]), as.character(TSI.f0.4[,1], as.character(TSI.f0.5[,1]))))))), file="AfrANDEurUnionAllFeqs.txt", quote=F, row.names=F, col.names=F)
+#write.table(sort(intersect(intersect(unique(c(as.character(YRI.f0.3[,1]), as.character(YRI.f0.4[,1], as.character(YRI.f0.5[,1])))), unique(c(as.character(LWK.f0.3[,1]), as.character(LWK.f0.4[,1], as.character(LWK.f0.5[,1]))))), intersect(unique(c(as.character(GBR.f0.3[,1]), as.character(GBR.f0.4[,1], as.character(GBR.f0.5[,1])))), unique(c(as.character(TSI.f0.3[,1]), as.character(TSI.f0.4[,1], as.character(TSI.f0.5[,1]))))))), file="AfrANDEurUnionAllFeqs.txt", quote=F, row.names=F, col.names=F)
+
+write.table(unique(c(
+as.character(YRI.f0.3[,1]), as.character(YRI.f0.4[,1]), as.character(YRI.f0.5[,1]), 
+as.character(LWK.f0.3[,1]), as.character(LWK.f0.4[,1]), as.character(LWK.f0.5[,1])
+)),file="YRIORLWKUnionAllFeqs.txt", quote=F, row.names=F, col.names=F)
+
+
+write.table(unique(c(
+as.character(GBR.f0.3[,1]), as.character(GBR.f0.4[,1]), as.character(GBR.f0.5[,1]), 
+as.character(TSI.f0.3[,1]), as.character(TSI.f0.4[,1]), as.character(TSI.f0.5[,1])
+)),file="GBRorTSUUnionAllFeqs.txt", quote=F, row.names=F, col.names=F)
+
 
 
 
