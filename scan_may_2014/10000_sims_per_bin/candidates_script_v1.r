@@ -163,27 +163,44 @@ mclapply(coding.per.chr.list, function(x) subset(x, type=='protein_coding'))->pr
 mclapply(coding.per.chr.list, function(x) subset(x, type=='pseudogene'))->pseudog.cod.per.chr.list #12,745
 mclapply(coding.per.chr.list, function(x) subset(x, type=='lincRNA'))->lincRNA.cod.per.chr.list #6,932
 do.call("rbind", prot.cod.per.chr.list)->all.prot.cod
+do.call("rbind", pseudog.cod.per.chr.list)->all.pseudog
+do.call("rbind", lincRNA.cod.per.chr.list)->all.lincRNA
+
 colnames(all.prot.cod)<-c('chr', 'B', 'E', 'Name', 'type')
+colnames(all.pseudog)<-c('chr', 'B', 'E', 'Name', 'type')
+colnames(all.lincRNA)<-c('chr', 'B', 'E', 'Name', 'type')
+
 all.prot.cod[,-5]->all.prot.cod #this will  be used with 'find.gene' further below
-all.prot.cod[-which(duplicated(all.prot.cod$Name)),]-> all.prot.cod
+all.pseudog[,-5]->all.pseudog 
+all.lincRNA[,-5]->all.lincRNA
+
+all.prot.cod[-which(duplicated(all.prot.cod$Name)),]-> all.prot.cod #19,349
+all.pseudog[-which(duplicated(all.pseudog$Name)),]-> all.pseudog #12,744
+all.lincRNA[-which(duplicated(all.lincRNA$Name)),]-> all.lincRNA #6,928
+
 sapply(1:nrow(all.prot.cod), function(x) all.prot.cod[x,1]<-paste0('chr',all.prot.cod[x,1]))-> test
 all.prot.cod[,1]<-test
 
+sapply(1:nrow(all.pseudog), function(x) all.pseudog[x,1]<-paste0('chr',all.pseudog[x,1]))-> test
+all.pseudog[,1]<-test
+
+sapply(1:nrow(all.lincRNA), function(x) all.lincRNA[x,1]<-paste0('chr',all.lincRNA[x,1]))-> test
+all.lincRNA[,1]<-test
+
+
 lapply(coding.per.chr.list, function(x)dim(x)[1])-> ll1
 Store(coding.per.chr.list); Store(prot.cod.per.chr.list);Store(pseudog.cod.per.chr.list); Store(lincRNA.cod.per.chr.list)
-Store(all.prot.cod)
-#lapply(ll1,function(x) vector('list',x))-> test.all.prot
+Store(all.prot.cod); Store(all.pseudog); Store(all.lincRNA)
 
+#lapply(ll1,function(x) vector('list',x))-> test.all.prot
 ########Currently re-running all.coding/ALL.CODING because the function find.gene is not working properly.#####
 #all.coding<-vector('list', 22) #YRI
-
 #system.time(for (j in  1:22){
 #chr1<-j
 #system.time(lapply(1:ll1[[chr1]], function(x)(my.function(B=coding.per.chr.list[[chr1]]$beg[x], E=coding.per.chr.list[[chr1]]$end[x], chr=chr1, df=list.SCAN[[3]])))-> all.coding[[chr1]])})
-
 #     user    system   elapsed 
 #71003.094   428.739 36829.092 
-#alternative, with aprallel....
+#alternative, with parallel....
 #29 hours was my first try, then this loop took 10 hours. Now trying to avoid the loops...
 
 system.time(mclapply(1:22, function(x) mclapply(1:ll1[[x]], 
