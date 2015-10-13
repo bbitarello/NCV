@@ -3,7 +3,7 @@
 #
 #
 #	Read in other script and comment.
-#	Last modified: 15.03.2015
+#	Last modified: 13.10.2015
 ###################################################
 
 
@@ -32,4 +32,4 @@ pops<-c("AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "C
 source('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/script1.r')
 source('script2_binsimulations.r')
 #candidates_script_v1.r  #ongoing
-
+source('candidates_script_v1.r')
