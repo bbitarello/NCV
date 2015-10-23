@@ -1,7 +1,8 @@
 ##########################################
 ##	Bed Files for Go analyses, etc.###
 ##	For Joao                         #
-##	Last modified: 22.07.2015       ##
+##	Created: 22.07.2015
+##	Last modified: 23.10.2015
 ##	Author: Barbara Bitarello       ##
 ##########################################
 
@@ -28,3 +29,24 @@ More info on how these files were generated can be found in /mnt/sequencedb/PopG
 The file I used for intersectBed (to get the gene names) was 
 /mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed
 #background file contains all genes for which there is at least one window overlapping its coordinates in our scan. This should be useful for GO analyses, whereby an appropriate background list of genes is useful.
+
+
+
+scanned_windows_humans.bed   #coordinates of all scanned windows for the NCV paper.
+
+#the other bed files with top816 in the name are the actual bedfiles for the candidate windows, before intersecting with ensembl annotations.
+#To generate combined version i did the following.
+bedtools intersect -wo -a m.YRI.top816.f0.5.bed -b m.LWK.top816.f0.5.bed > m.YRIandLWK.top816.f0.5.bed
+bedtools intersect -wo -a m.TSI.top816.f0.5.bed -b m.GBR.top816.f0.5.bed > m.GBRandTSI.top816.f0.5.bed
+
+
+bedtools intersect -wo -a m.YRIandLWK.top816.f0.5.bed  -b m.GBRandTSI.top816.f0.5.bed > m.YRIandLWKandGBRandTSI.top816.f0.5.bed
+
+#merge
+mergeBed -i m.YRIandLWKandGBRandTSI.top816.f0.5.bed -nms > merged.ALL.top816.f0.5.bed
+#
+
+annotations form GENCODE
+
+bedtools intersect -wo -a merged.ALL.top816.f0.5.bed -b ../scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed|awk '{print $9}'|sort|uniq -c
+
