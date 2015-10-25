@@ -39,6 +39,13 @@ scanned_windows_humans.bed   #coordinates of all scanned windows for the NCV pap
 bedtools intersect -wo -a m.YRI.top816.f0.5.bed -b m.LWK.top816.f0.5.bed > m.YRIandLWK.top816.f0.5.bed
 bedtools intersect -wo -a m.TSI.top816.f0.5.bed -b m.GBR.top816.f0.5.bed > m.GBRandTSI.top816.f0.5.bed
 
+
+bedtools intersect -wo -a m.YRI.top816.f0.4.bed -b m.LWK.top816.f0.4.bed > m.YRIandLWK.top816.f0.4.bed
+bedtools intersect -wo -a m.TSI.top816.f0.4.bed -b m.GBR.top816.f0.4.bed > m.GBRandTSI.top816.f0.4.bed
+
+
+bedtools intersect -wo -a m.YRI.top816.f0.3.bed -b m.LWK.top816.f0.3.bed > m.YRIandLWK.top816.f0.3.bed
+bedtools intersect -wo -a m.TSI.top816.f0.3.bed -b m.GBR.top816.f0.3.bed > m.GBRandTSI.top816.f0.3.bed
 #merge
 mergeBed -i m.YRIandLWK.top816.f0.5.bed -nms > merged.YRIandLWK.top816.f0.5.bed
 mergeBed -i m.GBRandTSI.top816.f0.5.bed -nms > merged.GBRandTSI.top816.f0.5.bed
@@ -57,6 +64,24 @@ bedtools intersect -wo -a m.YRIandLWKandGBRandTSI.top816.f0.5.bed -b ../scan_may
 
 #gencode
 bedtools intersect -wo -a m.YRIandLWKandGBRandTSI.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed > top816.ALL.annoated.gencode.bed
+
+#just checking
+grep protein_coding top816.ALL.annoated.gencode.bed |awk '{print $13}' |sort|uniq |wc
+#     37      37     263
+grep protein_coding top816.ALL.annoated.bed |awk '{print $13}' |sort|uniq |wc
+
+#     37      37     263
+grep protein_coding top816.ALL.annoated.bed |awk '{print $13}' |sort|uniq |wc
+
+bedtools intersect -wo -a m.YRI.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed > m.YRI.top816f0.5.intersect.gencode.bed
+
+
+bedtools intersect -wo -a m.LWK.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed  > m.LWK.top816f0.5.intersect.gencode.bed
+
+bedtools intersect -wo -a m.GBR.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed  > m.GBR.top816f0.5.intersect.gencode.bed
+
+bedtools intersect -wo -a m.TSI.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed  > m.TSI.top816f0.5.intersect.gencode.bed
+
 
 #some ENCODE annotations
 
