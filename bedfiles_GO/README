@@ -39,14 +39,26 @@ scanned_windows_humans.bed   #coordinates of all scanned windows for the NCV pap
 bedtools intersect -wo -a m.YRI.top816.f0.5.bed -b m.LWK.top816.f0.5.bed > m.YRIandLWK.top816.f0.5.bed
 bedtools intersect -wo -a m.TSI.top816.f0.5.bed -b m.GBR.top816.f0.5.bed > m.GBRandTSI.top816.f0.5.bed
 
+#merge
+mergeBed -i m.YRIandLWK.top816.f0.5.bed -nms > merged.YRIandLWK.top816.f0.5.bed
+mergeBed -i m.GBRandTSI.top816.f0.5.bed -nms > merged.GBRandTSI.top816.f0.5.bed
 
-bedtools intersect -wo -a m.YRIandLWK.top816.f0.5.bed  -b m.GBRandTSI.top816.f0.5.bed > m.YRIandLWKandGBRandTSI.top816.f0.5.bed
+bedtools intersect -wo -a merged.YRIandLWK.top816.f0.5.bed  -b merged.GBRandTSI.top816.f0.5.bed > m.YRIandLWKandGBRandTSI.top816.f0.5.bed
 
 #merge
 mergeBed -i m.YRIandLWKandGBRandTSI.top816.f0.5.bed -nms > merged.ALL.top816.f0.5.bed
 #
 
-annotations form GENCODE
+annotations form ENSEMBL
 
 bedtools intersect -wo -a merged.ALL.top816.f0.5.bed -b ../scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed|awk '{print $9}'|sort|uniq -c
+
+bedtools intersect -wo -a m.YRIandLWKandGBRandTSI.top816.f0.5.bed -b ../scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed > top816.ALL.annoated.bed
+#some ENCODE annotations
+
+wget http://promoter.bx.psu.edu/ENCODE/predicted_enhancer_human.tar.gz
+wget http://promoter.bx.psu.edu/ENCODE/predicted_promoter_human.tar.gz
+
+ tar -zxvf predicted_promoter_human.tar.gz
+ tar -zxvf predicted_enhancer_human.tar.gz
 
