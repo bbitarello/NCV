@@ -54,6 +54,10 @@ annotations form ENSEMBL
 bedtools intersect -wo -a merged.ALL.top816.f0.5.bed -b ../scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed|awk '{print $9}'|sort|uniq -c
 
 bedtools intersect -wo -a m.YRIandLWKandGBRandTSI.top816.f0.5.bed -b ../scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed > top816.ALL.annoated.bed
+
+#gencode
+bedtools intersect -wo -a m.YRIandLWKandGBRandTSI.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed > top816.ALL.annoated.gencode.bed
+
 #some ENCODE annotations
 
 wget http://promoter.bx.psu.edu/ENCODE/predicted_enhancer_human.tar.gz
