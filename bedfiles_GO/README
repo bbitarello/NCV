@@ -125,9 +125,16 @@ bedtools intersect -wo -a m.TSI.top816.f0.3.bed -b ../scan_may_2014/final_encode
 #
 bedtools intersect -wo -a  m.GBRandTSI.top816.f0.3.bed -b ../scan_may_2014/final_encode.bed  > m.GBRandTSIf0.3.intersect.gencode.bed
 
+#gene names
 
+grep protein_coding m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.5.genes.txt 
+grep protein_coding m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.5.genes.txt 
 
+grep protein_coding m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.4.genes.txt
+grep protein_coding m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.4.genes.txt    
 
+grep protein_coding m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.3.genes.txt
+grep protein_coding m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.3.genes.txt    
 #some ENCODE annotations
 
 wget http://promoter.bx.psu.edu/ENCODE/predicted_enhancer_human.tar.gz
