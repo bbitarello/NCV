@@ -85,7 +85,7 @@ bedtools intersect -wo -a m.YRIandLWKandGBRandTSI.top816.f0.3.bed -b ../scan_may
 
 
 #just checking
-grep protein_coding top816.ALL.annoated.gencode.bed |awk '{print $13}' |sort|uniq |wc
+grep protein_coding top816.ALL.f0.5.annotated.gencode.bed |awk '{print $13}' |sort|uniq > m.ALL.f0.5.intersect.gencode.bed
 #     37      37     263
 
 
@@ -142,8 +142,22 @@ grep pseudogene m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uni
 grep pseudogene m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.3.pseudogenes.txt
 
 
+
+grep protein_coding m.YRI.top816f0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRI.f0.5.genes.txt
+grep protein_coding m.LWK.top816f0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > LWK.f0.5.genes.txt
 grep protein_coding m.GBR.top816f0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBR.f0.5.genes.txt
 grep protein_coding m.TSI.top816f0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > TSI.f0.5.genes.txt
+
+grep protein_coding m.YRI.top816f0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRI.f0.4.genes.txt
+grep protein_coding m.LWK.top816f0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > LWK.f0.4.genes.txt
+grep protein_coding m.GBR.top816f0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBR.f0.4.genes.txt
+grep protein_coding m.TSI.top816f0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > TSI.f0.4.genes.txt
+
+grep protein_coding m.YRI.top816f0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRI.f0.3.genes.txt
+grep protein_coding m.LWK.top816f0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > LWK.f0.3.genes.txt
+grep protein_coding m.GBR.top816f0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBR.f0.3.genes.txt
+grep protein_coding m.TSI.top816f0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > TSI.f0.3.genes.txt
+
 #some ENCODE annotations
 
 wget http://promoter.bx.psu.edu/ENCODE/predicted_enhancer_human.tar.gz
