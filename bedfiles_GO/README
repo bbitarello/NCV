@@ -105,7 +105,7 @@ bedtools intersect -wo -a m.YRI.top816.f0.4.bed -b ../scan_may_2014/final_encode
 
 bedtools intersect -wo -a m.LWK.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed  > m.LWK.top816f0.4.intersect.gencode.bed
 
-bedtools intersect -wo -a  m.YRIandLWK.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed  > m.YRIanLWKf0.4.intersect.gencode.bed
+bedtools intersect -wo -a  m.YRIandLWK.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed  > m.YRIanWKf0.4.intersect.gencode.bed
 
 bedtools intersect -wo -a m.GBR.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed  > m.GBR.top816f0.4.intersect.gencode.bed
 
@@ -129,12 +129,21 @@ bedtools intersect -wo -a  m.GBRandTSI.top816.f0.3.bed -b ../scan_may_2014/final
 
 grep protein_coding m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.5.genes.txt 
 grep protein_coding m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.5.genes.txt 
-
 grep protein_coding m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.4.genes.txt
 grep protein_coding m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.4.genes.txt    
-
 grep protein_coding m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.3.genes.txt
 grep protein_coding m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.3.genes.txt    
+
+grep pseudogene m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.5.pseudogenes.txt
+grep pseudogene m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.5.pseudogenes.txt
+grep pseudogene m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.4.pseudogenes.txt
+grep pseudogene m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.4.pseudogenes.txt
+grep pseudogene m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.3.pseudogenes.txt
+grep pseudogene m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.3.pseudogenes.txt
+
+
+grep protein_coding m.GBR.top816f0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBR.f0.5.genes.txt
+grep protein_coding m.TSI.top816f0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > TSI.f0.5.genes.txt
 #some ENCODE annotations
 
 wget http://promoter.bx.psu.edu/ENCODE/predicted_enhancer_human.tar.gz
