@@ -85,7 +85,7 @@ bedtools intersect -wo -a m.YRIandLWKandGBRandTSI.top816.f0.3.bed -b ../scan_may
 
 
 #just checking
-grep protein_coding top816.ALL.f0.5.annotated.gencode.bed |awk '{print $13}' |sort|uniq > m.ALL.f0.5.intersect.gencode.bed
+grep protein_coding top816.ALL.f0.5.annotated.gencode.bed |awk '{print $13}' |sort|uniq > ALL.genes.f0.5.txt
 #     37      37     263
 
 
@@ -174,3 +174,31 @@ wget http://promoter.bx.psu.edu/ENCODE/predicted_promoter_human.tar.gz
 wget ftp://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/ntOoaHaplo.txt.gz
 gunzip ntOoaHaplo.txt.gz 
 
+
+
+#now, i found something better for neanderthals, this file pro Micha, Janet, etc, that João pointed me to.
+
+/mnt/expressions/Janet/forMicha/Akey_IntrogressedRegions/all_haplotypes_populations.bed.eur
+#i copied these files to Vernot_akey_2014
+
+cd 
+
+awk '{s+=$1}END{print s}' <(awk '{print $0, $3-$2;}' all_haplotypes_populations.bed.all |awk '{print $4}') #gives the total bp in introgressed regions
+
+
+sort -V -k1,1 -k2,2 <(bedtools intersect -wo -a all_haplotypes_populations.bed.all -b ../merged.ALL.top816.f0.5.bed) > temp.bed
+sort -V -k1,1 -k2,2 <(bedtools intersect -wo -a all_haplotypes_populations.bed.all -b ../merged.GBRandTSI.top816.f0.5.bed) > temp2.bed
+sort -V -k1,1 -k2,2 <(bedtools intersect -wo -a all_haplotypes_populations.bed.all -b ../merged.YRIandLWK.top816.f0.5.bed) > temp3.bed
+
+ bedtools intersect -wo -a <(awk -F "\t" -v OFS="\t" '{print $4, $5, $6}' temp.bed) -b ../../scan_may_2014/final_encode.bed |grep protein_coding|awk '{print $7}'|sort|uniq
+
+
+
+ bedtools intersect -wo -a <(awk -F "\t" -v OFS="\t" '{print $4, $5, $6}' temp2.bed) -b ../../scan_may_2014/final_encode.bed |grep protein_coding|awk '{print $7}'|sort|uniq
+
+ bedtools intersect -wo -a <(awk -F "\t" -v OFS="\t" '{print $4, $5, $6}' temp3.bed) -b ../../scan_may_2014/final_encode.bed |grep protein_coding|awk '{print $7}'|sort|uniq
+
+
+#an alternative, the other map of introgression
+
+http://genetics.med.harvard.edu/reich/Reich_Lab/Datasets_-_Neandertal_Introgression.html
