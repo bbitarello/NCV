@@ -1,0 +1,725 @@
+##############################################################################
+#	Barbara Bitarello
+#
+#	Last modified: 03.12.2015
+#
+#############################################################################
+library(parallel)
+library(SOAR)
+library(ROCR)
+
+#PATH='/mnt/sequencedb/PopGen/cesare/bs_genomescan/ncv_test/'
+PATH='/mnt/sequencedb/PopGen/barbara/simulations/clone_cee_sims/'
+
+
+a<-c((paste0(rep('neutral',3), '_n100.msms_', c('3000bp.ncv+hka+tajd.out','6000bp.ncv+hka+tajd.out','12000bp.ncv+hka+tajd.out'))),
+
+paste0(paste0(rep(paste0('Tbs1_', c('f0.1', 'f0.2', 'f0.3','f0.4', 'f0.5'), rep('_n100.msms_', 5)),3), c(rep('3000bp.ncv+hka+tajd.out',5), rep('6000bp.ncv+hka+tajd.out', 5), rep('12000bp.ncv+hka+tajd.out', 5)))),
+
+paste0(paste0(rep(paste0('Tbs3_', c('f0.1', 'f0.2', 'f0.3','f0.4', 'f0.5'), rep('_n100.msms_', 5)),3), c(rep('3000bp.ncv+hka+tajd.out',5), rep('6000bp.ncv+hka+tajd.out', 5), rep('12000bp.ncv+hka+tajd.out', 5)))),
+
+paste0(paste0(rep(paste0('Tbs5_', c('f0.1', 'f0.2', 'f0.3','f0.4', 'f0.5'), rep('_n100.msms_', 5)),3), c(rep('3000bp.ncv+hka+tajd.out',5), rep('6000bp.ncv+hka+tajd.out', 5), rep('12000bp.ncv+hka+tajd.out', 5)))))
+
+
+mclapply(1:length(a), function(x) read.table(paste0(PATH, a[x]), header=T))-> list.power
+
+
+
+#T2
+
+PATH2='/mnt/sequencedb/PopGen/barbara/BALLET/'
+
+list.power.II<-vector('list', 12)
+
+
+for (i  in 1:12){read.table(paste0(PATH2,'tmp_neu_T1.txt'))-> list.power.II[[1]];
+
+read.table(paste0(PATH2,'tmp_neu_T2.txt'))-> list.power.II[[2]];
+read.table(paste0(PATH2,'tmp_f0.1_bs_T1.txt'))-> list.power.II[[3]];
+read.table(paste0(PATH2,'tmp_f0.2_bs_T1.txt'))-> list.power.II[[4]];
+read.table(paste0(PATH2,'tmp_f0.3_bs_T1.txt'))-> list.power.II[[5]];
+read.table(paste0(PATH2,'tmp_f0.4_bs_T1.txt'))-> list.power.II[[6]];
+read.table(paste0(PATH2,'tmp_f0.5_bs_T1.txt'))-> list.power.II[[7]];
+
+read.table(paste0(PATH2,'tmp_f0.1_bs_T2.txt'))-> list.power.II[[8]];
+read.table(paste0(PATH2,'tmp_f0.2_bs_T2.txt'))-> list.power.II[[9]];
+read.table(paste0(PATH2,'tmp_f0.3_bs_T2.txt'))-> list.power.II[[10]];
+read.table(paste0(PATH2,'tmp_f0.4_bs_T2.txt'))-> list.power.II[[11]];
+read.table(paste0(PATH2,'tmp_f0.5_bs_T2.txt'))-> list.power.II[[12]];
+
+}
+###############################################################################################
+#PRED and PERF (ROCR package)
+#############Tbs5###############
+################################
+######
+#3000#
+######
+#NCVFD_eur feq=0.5
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[38]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.3000bp.f0.5.EUR
+performance(pred.NCV.3000bp.f0.5.EUR, "tpr", "fpr")-> perf.NCV.3000bp.f0.5.EUR
+#NCV-no-FD_eur FEQ=0.5
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[38]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.3000bp.f0.5.EUR
+performance(pred.NCV.no.FD.3000bp.f0.5.EUR, "tpr", "fpr")-> perf.NCV.3000bp.no.FD.f0.5.EUR
+#HKA_eur feq=0.5
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[38]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.3000bp.f0.5.EUR
+performance(pred.hka.3000bp.f0.5.EUR, "tpr", "fpr")-> perf.hka.3000bp.f0.5.EUR
+#TajD_eur feq=0.5
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[38]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.3000bp.f0.5.EUR  #here we invert the labels, because in balsel tajD and HKA are high, opposite of NCV.
+#performance(pred.tajd.3000bp.f0.5.EUR, "tpr", "fpr")-> perf.tajd.3000bp.f0.5.EUR
+###########
+#NCV_eur feq=0.4
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[37]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.3000bp.f0.4.EUR
+performance(pred.NCV.3000bp.f0.4.EUR, "tpr", "fpr")-> perf.NCV.3000bp.f0.4.EUR
+#NCV-no-FD_eur feq=0.4
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[37]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.3000bp.f0.4.EUR
+performance(pred.NCV.no.FD.3000bp.f0.4.EUR, "tpr", "fpr")-> perf.NCV.3000bp.no.FD.f0.4.EUR
+#HKA_eur feq=0.4
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[37]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.3000bp.f0.4.EUR
+performance(pred.hka.3000bp.f0.4.EUR, "tpr", "fpr")-> perf.hka.3000bp.f0.4.EUR
+#TajD_eur feq=0.4
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[37]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.3000bp.f0.4.EUR
+#performance(pred.tajd.3000bp.f0.4.EUR, "tpr", "fpr")-> perf.tajd.3000bp.f0.4.EUR
+##################
+#NCV_eur feq=0.3
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[36]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.3000bp.f0.3.EUR
+performance(pred.NCV.3000bp.f0.3.EUR, "tpr", "fpr")-> perf.NCV.3000bp.f0.3.EUR
+#NCV-no-FD_eur feq=0.3
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[36]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.3000bp.f0.3.EUR
+performance(pred.NCV.no.FD.3000bp.f0.3.EUR, "tpr", "fpr")-> perf.NCV.3000bp.no.FD.f0.3.EUR
+#HKA_eur feq=0.3
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[36]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.3000bp.f0.3.EUR
+performance(pred.hka.3000bp.f0.3.EUR, "tpr", "fpr")-> perf.hka.3000bp.f0.3.EUR
+#TajD_eur feq=0.3
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[36]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.3000bp.f0.3.EUR
+#performance(pred.tajd.3000bp.f0.3.EUR, "tpr", "fpr")-> perf.tajd.3000bp.f0.3.EUR
+#####################
+#NCV_eur feq=0.2
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[35]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.3000bp.f0.2.EUR
+performance(pred.NCV.3000bp.f0.2.EUR, "tpr", "fpr")-> perf.NCV.3000bp.f0.2.EUR
+#NCV-no-FD_eur feq=0.2
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[35]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.3000bp.f0.2.EUR
+performance(pred.NCV.no.FD.3000bp.f0.2.EUR, "tpr", "fpr")-> perf.NCV.3000bp.no.FD.f0.2.EUR
+#HKA_eur feq=0.2
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[35]]$hka_EUR), c(rep(1,1000), rep(0,1000)))-> pred.hka.3000bp.f0.2.EUR
+performance(pred.hka.3000bp.f0.2.EUR, "tpr", "fpr")-> perf.hka.3000bp.f0.2.EUR
+#TajD_eur feq=0.2
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[35]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.3000bp.f0.2.EUR
+#performance(pred.tajd.3000bp.f0.2.EUR, "tpr", "fpr")-> perf.tajd.3000bp.f0.2.EUR
+####################
+#NCV_eur feq=0.1
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[34]]$ncvFD_EUR), c(rep(0,1000), rep(1,1000)))-> pred.NCV.3000bp.f0.1.EUR
+performance(pred.NCV.3000bp.f0.1.EUR, "tpr", "fpr")-> perf.NCV.3000bp.f0.1.EUR
+#NCV-no-FD_eur feq=0.1
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[34]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.3000bp.f0.1.EUR
+performance(pred.NCV.no.FD.3000bp.f0.1.EUR, "tpr", "fpr")-> perf.NCV.3000bp.no.FD.f0.1.EUR
+#HKA_eur feq=0.1
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[34]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.3000bp.f0.1.EUR
+performance(pred.hka.3000bp.f0.1.EUR, "tpr", "fpr")-> perf.hka.3000bp.f0.1.EUR
+#TajD_eur feq=0.1
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[34]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.3000bp.f0.1.EUR
+#performance(pred.tajd.3000bp.f0.1.EUR, "tpr", "fpr")-> perf.tajd.3000bp.f0.1.EUR
+###
+##################################################################
+#6000bp, Tbs=5####
+#NCVFD_eur feq=0.5
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[43]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.6000bp.f0.5.EUR
+performance(pred.NCV.6000bp.f0.5.EUR, "tpr", "fpr")-> perf.NCV.6000bp.f0.5.EUR
+#NCV-no-FD_eur FEQ=0.5
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[43]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.6000bp.f0.5.EUR
+performance(pred.NCV.no.FD.6000bp.f0.5.EUR, "tpr", "fpr")-> perf.NCV.6000bp.no.FD.f0.5.EUR
+#HKA_eur feq=0.5
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[43]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.6000bp.f0.5.EUR
+performance(pred.hka.6000bp.f0.5.EUR, "tpr", "fpr")-> perf.hka.6000bp.f0.5.EUR
+#TajD_eur feq=0.5
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[43]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.6000bp.f0.5.EUR  #here we invert the labels, because in balsel tajD and HKA are high, opposite of NCV.
+#performance(pred.tajd.6000bp.f0.5.EUR, "tpr", "fpr")-> perf.tajd.6000bp.f0.5.EUR
+####################
+#NCV_eur feq=0.4
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[42]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.6000bp.f0.4.EUR
+performance(pred.NCV.6000bp.f0.4.EUR, "tpr", "fpr")-> perf.NCV.6000bp.f0.4.EUR
+#NCV-no-FD_eur feq=0.4
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[42]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.6000bp.f0.4.EUR
+performance(pred.NCV.no.FD.6000bp.f0.4.EUR, "tpr", "fpr")-> perf.NCV.6000bp.no.FD.f0.4.EUR
+#HKA_eur feq=0.4
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[42]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.6000bp.f0.4.EUR
+performance(pred.hka.6000bp.f0.4.EUR, "tpr", "fpr")-> perf.hka.6000bp.f0.4.EUR
+#TajD_eur feq=0.4
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[42]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.6000bp.f0.4.EUR
+#performance(pred.tajd.6000bp.f0.4.EUR, "tpr", "fpr")-> perf.tajd.6000bp.f0.4.EUR
+##################
+#NCV_eur feq=0.3
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[41]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.6000bp.f0.3.EUR
+performance(pred.NCV.6000bp.f0.3.EUR, "tpr", "fpr")-> perf.NCV.6000bp.f0.3.EUR
+#NCV-no-FD_eur feq=0.3
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[41]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.6000bp.f0.3.EUR
+performance(pred.NCV.no.FD.6000bp.f0.3.EUR, "tpr", "fpr")-> perf.NCV.6000bp.no.FD.f0.3.EUR
+#HKA_eur feq=0.3
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[41]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.6000bp.f0.3.EUR
+performance(pred.hka.6000bp.f0.3.EUR, "tpr", "fpr")-> perf.hka.6000bp.f0.3.EUR
+#TajD_eur feq=0.3
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[41]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.6000bp.f0.3.EUR
+#performance(pred.tajd.6000bp.f0.3.EUR, "tpr", "fpr")-> perf.tajd.6000bp.f0.3.EUR
+#####################
+#NCV_eur feq=0.2
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[40]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.6000bp.f0.2.EUR
+performance(pred.NCV.6000bp.f0.2.EUR, "tpr", "fpr")-> perf.NCV.6000bp.f0.2.EUR
+#NCV-no-FD_eur feq=0.2
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[40]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.6000bp.f0.2.EUR
+performance(pred.NCV.no.FD.6000bp.f0.2.EUR, "tpr", "fpr")-> perf.NCV.6000bp.no.FD.f0.2.EUR
+#HKA_eur feq=0.2
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[40]]$hka_EUR), c(rep(1,1000), rep(0,1000)))-> pred.hka.6000bp.f0.2.EUR
+performance(pred.hka.6000bp.f0.2.EUR, "tpr", "fpr")-> perf.hka.6000bp.f0.2.EUR
+#TajD_eur feq=0.2
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[40]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.6000bp.f0.2.EUR
+#performance(pred.tajd.6000bp.f0.2.EUR, "tpr", "fpr")-> perf.tajd.6000bp.f0.2.EUR
+####################
+#NCV_eur feq=0.1
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[39]]$ncvFD_EUR), c(rep(0,1000), rep(1,1000)))-> pred.NCV.6000bp.f0.1.EUR
+performance(pred.NCV.6000bp.f0.1.EUR, "tpr", "fpr")-> perf.NCV.6000bp.f0.1.EUR
+#NCV-no-FD_eur feq=0.1
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[39]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.6000bp.f0.1.EUR
+performance(pred.NCV.no.FD.6000bp.f0.1.EUR, "tpr", "fpr")-> perf.NCV.6000bp.no.FD.f0.1.EUR
+#HKA_eur feq=0.1
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[39]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.6000bp.f0.1.EUR
+performance(pred.hka.6000bp.f0.1.EUR, "tpr", "fpr")-> perf.hka.6000bp.f0.1.EUR
+#TajD_eur feq=0.1
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[39]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.6000bp.f0.1.EUR
+#performance(pred.tajd.6000bp.f0.1.EUR, "tpr", "fpr")-> perf.tajd.6000bp.f0.1.EUR
+#
+######################################################################################################
+####12000bp, Tbs=5#####
+#NCVFD_eur feq=0.5
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[48]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.12000bp.f0.5.EUR
+performance(pred.NCV.12000bp.f0.5.EUR, "tpr", "fpr")-> perf.NCV.12000bp.f0.5.EUR
+#NCV-no-FD_eur FEQ=0.5
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[48]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.12000bp.f0.5.EUR
+performance(pred.NCV.no.FD.12000bp.f0.5.EUR, "tpr", "fpr")-> perf.NCV.12000bp.no.FD.f0.5.EUR
+#HKA_eur feq=0.5
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[48]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.12000bp.f0.5.EUR
+performance(pred.hka.12000bp.f0.5.EUR, "tpr", "fpr")-> perf.hka.12000bp.f0.5.EUR
+#TajD_eur feq=0.5
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[48]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.12000bp.f0.5.EUR  #here we invert the labels, because in balsel tajD and HKA are high, opposite of NCV.
+#performance(pred.tajd.12000bp.f0.5.EUR, "tpr", "fpr")-> perf.tajd.12000bp.f0.5.EUR
+####################
+#NCV_eur feq=0.4
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[47]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.12000bp.f0.4.EUR
+performance(pred.NCV.12000bp.f0.4.EUR, "tpr", "fpr")-> perf.NCV.12000bp.f0.4.EUR
+#NCV-no-FD_eur feq=0.4
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[47]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.12000bp.f0.4.EUR
+performance(pred.NCV.no.FD.12000bp.f0.4.EUR, "tpr", "fpr")-> perf.NCV.12000bp.no.FD.f0.4.EUR
+#HKA_eur feq=0.4
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[47]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.12000bp.f0.4.EUR
+performance(pred.hka.12000bp.f0.4.EUR, "tpr", "fpr")-> perf.hka.12000bp.f0.4.EUR
+#TajD_eur feq=0.4
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[47]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.12000bp.f0.4.EUR
+#performance(pred.tajd.12000bp.f0.4.EUR, "tpr", "fpr")-> perf.tajd.12000bp.f0.4.EUR
+##################
+#NCV_eur feq=0.3
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[46]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.12000bp.f0.3.EUR
+performance(pred.NCV.12000bp.f0.3.EUR, "tpr", "fpr")-> perf.NCV.12000bp.f0.3.EUR
+#NCV-no-FD_eur feq=0.3
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[46]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.12000bp.f0.3.EUR
+performance(pred.NCV.no.FD.12000bp.f0.3.EUR, "tpr", "fpr")-> perf.NCV.12000bp.no.FD.f0.3.EUR
+#HKA_eur feq=0.3
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[46]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.12000bp.f0.3.EUR
+performance(pred.hka.12000bp.f0.3.EUR, "tpr", "fpr")-> perf.hka.12000bp.f0.3.EUR
+#TajD_eur feq=0.3
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[46]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.12000bp.f0.3.EUR
+#performance(pred.tajd.12000bp.f0.3.EUR, "tpr", "fpr")-> perf.tajd.12000bp.f0.3.EUR
+#####################
+#NCV_eur feq=0.2
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[45]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.12000bp.f0.2.EUR
+performance(pred.NCV.12000bp.f0.2.EUR, "tpr", "fpr")-> perf.NCV.12000bp.f0.2.EUR
+#NCV-no-FD_eur feq=0.2
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[45]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.12000bp.f0.2.EUR
+performance(pred.NCV.no.FD.12000bp.f0.2.EUR, "tpr", "fpr")-> perf.NCV.12000bp.no.FD.f0.2.EUR
+#HKA_eur feq=0.2
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[45]]$hka_EUR), c(rep(1,1000), rep(0,1000)))-> pred.hka.12000bp.f0.2.EUR
+performance(pred.hka.12000bp.f0.2.EUR, "tpr", "fpr")-> perf.hka.12000bp.f0.2.EUR
+#TajD_eur feq=0.2
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[45]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.12000bp.f0.2.EUR
+#performance(pred.tajd.12000bp.f0.2.EUR, "tpr", "fpr")-> perf.tajd.12000bp.f0.2.EUR
+#######################
+#NCV_eur feq=0.1
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[44]]$ncvFD_EUR), c(rep(0,1000), rep(1,1000)))-> pred.NCV.12000bp.f0.1.EUR
+performance(pred.NCV.12000bp.f0.1.EUR, "tpr", "fpr")-> perf.NCV.12000bp.f0.1.EUR
+#NCV-no-FD_eur feq=0.1
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[44]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> pred.NCV.no.FD.12000bp.f0.1.EUR
+performance(pred.NCV.no.FD.12000bp.f0.1.EUR, "tpr", "fpr")-> perf.NCV.12000bp.no.FD.f0.1.EUR
+#HKA_eur feq=0.1
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[44]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> pred.hka.12000bp.f0.1.EUR
+performance(pred.hka.12000bp.f0.1.EUR, "tpr", "fpr")-> perf.hka.12000bp.f0.1.EUR
+#TajD_eur feq=0.1
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[44]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> pred.tajd.12000bp.f0.1.EUR
+#performance(pred.tajd.12000bp.f0.1.EUR, "tpr", "fpr")-> perf.tajd.12000bp.f0.1.EUR
+#
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+###############Tbs3###########
+#########3000##########
+#NCVFD_eur feq=0.5
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[23]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.3000bp.f0.5.EUR
+performance(tbs3.pred.NCV.3000bp.f0.5.EUR, "tpr", "fpr")-> tbs3.perf.NCV.3000bp.f0.5.EUR
+#NCV-no-FD_eur FEQ=0.5
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[23]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.3000bp.f0.5.EUR
+performance(tbs3.pred.NCV.no.FD.3000bp.f0.5.EUR, "tpr", "fpr")-> tbs3.perf.NCV.3000bp.no.FD.f0.5.EUR
+#HKA_eur feq=0.5
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[23]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.3000bp.f0.5.EUR
+performance(tbs3.pred.hka.3000bp.f0.5.EUR, "tpr", "fpr")-> tbs3.perf.hka.3000bp.f0.5.EUR
+#TajD_eur feq=0.5
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[23]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.3000bp.f0.5.EUR  #here we invert the labels, because in balsel tajD and HKA are high, opposite of NCV.
+#performance(tbs3.pred.tajd.3000bp.f0.5.EUR, "tpr", "fpr")-> tbs3.perf.tajd.3000bp.f0.5.EUR
+####################
+#NCV_eur feq=0.4
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[22]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.3000bp.f0.4.EUR
+performance(tbs3.pred.NCV.3000bp.f0.4.EUR, "tpr", "fpr")-> tbs3.perf.NCV.3000bp.f0.4.EUR
+#NCV-no-FD_eur feq=0.4
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[22]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.3000bp.f0.4.EUR
+performance(tbs3.pred.NCV.no.FD.3000bp.f0.4.EUR, "tpr", "fpr")-> tbs3.perf.NCV.3000bp.no.FD.f0.4.EUR
+#HKA_eur feq=0.4
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[22]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.3000bp.f0.4.EUR
+performance(tbs3.pred.hka.3000bp.f0.4.EUR, "tpr", "fpr")-> tbs3.perf.hka.3000bp.f0.4.EUR
+#TajD_eur feq=0.4
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[22]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.3000bp.f0.4.EUR
+#performance(tbs3.pred.tajd.3000bp.f0.4.EUR, "tpr", "fpr")-> tbs3.perf.tajd.3000bp.f0.4.EUR
+##################
+#NCV_eur feq=0.3
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[21]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.3000bp.f0.3.EUR
+performance(tbs3.pred.NCV.3000bp.f0.3.EUR, "tpr", "fpr")-> tbs3.perf.NCV.3000bp.f0.3.EUR
+#NCV-no-FD_eur feq=0.3
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[21]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.3000bp.f0.3.EUR
+performance(tbs3.pred.NCV.no.FD.3000bp.f0.3.EUR, "tpr", "fpr")-> tbs3.perf.NCV.3000bp.no.FD.f0.3.EUR
+#HKA_eur feq=0.3
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[21]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.3000bp.f0.3.EUR
+performance(tbs3.pred.hka.3000bp.f0.3.EUR, "tpr", "fpr")-> tbs3.perf.hka.3000bp.f0.3.EUR
+#TajD_eur feq=0.3
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[21]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.3000bp.f0.3.EUR
+#performance(tbs3.pred.tajd.3000bp.f0.3.EUR, "tpr", "fpr")-> tbs3.perf.tajd.3000bp.f0.3.EUR
+#####################
+#NCV_eur feq=0.2
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[20]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.3000bp.f0.2.EUR
+performance(tbs3.pred.NCV.3000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.NCV.3000bp.f0.2.EUR
+#NCV-no-FD_eur feq=0.2
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[20]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.3000bp.f0.2.EUR
+performance(tbs3.pred.NCV.no.FD.3000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.NCV.3000bp.no.FD.f0.2.EUR
+#HKA_eur feq=0.2
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[20]]$hka_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.hka.3000bp.f0.2.EUR
+performance(tbs3.pred.hka.3000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.hka.3000bp.f0.2.EUR
+#TajD_eur feq=0.2
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[20]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.3000bp.f0.2.EUR
+#performance(tbs3.pred.tajd.3000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.tajd.3000bp.f0.2.EUR
+##################
+#NCV_eur feq=0.1
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[19]]$ncvFD_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.NCV.3000bp.f0.1.EUR
+performance(tbs3.pred.NCV.3000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.NCV.3000bp.f0.1.EUR
+#NCV-no-FD_eur feq=0.1
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[19]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.3000bp.f0.1.EUR
+performance(tbs3.pred.NCV.no.FD.3000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.NCV.3000bp.no.FD.f0.1.EUR
+#HKA_eur feq=0.1
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[19]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.3000bp.f0.1.EUR
+performance(tbs3.pred.hka.3000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.hka.3000bp.f0.1.EUR
+#TajD_eur feq=0.1
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[19]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.3000bp.f0.1.EUR
+#performance(tbs3.pred.tajd.3000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.tajd.3000bp.f0.1.EUR
+###
+##################################################################
+#6000bp, Tbs=3
+#NCVFD_eur feq=0.5
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[28]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.6000bp.f0.5.EUR
+performance(tbs3.pred.NCV.6000bp.f0.5.EUR, "tpr", "fpr")-> tbs3.perf.NCV.6000bp.f0.5.EUR
+#NCV-no-FD_eur FEQ=0.5
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[28]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.6000bp.f0.5.EUR
+performance(tbs3.pred.NCV.no.FD.6000bp.f0.5.EUR, "tpr", "fpr")-> tbs3.perf.NCV.6000bp.no.FD.f0.5.EUR
+#HKA_eur feq=0.5
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[28]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.6000bp.f0.5.EUR
+performance(tbs3.pred.hka.6000bp.f0.5.EUR, "tpr", "fpr")-> tbs3.perf.hka.6000bp.f0.5.EUR
+#TajD_eur feq=0.5
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[28]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.6000bp.f0.5.EUR  #here we invert the labels, because in balsel tajD and HKA are high, opposite of NCV.
+#performance(tbs3.pred.tajd.6000bp.f0.5.EUR, "tpr", "fpr")-> tbs3.perf.tajd.6000bp.f0.5.EUR
+####################
+#NCV_eur feq=0.4
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[27]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.6000bp.f0.4.EUR
+performance(tbs3.pred.NCV.6000bp.f0.4.EUR, "tpr", "fpr")-> tbs3.perf.NCV.6000bp.f0.4.EUR
+#NCV-no-FD_eur feq=0.4
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[27]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.6000bp.f0.4.EUR
+performance(tbs3.pred.NCV.no.FD.6000bp.f0.4.EUR, "tpr", "fpr")-> tbs3.perf.NCV.6000bp.no.FD.f0.4.EUR
+#HKA_eur feq=0.4
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[27]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.6000bp.f0.4.EUR
+performance(tbs3.pred.hka.6000bp.f0.4.EUR, "tpr", "fpr")-> tbs3.perf.hka.6000bp.f0.4.EUR
+#TajD_eur feq=0.4
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[27]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.6000bp.f0.4.EUR
+#performance(tbs3.pred.tajd.6000bp.f0.4.EUR, "tpr", "fpr")-> tbs3.perf.tajd.6000bp.f0.4.EUR
+##################
+#NCV_eur feq=0.3
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[26]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.6000bp.f0.3.EUR
+performance(tbs3.pred.NCV.6000bp.f0.3.EUR, "tpr", "fpr")-> tbs3.perf.NCV.6000bp.f0.3.EUR
+#NCV-no-FD_eur feq=0.3
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[26]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.6000bp.f0.3.EUR
+performance(tbs3.pred.NCV.no.FD.6000bp.f0.3.EUR, "tpr", "fpr")-> tbs3.perf.NCV.6000bp.no.FD.f0.3.EUR
+#HKA_eur feq=0.3
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[26]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.6000bp.f0.3.EUR
+performance(tbs3.pred.hka.6000bp.f0.3.EUR, "tpr", "fpr")-> tbs3.perf.hka.6000bp.f0.3.EUR
+#TajD_eur feq=0.3
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[26]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.6000bp.f0.3.EUR
+#performance(tbs3.pred.tajd.6000bp.f0.3.EUR, "tpr", "fpr")-> tbs3.perf.tajd.6000bp.f0.3.EUR
+#####################
+#NCV_eur feq=0.2
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[25]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.6000bp.f0.2.EUR
+performance(tbs3.pred.NCV.6000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.NCV.6000bp.f0.2.EUR
+#NCV-no-FD_eur feq=0.2
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[25]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.6000bp.f0.2.EUR
+performance(tbs3.pred.NCV.no.FD.6000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.NCV.6000bp.no.FD.f0.2.EUR
+#HKA_eur feq=0.2
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[25]]$hka_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.hka.6000bp.f0.2.EUR
+performance(tbs3.pred.hka.6000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.hka.6000bp.f0.2.EUR
+#TajD_eur feq=0.2
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[25]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.6000bp.f0.2.EUR
+#performance(tbs3.pred.tajd.6000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.tajd.6000bp.f0.2.EUR
+###############
+#NCV_eur feq=0.1
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[24]]$ncvFD_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.NCV.6000bp.f0.1.EUR
+performance(tbs3.pred.NCV.6000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.NCV.6000bp.f0.1.EUR
+#NCV-no-FD_eur feq=0.1
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[24]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.6000bp.f0.1.EUR
+performance(tbs3.pred.NCV.no.FD.6000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.NCV.6000bp.no.FD.f0.1.EUR
+#HKA_eur feq=0.1
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[24]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.6000bp.f0.1.EUR
+performance(tbs3.pred.hka.6000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.hka.6000bp.f0.1.EUR
+#TajD_eur feq=0.1
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[24]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.6000bp.f0.1.EUR
+#performance(tbs3.pred.tajd.6000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.tajd.6000bp.f0.1.EUR
+#
+######################################################################################################
+#12000bp, Tbs=3
+#NCVFD_eur feq=0.5
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[33]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.12000bp.f0.5.EUR
+performance(tbs3.pred.NCV.12000bp.f0.5.EUR, "tpr", "fpr")-> tbs3.perf.NCV.12000bp.f0.5.EUR
+#NCV-no-FD_eur FEQ=0.5
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[33]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.12000bp.f0.5.EUR
+performance(tbs3.pred.NCV.no.FD.12000bp.f0.5.EUR, "tpr", "fpr")-> tbs3.perf.NCV.12000bp.no.FD.f0.5.EUR
+#HKA_eur feq=0.5
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[33]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.12000bp.f0.5.EUR
+performance(tbs3.pred.hka.12000bp.f0.5.EUR, "tpr", "fpr")-> tbs3.perf.hka.12000bp.f0.5.EUR
+#TajD_eur feq=0.5
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[33]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.12000bp.f0.5.EUR  #here we invert the labels, because in balsel tajD and HKA are high, opposite of NCV.
+#performance(pred.tajd.12000bp.f0.5, "tpr", "fpr")-> tbs3.perf.tajd.12000bp.f0.5.EUR
+####################
+#NCV_eur feq=0.4
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[32]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.12000bp.f0.4.EUR
+performance(tbs3.pred.NCV.12000bp.f0.4.EUR, "tpr", "fpr")-> tbs3.perf.NCV.12000bp.f0.4.EUR
+#NCV-no-FD_eur feq=0.4
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[32]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.12000bp.f0.4.EUR
+performance(tbs3.pred.NCV.no.FD.12000bp.f0.4.EUR, "tpr", "fpr")-> tbs3.perf.NCV.12000bp.no.FD.f0.4.EUR
+#HKA_eur feq=0.4
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[32]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.12000bp.f0.4.EUR
+performance(tbs3.pred.hka.12000bp.f0.4.EUR, "tpr", "fpr")-> tbs3.perf.hka.12000bp.f0.4.EUR
+#TajD_eur feq=0.4
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[32]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.12000bp.f0.4.EUR
+#performance(tbs3.pred.tajd.12000bp.f0.4, "tpr", "fpr")-> tbs3.perf.tajd.12000bp.f0.4
+##################
+#NCV_eur feq=0.3
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[31]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.12000bp.f0.3.EUR
+performance(tbs3.pred.NCV.12000bp.f0.3.EUR, "tpr", "fpr")-> tbs3.perf.NCV.12000bp.f0.3.EUR
+#NCV-no-FD_eur feq=0.3
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[31]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.12000bp.f0.3.EUR
+performance(tbs3.pred.NCV.no.FD.12000bp.f0.3.EUR, "tpr", "fpr")-> tbs3.perf.NCV.12000bp.no.FD.f0.3.EUR
+#HKA_eur feq=0.3
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[31]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.12000bp.f0.3.EUR
+performance(tbs3.pred.hka.12000bp.f0.3.EUR, "tpr", "fpr")-> tbs3.perf.hka.12000bp.f0.3.EUR
+#TajD_eur feq=0.3
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[31]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.12000bp.f0.3.EUR
+#performance(tbs3.pred.tajd.12000bp.f0.3, "tpr", "fpr")-> tbs3.perf.tajd.12000bp.f0.3
+#####################
+#NCV_eur feq=0.2
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[30]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.12000bp.f0.2.EUR
+performance(tbs3.pred.NCV.12000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.NCV.12000bp.f0.2.EUR
+#NCV-no-FD_eur feq=0.2
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[30]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.12000bp.f0.2.EUR
+performance(tbs3.pred.NCV.no.FD.12000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.NCV.12000bp.no.FD.f0.2.EUR
+#HKA_eur feq=0.2
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[30]]$hka_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.hka.12000bp.f0.2.EUR
+performance(tbs3.pred.hka.12000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.hka.12000bp.f0.2.EUR
+#TajD_eur feq=0.2
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[30]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.12000bp.f0.2.EUR
+#performance(tbs3.pred.tajd.12000bp.f0.2.EUR, "tpr", "fpr")-> tbs3.perf.tajd.12000bp.f0.2.EUR
+###############
+#NCV_eur feq=0.1
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[29]]$ncvFD_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.NCV.12000bp.f0.1.EUR
+performance(tbs3.pred.NCV.12000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.NCV.12000bp.f0.1.EUR
+#NCV-no-FD_eur feq=0.1
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[29]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs3.pred.NCV.no.FD.12000bp.f0.1.EUR
+performance(tbs3.pred.NCV.no.FD.12000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.NCV.12000bp.no.FD.f0.1.EUR
+#HKA_eur feq=0.1
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[29]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.hka.12000bp.f0.1.EUR
+performance(tbs3.pred.hka.12000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.hka.12000bp.f0.1.EUR
+#TajD_eur feq=0.1
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[29]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs3.pred.tajd.12000bp.f0.1.EUR
+#performance(tbs3.pred.tajd.12000bp.f0.1.EUR, "tpr", "fpr")-> tbs3.perf.tajd.12000bp.f0.1.EUR
+#
+######################################################################################################
+######################################################################################################
+######################################################################################################
+######################################################################################################
+###########Tbs1##############
+########3000#################
+#NCVFD_eur feq=0.5
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[8]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.3000bp.f0.5.EUR
+performance(tbs1.pred.NCV.3000bp.f0.5.EUR, "tpr", "fpr")-> tbs1.perf.NCV.3000bp.f0.5.EUR
+#NCV-no-FD_eur FEQ=0.5
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[8]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.3000bp.f0.5.EUR
+performance(tbs1.pred.NCV.no.FD.3000bp.f0.5.EUR, "tpr", "fpr")-> tbs1.perf.NCV.3000bp.no.FD.f0.5.EUR
+#HKA_eur feq=0.5
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[8]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.3000bp.f0.5.EUR
+performance(tbs1.pred.hka.3000bp.f0.5.EUR, "tpr", "fpr")-> tbs1.perf.hka.3000bp.f0.5.EUR
+#TajD_eur feq=0.5
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[8]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.3000bp.f0.5.EUR  #here we invert the labels, because in balsel tajD and HKA are high, opposite of NCV.
+#performance(tbs1.pred.tajd.3000bp.f0.5.EUR.EUR, "tpr", "fpr")-> tbs1.perf.tajd.3000bp.f0.5.EUR
+####################
+#NCV_eur feq=0.4
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[7]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.3000bp.f0.4.EUR
+performance(tbs1.pred.NCV.3000bp.f0.4.EUR, "tpr", "fpr")-> tbs1.perf.NCV.3000bp.f0.4.EUR
+#NCV-no-FD_eur feq=0.4
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[7]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.3000bp.f0.4.EUR
+performance(tbs1.pred.NCV.no.FD.3000bp.f0.4.EUR, "tpr", "fpr")-> tbs1.perf.NCV.3000bp.no.FD.f0.4.EUR
+#HKA_eur feq=0.4
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[7]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.3000bp.f0.4.EUR
+performance(tbs1.pred.hka.3000bp.f0.4.EUR, "tpr", "fpr")-> tbs1.perf.hka.3000bp.f0.4.EUR
+#TajD_eur feq=0.4
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[7]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.3000bp.f0.4.EUR
+#performance(tbs1.pred.tajd.3000bp.f0.4.EUR, "tpr", "fpr")-> tbs1.perf.tajd.3000bp.f0.4.EUR
+##################
+#NCV_eur feq=0.3
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[6]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.3000bp.f0.3.EUR
+performance(tbs1.pred.NCV.3000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.NCV.3000bp.f0.3.EUR
+#NCV-no-FD_eur feq=0.3
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[6]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.3000bp.f0.3.EUR
+performance(tbs1.pred.NCV.no.FD.3000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.NCV.3000bp.no.FD.f0.3.EUR
+#HKA_eur feq=0.3
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[6]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.3000bp.f0.3.EUR
+performance(tbs1.pred.hka.3000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.hka.3000bp.f0.3.EUR
+#TajD_eur feq=0.3
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[6]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.3000bp.f0.3.EUR
+#performance(tbs1.pred.tajd.3000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.tajd.3000bp.f0.3.EUR
+#####################
+#NCV_eur feq=0.2
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[5]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.3000bp.f0.2.EUR
+performance(tbs1.pred.NCV.3000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.NCV.3000bp.f0.2.EUR
+#NCV-no-FD_eur feq=0.2
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[5]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.3000bp.f0.2.EUR
+performance(tbs1.pred.NCV.no.FD.3000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.NCV.3000bp.no.FD.f0.2.EUR
+#HKA_eur feq=0.2
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[5]]$hka_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.hka.3000bp.f0.2.EUR
+performance(tbs1.pred.hka.3000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.hka.3000bp.f0.2.EUR
+#TajD_eur feq=0.2
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[5]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.3000bp.f0.2.EUR
+#performance(tbs1.pred.tajd.3000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.tajd.3000bp.f0.2.EUR
+######################
+#NCV_eur feq=0.1
+prediction(c(list.power[[1]]$ncvFD_EUR[1:1000] , list.power[[4]]$ncvFD_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.NCV.3000bp.f0.1.EUR
+performance(tbs1.pred.NCV.3000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.NCV.3000bp.f0.1.EUR
+#NCV-no-FD_eur feq=0.1
+prediction(c(list.power[[1]]$ncv_EUR[1:1000] , list.power[[4]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.3000bp.f0.1.EUR
+performance(tbs1.pred.NCV.no.FD.3000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.NCV.3000bp.no.FD.f0.1.EUR
+#HKA_eur feq=0.1
+prediction(c(list.power[[1]]$hka_EUR[1:1000] , list.power[[4]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.3000bp.f0.1.EUR
+performance(tbs1.pred.hka.3000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.hka.3000bp.f0.1.EUR
+#TajD_eur feq=0.1
+#prediction(c(list.power[[1]]$tajd_EUR[1:1000] , list.power[[4]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.3000bp.f0.1.EUR
+#performance(tbs1.pred.tajd.3000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.tajd.3000bp.f0.1.EUR
+###
+##################################################################
+#6000bp, Tbs=1
+#NCVFD_eur feq=0.5
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[13]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.6000bp.f0.5.EUR
+performance(tbs1.pred.NCV.6000bp.f0.5.EUR, "tpr", "fpr")-> tbs1.perf.NCV.6000bp.f0.5.EUR
+#NCV-no-FD_eur FEQ=0.5
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[13]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.6000bp.f0.5.EUR
+performance(tbs1.pred.NCV.no.FD.6000bp.f0.5.EUR, "tpr", "fpr")-> tbs1.perf.NCV.6000bp.no.FD.f0.5.EUR
+#HKA_eur feq=0.5
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[13]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.6000bp.f0.5.EUR
+performance(tbs1.pred.hka.6000bp.f0.5.EUR, "tpr", "fpr")-> tbs1.perf.hka.6000bp.f0.5.EUR
+#TajD_eur feq=0.5
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[13]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.6000bp.f0.5.EUR  #here we invert the labels, because in balsel tajD and HKA are high, opposite of NCV.
+#performance(tbs1.pred.tajd.6000bp.f0.5, "tpr", "fpr")-> tbs1.perf.tajd.6000bp.f0.5.EUR
+####################
+#NCV_eur feq=0.4
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[12]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.6000bp.f0.4.EUR
+performance(tbs1.pred.NCV.6000bp.f0.4.EUR, "tpr", "fpr")-> tbs1.perf.NCV.6000bp.f0.4.EUR
+#NCV-no-FD_eur feq=0.4
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[12]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.6000bp.f0.4.EUR
+performance(tbs1.pred.NCV.no.FD.6000bp.f0.4.EUR, "tpr", "fpr")-> tbs1.perf.NCV.6000bp.no.FD.f0.4.EUR
+#HKA_eur feq=0.4
+#prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[12]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.6000bp.f0.4.EUR
+#performance(tbs1.pred.hka.6000bp.f0.4.EUR, "tpr", "fpr")-> tbs1.perf.hka.6000bp.f0.4.EUR
+#TajD_eur feq=0.4
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[12]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.6000bp.f0.4.EUR
+#performance(tbs1.pred.tajd.6000bp.f0.4.EUR, "tpr","fpr")-> tbs1.perf.tajd.6000bp.f0.4.EUR
+##################
+#NCV_eur feq=0.3
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[11]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.6000bp.f0.3.EUR
+performance(tbs1.pred.NCV.6000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.NCV.6000bp.f0.3.EUR
+#NCV-no-FD_eur feq=0.3
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[11]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.6000bp.f0.3.EUR
+performance(tbs1.pred.NCV.no.FD.6000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.NCV.6000bp.no.FD.f0.3.EUR
+#HKA_eur feq=0.3
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[11]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.6000bp.f0.3.EUR
+performance(tbs1.pred.hka.6000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.hka.6000bp.f0.3.EUR
+#TajD_eur feq=0.3
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[11]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.6000bp.f0.3.EUR
+#performance(tbs1.pred.tajd.6000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.tajd.6000bp.f0.3.EUR
+#####################
+#NCV_eur feq=0.2
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[10]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.6000bp.f0.2.EUR
+performance(tbs1.pred.NCV.6000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.NCV.6000bp.f0.2.EUR
+#NCV-no-FD_eur feq=0.2
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[10]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.6000bp.f0.2.EUR
+performance(tbs1.pred.NCV.no.FD.6000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.NCV.6000bp.no.FD.f0.2.EUR
+#HKA_eur feq=0.2
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[10]]$hka_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.hka.6000bp.f0.2.EUR
+performance(tbs1.pred.hka.6000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.hka.6000bp.f0.2.EUR
+#TajD_eur feq=0.2
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[10]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.6000bp.f0.2.EUR
+#performance(tbs1.pred.tajd.6000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.tajd.6000bp.f0.2.EUR
+################
+#NCV_eur feq=0.1
+prediction(c(list.power[[2]]$ncvFD_EUR[1:1000] , list.power[[9]]$ncvFD_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.NCV.6000bp.f0.1.EUR
+performance(tbs1.pred.NCV.6000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.NCV.6000bp.f0.1.EUR
+#NCV-no-FD_eur feq=0.1
+prediction(c(list.power[[2]]$ncv_EUR[1:1000] , list.power[[9]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.6000bp.f0.1.EUR
+performance(tbs1.pred.NCV.no.FD.6000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.NCV.6000bp.no.FD.f0.1.EUR
+#HKA_eur feq=0.1
+prediction(c(list.power[[2]]$hka_EUR[1:1000] , list.power[[9]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.6000bp.f0.1.EUR
+performance(tbs1.pred.hka.6000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.hka.6000bp.f0.1.EUR
+#TajD_eur feq=0.1
+#prediction(c(list.power[[2]]$tajd_EUR[1:1000] , list.power[[9]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.6000bp.f0.1.EUR
+#performance(tbs1.pred.tajd.6000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.tajd.6000bp.f0.1.EUR
+#
+######################################################################################################
+#12000bp, Tbs=1
+#NCVFD_eur feq=0.5
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[18]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.12000bp.f0.5.EUR
+performance(tbs1.pred.NCV.12000bp.f0.5.EUR, "tpr", "fpr")-> tbs1.perf.NCV.12000bp.f0.5.EUR
+#NCV-no-FD_eur FEQ=0.5
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[18]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.12000bp.f0.5.EUR
+performance(tbs1.pred.NCV.no.FD.12000bp.f0.5.EUR, "tpr", "fpr")-> tbs1.perf.NCV.12000bp.no.FD.f0.5.EUR
+#HKA_eur feq=0.5
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[18]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.12000bp.f0.5.EUR
+performance(tbs1.pred.hka.12000bp.f0.5.EUR, "tpr", "fpr")-> tbs1.perf.hka.12000bp.f0.5.EUR
+#TajD_eur feq=0.5
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[18]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.12000bp.f0.5.EUR  #here we invert the labels, because in balsel tajD and HKA are high, opposite of NCV.
+#performance(tbs1.pred.tajd.12000bp.f0.5.EUR, "tpr", "fpr")-> tbs1.perf.tajd.12000bp.f0.5.EUR
+####################
+#NCV_eur feq=0.4
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[17]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.12000bp.f0.4.EUR
+performance(tbs1.pred.NCV.12000bp.f0.4.EUR, "tpr", "fpr")-> tbs1.perf.NCV.12000bp.f0.4.EUR
+#NCV-no-FD_eur feq=0.4
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[17]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.12000bp.f0.4.EUR
+performance(tbs1.pred.NCV.no.FD.12000bp.f0.4.EUR, "tpr", "fpr")-> tbs1.perf.NCV.12000bp.no.FD.f0.4.EUR
+#HKA_eur feq=0.4
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[17]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.12000bp.f0.4.EUR
+performance(tbs1.pred.hka.12000bp.f0.4.EUR, "tpr", "fpr")-> tbs1.perf.hka.12000bp.f0.4.EUR
+#TajD_eur feq=0.4
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[17]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.12000bp.f0.4.EUR
+#performance(tbs1.pred.tajd.12000bp.f0.4.EUR, "tpr", "fpr")-> tbs1.perf.tajd.12000bp.f0.4.EUR
+##################
+#NCV_eur feq=0.3
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[16]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.12000bp.f0.3.EUR
+performance(tbs1.pred.NCV.12000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.NCV.12000bp.f0.3.EUR
+#NCV-no-FD_eur feq=0.3
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[16]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.12000bp.f0.3.EUR
+performance(tbs1.pred.NCV.no.FD.12000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.NCV.12000bp.no.FD.f0.3.EUR
+#HKA_eur feq=0.3
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[16]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.12000bp.f0.3.EUR
+performance(tbs1.pred.hka.12000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.hka.12000bp.f0.3.EUR
+#TajD_eur feq=0.3
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[16]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.12000bp.f0.3.EUR
+#performance(tbs1.pred.tajd.12000bp.f0.3.EUR, "tpr", "fpr")-> tbs1.perf.tajd.12000bp.f0.3.EUR
+#####################
+#NCV_eur feq=0.2
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[15]]$ncvFD_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.12000bp.f0.2.EUR
+performance(tbs1.pred.NCV.12000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.NCV.12000bp.f0.2.EUR
+#NCV-no-FD_eur feq=0.2
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[15]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.12000bp.f0.2.EUR
+performance(tbs1.pred.NCV.no.FD.12000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.NCV.12000bp.no.FD.f0.2.EUR
+#HKA_eur feq=0.2
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[15]]$hka_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.hka.12000bp.f0.2.EUR
+performance(tbs1.pred.hka.12000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.hka.12000bp.f0.2.EUR
+#TajD_eur feq=0.2
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[15]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.12000bp.f0.2.EUR
+#performance(tbs1.pred.tajd.12000bp.f0.2.EUR, "tpr", "fpr")-> tbs1.perf.tajd.12000bp.f0.2.EUR
+#######################
+#NCV_eur feq=0.1
+prediction(c(list.power[[3]]$ncvFD_EUR[1:1000] , list.power[[14]]$ncvFD_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.NCV.12000bp.f0.1.EUR
+performance(tbs1.pred.NCV.12000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.NCV.12000bp.f0.1.EUR
+#NCV-no-FD_eur feq=0.1
+prediction(c(list.power[[3]]$ncv_EUR[1:1000] , list.power[[14]]$ncv_EUR), c(rep(1,1000), rep(0,1000)))-> tbs1.pred.NCV.no.FD.12000bp.f0.1.EUR
+performance(tbs1.pred.NCV.no.FD.12000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.NCV.12000bp.no.FD.f0.1.EUR
+#HKA_eur feq=0.1
+prediction(c(list.power[[3]]$hka_EUR[1:1000] , list.power[[14]]$hka_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.hka.12000bp.f0.1.EUR
+performance(tbs1.pred.hka.12000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.hka.12000bp.f0.1.EUR
+#TajD_eur feq=0.1
+#prediction(c(list.power[[3]]$tajd_EUR[1:1000] , list.power[[14]]$tajd_EUR), c(rep(0,1000), rep(1,1000)))-> tbs1.pred.tajd.12000bp.f0.1.EUR
+#performance(tbs1.pred.tajd.12000bp.f0.1.EUR, "tpr", "fpr")-> tbs1.perf.tajd.12000bp.f0.1.EUR
+
+
+################################################################################################################
+################################################################################################################
+################################################################################################################
+################################################################################################################
+################################################################################################################
+
+######################################################################################################
+######################################################################################################
+######################################################################################################
+###########
+#T1 and T2#
+###########
+prediction(c(list.power.II[[2]]$V1 , list.power.II[[8]]$V1), c(rep(0,1000), rep(1,1000)))-> pred.T2.f0.1
+performance(pred.T2.f0.1, "tpr", "fpr")-> perf.T2.f0.1
+
+prediction(c(list.power.II[[2]]$V1 , list.power.II[[9]]$V1), c(rep(0,1000), rep(1,1000)))-> pred.T2.f0.2
+performance(pred.T2.f0.2, "tpr", "fpr")-> perf.T2.f0.2
+
+prediction(c(list.power.II[[2]]$V1 , list.power.II[[10]]$V1), c(rep(0,1000), rep(1,1000)))-> pred.T2.f0.3
+performance(pred.T2.f0.3, "tpr", "fpr")-> perf.T2.f0.3
+
+
+prediction(c(list.power.II[[2]]$V1 , list.power.II[[11]]$V1), c(rep(0,1000), rep(1,1000)))-> pred.T2.f0.4
+performance(pred.T2.f0.4, "tpr", "fpr")-> perf.T2.f0.4
+
+
+prediction(c(list.power.II[[2]]$V1 , list.power.II[[12]]$V1), c(rep(0,1000), rep(1,1000)))-> pred.T2.f0.5
+performance(pred.T2.f0.5, "tpr", "fpr")-> perf.T2.f0.5
+
+
+#T1
+
+prediction(c(list.power.II[[1]]$V1 , list.power.II[[3]]$V1), c(rep(0,1000), rep(1,1000)))-> pred.T1.f0.1
+performance(pred.T1.f0.1, "tpr", "fpr")-> perf.T1.f0.1
+
+
+
+prediction(c(list.power.II[[1]]$V1 , list.power.II[[4]]$V1), c(rep(0,1000), rep(1,1000)))-> pred.T1.f0.2
+performance(pred.T1.f0.2, "tpr", "fpr")-> perf.T1.f0.2
+
+
+prediction(c(list.power.II[[1]]$V1 , list.power.II[[5]]$V1), c(rep(0,1000), rep(1,1000)))-> pred.T1.f0.3
+performance(pred.T1.f0.3, "tpr", "fpr")-> perf.T1.f0.3
+
+prediction(c(list.power.II[[1]]$V1 , list.power.II[[6]]$V1), c(rep(0,1000), rep(1,1000)))-> pred.T1.f0.4
+performance(pred.T1.f0.4, "tpr", "fpr")-> perf.T1.f0.4
+
+prediction(c(list.power.II[[1]]$V1 , list.power.II[[7]]$V1), c(rep(0,1000), rep(1,1000)))-> pred.T1.f0.5
+performance(pred.T1.f0.5, "tpr", "fpr")-> perf.T1.f0.5
+
+###############################################################################
+###############################################################################
+#how to find the power for a given threshold (say 5% FPR)
+
+which(perf.NCV.3000bp.f0.5.EUR@x.values[[1]]==0.05)
+#[1] 367 368
+perf.NCV.3000bp.f0.5.EUR@y.values[[1]][367]
+#0.973

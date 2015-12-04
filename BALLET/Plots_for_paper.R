@@ -1,7 +1,7 @@
 ##############################################################################
 #	Barbara Bitarello
 #Created: 18.08.2015
-#	Last modified: 18.08.2015
+#	Last modified: 04.12.2015
 #
 #############################################################################
 library(parallel)
@@ -9,6 +9,7 @@ library(SOAR)
 library(ROCR)
 
 ###############################################################################
+#first, run power_analyses and power_analyses_EUR scrpts, then generate the plots below.
 #3000bp, Tbs=5
 
 
@@ -19,11 +20,42 @@ plot(perf.NCV.3000bp.f0.3, lwd=3, col='violetred1',add=T)
 plot(perf.NCV.3000bp.f0.2, lwd=3, col='darkolivegreen', add=T)
 dev.off()
 
+
+pdf('ROCS_for_paper/ROC_NCV_EUR_3000bp_Tbs5.pdf')
+plot(perf.NCV.3000bp.f0.5.EUR, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(perf.NCV.3000bp.f0.4.EUR, lwd=3, col='sienna1', add=T)
+plot(perf.NCV.3000bp.f0.3.EUR, lwd=3, col='violetred1',add=T)
+plot(perf.NCV.3000bp.f0.2.EUR, lwd=3, col='darkolivegreen', add=T)
+dev.off()
+
+
+pdf('ROCS_for_paper/ROC_NCV_ASN_3000bp_Tbs5.pdf')
+plot(perf.NCV.3000bp.f0.5.ASN, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(perf.NCV.3000bp.f0.4.ASN, lwd=3, col='sienna1', add=T)
+plot(perf.NCV.3000bp.f0.3.ASN, lwd=3, col='violetred1',add=T)
+plot(perf.NCV.3000bp.f0.2.ASN, lwd=3, col='darkolivegreen', add=T)
+dev.off()
+
 pdf('ROCS_for_paper/ROC_NCV_AFR_6000bp_Tbs5.pdf')
 plot(perf.NCV.6000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(perf.NCV.6000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(perf.NCV.6000bp.f0.3, lwd=3, col='violetred1',add=T)
 plot(perf.NCV.6000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
+
+
+
+pdf('ROCS_for_paper/ROC_NCV_EUR_6000bp_Tbs5.pdf')
+plot(perf.NCV.6000bp.f0.5.EUR, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(perf.NCV.6000bp.f0.4.EUR, lwd=3, col='sienna1', add=T)
+plot(perf.NCV.6000bp.f0.3.EUR, lwd=3, col='violetred1',add=T)
+plot(perf.NCV.6000bp.f0.2.EUR, lwd=3, col='darkolivegreen', add=T); dev.off()
+
+
+pdf('ROCS_for_paper/ROC_NCV_ASN_6000bp_Tbs5.pdf')
+plot(perf.NCV.6000bp.f0.5.ASN, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(perf.NCV.6000bp.f0.4.ASN, lwd=3, col='sienna1', add=T)
+plot(perf.NCV.6000bp.f0.3.ASN, lwd=3, col='violetred1',add=T)
+plot(perf.NCV.6000bp.f0.2.ASN, lwd=3, col='darkolivegreen', add=T); dev.off()
 
 #################
 #12000bp, Tbs=5
@@ -32,6 +64,19 @@ plot(perf.NCV.12000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(perf.NCV.12000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(perf.NCV.12000bp.f0.3, lwd=3, col='violetred1',add=T)
 plot(perf.NCV.12000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
+
+
+pdf('ROCS_for_paper/ROC_NCV_EUR_12000bp_Tbs5.pdf')
+plot(perf.NCV.12000bp.f0.5.EUR, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(perf.NCV.12000bp.f0.4.EUR, lwd=3, col='sienna1', add=T)
+plot(perf.NCV.12000bp.f0.3.EUR, lwd=3, col='violetred1',add=T)
+plot(perf.NCV.12000bp.f0.2.EUR, lwd=3, col='darkolivegreen', add=T); dev.off()
+
+pdf('ROCS_for_paper/ROC_NCV_ASN_12000bp_Tbs5.pdf')
+plot(perf.NCV.12000bp.f0.5.ASN, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(perf.NCV.12000bp.f0.4.ASN, lwd=3, col='sienna1', add=T)
+plot(perf.NCV.12000bp.f0.3.ASN, lwd=3, col='violetred1',add=T)
+plot(perf.NCV.12000bp.f0.2.ASN, lwd=3, col='darkolivegreen', add=T); dev.off()
 
 ##################################3
 #Tbs3
@@ -43,8 +88,20 @@ plot(tbs3.perf.NCV.3000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs3.perf.NCV.3000bp.f0.3, lwd=3, col='violetred1',add=T)
 plot(tbs3.perf.NCV.3000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
 
+pdf('ROCS_for_paper/ROC_NCV_EUR_3000bp.tbs3.pdf')
+plot(tbs3.perf.NCV.3000bp.f0.5.EUR, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(tbs3.perf.NCV.3000bp.f0.4.EUR, lwd=3, col='sienna1', add=T)
+plot(tbs3.perf.NCV.3000bp.f0.3.EUR, lwd=3, col='violetred1',add=T)
+plot(tbs3.perf.NCV.3000bp.f0.2.EUR, lwd=3, col='darkolivegreen', add=T); dev.off()
 
-###########################333
+pdf('ROCS_for_paper/ROC_NCV_ASN_3000bp.tbs3.pdf')
+plot(tbs3.perf.NCV.3000bp.f0.5.ASN, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(tbs3.perf.NCV.3000bp.f0.4.ASN, lwd=3, col='sienna1', add=T)
+plot(tbs3.perf.NCV.3000bp.f0.3.ASN, lwd=3, col='violetred1',add=T)
+plot(tbs3.perf.NCV.3000bp.f0.2.ASN, lwd=3, col='darkolivegreen', add=T); dev.off()
+
+
+#)#########################
 #6000bp, Tbs=3
 pdf('ROCS_for_paper/ROC_NCV_AFR_6000bp.tbs3.pdf')
 plot(tbs3.perf.NCV.6000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
@@ -52,6 +109,17 @@ plot(tbs3.perf.NCV.6000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs3.perf.NCV.6000bp.f0.3, lwd=3, col='violetred1',add=T)
 plot(tbs3.perf.NCV.6000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
 
+pdf('ROCS_for_paper/ROC_NCV_EUR_6000bp.tbs3.pdf')
+plot(tbs3.perf.NCV.6000bp.f0.5.EUR, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(tbs3.perf.NCV.6000bp.f0.4.EUR, lwd=3, col='sienna1', add=T)
+plot(tbs3.perf.NCV.6000bp.f0.3.EUR, lwd=3, col='violetred1',add=T)
+plot(tbs3.perf.NCV.6000bp.f0.2.EUR, lwd=3, col='darkolivegreen', add=T); dev.off()
+
+pdf('ROCS_for_paper/ROC_NCV_ASN_6000bp.tbs3.pdf')
+plot(tbs3.perf.NCV.6000bp.f0.5.ASN, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(tbs3.perf.NCV.6000bp.f0.4.ASN, lwd=3, col='sienna1', add=T)
+plot(tbs3.perf.NCV.6000bp.f0.3.ASN, lwd=3, col='violetred1',add=T)
+plot(tbs3.perf.NCV.6000bp.f0.2.ASN, lwd=3, col='darkolivegreen', add=T); dev.off()
 
 #################
 #12000bp, Tbs=3
@@ -61,8 +129,20 @@ plot(tbs3.perf.NCV.12000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs3.perf.NCV.12000bp.f0.3, lwd=3, col='violetred1',add=T)
 plot(tbs3.perf.NCV.12000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
 
+pdf('ROCS_for_paper/ROC_NCV_EUR_12000bp.tbs3.pdf')
+plot(tbs3.perf.NCV.12000bp.f0.5.EUR, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(tbs3.perf.NCV.12000bp.f0.4.EUR, lwd=3, col='sienna1', add=T)
+plot(tbs3.perf.NCV.12000bp.f0.3.EUR, lwd=3, col='violetred1',add=T)
+plot(tbs3.perf.NCV.12000bp.f0.2.EUR, lwd=3, col='darkolivegreen', add=T); dev.off()
 
-############################33
+pdf('ROCS_for_paper/ROC_NCV_ASN_12000bp.tbs3.pdf')
+plot(tbs3.perf.NCV.12000bp.f0.5.ASN, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(tbs3.perf.NCV.12000bp.f0.4.ASN, lwd=3, col='sienna1', add=T)
+plot(tbs3.perf.NCV.12000bp.f0.3.ASN, lwd=3, col='violetred1',add=T)
+plot(tbs3.perf.NCV.12000bp.f0.2.ASN, lwd=3, col='darkolivegreen', add=T); dev.off()
+
+
+############################
 #Tbs1
 
 #3000bp, Tbs=1
@@ -72,15 +152,39 @@ plot(tbs1.perf.NCV.3000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs1.perf.NCV.3000bp.f0.3, lwd=3, col='violetred1',add=T)
 plot(tbs1.perf.NCV.3000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
 
-###########################333
+pdf('ROCS_for_paper/ROC_NCV_EUR_3000bp.tbs1.pdf')
+plot(tbs1.perf.NCV.3000bp.f0.5.EUR, lwd=3, col='cornflowerblue', xlim=c(0,0.05), xlab='FPR', ylab='TPR', cex.lab=1.5)
+plot(tbs1.perf.NCV.3000bp.f0.4.EUR, lwd=3, col='sienna1', add=T)
+plot(tbs1.perf.NCV.3000bp.f0.3.EUR, lwd=3, col='violetred1',add=T)
+plot(tbs1.perf.NCV.3000bp.f0.2.EUR, lwd=3, col='darkolivegreen', add=T); dev.off()
+
+pdf('ROCS_for_paper/ROC_NCV_ASN_3000bp.tbs1.pdf')
+plot(tbs1.perf.NCV.3000bp.f0.5.ASN, lwd=3, col='cornflowerblue', xlim=c(0,0.05), xlab='FPR', ylab='TPR', cex.lab=1.5)
+plot(tbs1.perf.NCV.3000bp.f0.4.ASN, lwd=3, col='sienna1', add=T)
+plot(tbs1.perf.NCV.3000bp.f0.3.ASN, lwd=3, col='violetred1',add=T)
+plot(tbs1.perf.NCV.3000bp.f0.2.ASN, lwd=3, col='darkolivegreen', add=T); dev.off()
+
+###########################
 #6000bp, Tbs=1
 pdf('ROCS_for_paper/ROC_NCV_AFR_6000bp.tbs1.pdf')
 plot(tbs1.perf.NCV.6000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(tbs1.perf.NCV.6000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs1.perf.NCV.6000bp.f0.3, lwd=3, col='violetred1',add=T)
 plot(tbs1.perf.NCV.6000bp.f0.2, lwd=3, col='darkolivegreen', add=T); 
-legend(0.04, 0.2, c('0.5', '0.4', '0.3', '0.2'), col=c('cornflowerblue', 'sienna1','violetred1','darkolivegreen'), lty=c(NA,NA,NA,NA), lwd=c(NA,NA,NA,NA), bty='n',pch=c(19,19,19,19), xpd=T, horiz=F, cex=0.85)
+#legend(0.04, 0.2, c('0.5', '0.4', '0.3', '0.2'), col=c('cornflowerblue', 'sienna1','violetred1','darkolivegreen'), lty=c(NA,NA,NA,NA), lwd=c(NA,NA,NA,NA), bty='n',pch=c(19,19,19,19), xpd=T, horiz=F, cex=0.85)
 dev.off()
+
+pdf('ROCS_for_paper/ROC_NCV_EUR_6000bp.tbs1.pdf')
+plot(tbs1.perf.NCV.6000bp.f0.5.EUR, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(tbs1.perf.NCV.6000bp.f0.4.EUR, lwd=3, col='sienna1', add=T)
+plot(tbs1.perf.NCV.6000bp.f0.3.EUR, lwd=3, col='violetred1',add=T)
+plot(tbs1.perf.NCV.6000bp.f0.2.EUR, lwd=3, col='darkolivegreen', add=T);dev.off()
+
+pdf('ROCS_for_paper/ROC_NCV_ASN_6000bp.tbs1.pdf')
+plot(tbs1.perf.NCV.6000bp.f0.5.ASN, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(tbs1.perf.NCV.6000bp.f0.4.ASN, lwd=3, col='sienna1', add=T)
+plot(tbs1.perf.NCV.6000bp.f0.3.ASN, lwd=3, col='violetred1',add=T)
+plot(tbs1.perf.NCV.6000bp.f0.2.ASN, lwd=3, col='darkolivegreen', add=T);dev.off()
 
 
 #################
@@ -90,6 +194,19 @@ plot(tbs1.perf.NCV.12000bp.f0.5, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
 plot(tbs1.perf.NCV.12000bp.f0.4, lwd=3, col='sienna1', add=T)
 plot(tbs1.perf.NCV.12000bp.f0.3, lwd=3, col='violetred1',add=T)
 plot(tbs1.perf.NCV.12000bp.f0.2, lwd=3, col='darkolivegreen', add=T); dev.off()
+
+
+pdf('ROCS_for_paper/ROC_NCV_EUR_12000bp.tbs1.pdf')
+plot(tbs1.perf.NCV.12000bp.f0.5.EUR, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(tbs1.perf.NCV.12000bp.f0.4.EUR, lwd=3, col='sienna1', add=T)
+plot(tbs1.perf.NCV.12000bp.f0.3.EUR, lwd=3, col='violetred1',add=T)
+plot(tbs1.perf.NCV.12000bp.f0.2.EUR, lwd=3, col='darkolivegreen', add=T); dev.off()
+
+pdf('ROCS_for_paper/ROC_NCV_ASN_12000bp.tbs1.pdf')
+plot(tbs1.perf.NCV.12000bp.f0.5.ASN, lwd=3, col='cornflowerblue', xlim=c(0,0.05))
+plot(tbs1.perf.NCV.12000bp.f0.4.ASN, lwd=3, col='sienna1', add=T)
+plot(tbs1.perf.NCV.12000bp.f0.3.ASN, lwd=3, col='violetred1',add=T)
+plot(tbs1.perf.NCV.12000bp.f0.2.ASN, lwd=3, col='darkolivegreen', add=T); dev.off()
 
 ###################
 
