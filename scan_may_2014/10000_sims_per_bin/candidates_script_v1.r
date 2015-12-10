@@ -2,7 +2,7 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 08.07.2015
+#	Last modified: 9.12.2015
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #                          Last comment: I am currently trying to fix an issue between lines 158 and 176 (all.coding/ALL.CODING)
@@ -469,6 +469,36 @@ lines(density(CANDf0.3[[3]]$NCVf3), col='red')
 lines(density(arrange(CANDf0.3[[3]], Z.f0.3.P.val)[1:100,]$NCVf3), col='magenta', lty=2)
 legend('topleft', c('Genomic', 'NCV<all sims', 'Top100.Z.score'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
 dev.off()
+
+
+#
+pdf('figures/Z_feq_allfeqs_genomic_cand_top816.pdf')
+
+
+plot(density(list.SCAN[[3]]$Dist.NCV.f0.5), col='cornflowerblue', xlab=expression("Z"[feq]), bty='l',main="")
+lines(density(list.SCAN[[3]]$Dist.NCV.f0.4), col='sienna1')
+lines(density(list.SCAN[[3]]$Dist.NCV.f0.3), col='violetred1')
+lines(density(CANDf0.4[[3]]$Dist.NCV.f0.4), col='sienna1', lty=2)
+lines(density(CANDf0.3[[3]]$Dist.NCV.f0.3), col='violetred1', lty=2)
+lines(density(CANDf0.5[[3]]$Dist.NCV.f0.5), col='cornflowerblue', lty=2)
+lines(density(top816f0.5[[3]]$Dist.NCV.f0.5), col='cornflowerblue', lty=3, lwd=2)
+lines(density(top816f0.4[[3]]$Dist.NCV.f0.4), col='sienna1', lty=3, lwd=2)
+lines(density(top816f0.3[[3]]$Dist.NCV.f0.3), col='violetred1', lty=3, lwd=2)
+legend('topleft', c('Genomic', 'Simulation-based', 'Empirical cutoff', 'feq=0.5', 'feq=0.4','feq=0.3'), lty=c(1,2,3,1,1), lwd=c(1,1,2,2,2),col=c('black', 'black', 'black', 'cornflowerblue', 'sienna1','violetred1'), bty="n")
+dev.off()
+
+pdf('NCV_allfeqs_genomic_simbases_top816.pdf')
+plot(density(list.SCAN[[3]]$NCVf3), col='violetred1', xlab=expression("NCV"[feq]), bty='l',main="", xlim=c(0.05,0.5), ylim=c(0,38))
+lines(density(list.SCAN[[3]]$NCVf4), col='sienna1')
+lines(density(list.SCAN[[3]]$NCVf5), col='cornflowerblue')
+lines(density(CANDf0.4[[3]]$NCVf4), col='sienna1', lty=2)
+lines(density(CANDf0.3[[3]]$NCVf3), col='violetred1', lty=2)
+lines(density(CANDf0.5[[3]]$NCVf5), col='cornflowerblue', lty=2)
+lines(density(top816f0.5[[3]]$NCVf5), col='cornflowerblue', lty=3, lwd=2)
+lines(density(top816f0.4[[3]]$NCVf4), col='sienna1', lty=3, lwd=2)
+lines(density(top816f0.3[[3]]$NCVf3), col='violetred1', lty=3, lwd=2)
+legend('topleft', c('Genomic', 'Simulation-based', 'Empirical cutoff', 'feq=0.5', 'feq=0.4','feq=0.3'), lty=c(1,2,3,1,1), lwd=c(1,1,2,2,2),col=c('black', 'black', 'black', 'cornflowerblue', 'sienna1','violetred1'), bty="n")
+
 #
 #also obsolete, but may be useful so I will keep the code here.
 #pdf('figures/PtoD.candidates.YRI.pdf')
