@@ -36,15 +36,79 @@ scanned_windows_humans.bed   #coordinates of all scanned windows for the NCV pap
 
 ############################################################################
 #the other bed files with top816 in the name are the actual bedfiles for the candidate windows, before intersecting with ensembl annotations.
+
+#I just pickd up a huge problem here...when I intersect two lists and then i intersect the result of that with GENCODE or ENSEMBL it is taking the coordinates from the first list.
 #To generate combined version i did the following.
-bedtools intersect -wo -a m.YRI.top816.f0.5.bed -b m.LWK.top816.f0.5.bed > m.YRIandLWK.top816.f0.5.bed
-bedtools intersect -wo -a m.TSI.top816.f0.5.bed -b m.GBR.top816.f0.5.bed > m.GBRandTSI.top816.f0.5.bed
 
-bedtools intersect -wo -a m.YRI.top816.f0.4.bed -b m.LWK.top816.f0.4.bed > m.YRIandLWK.top816.f0.4.bed
-bedtools intersect -wo -a m.TSI.top816.f0.4.bed -b m.GBR.top816.f0.4.bed > m.GBRandTSI.top816.f0.4.bed
+bedtools intersect -wo -a m.YRI.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed > m.YRI.top816f0.5.intersect.gencode.bed
+bedtools intersect -wo -a m.YRI.top816.f0.5.bed -b ../scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed > m.YRI.top816f0.5.intersect.ensembl.bed
 
-bedtools intersect -wo -a m.YRI.top816.f0.3.bed -b m.LWK.top816.f0.3.bed > m.YRIandLWK.top816.f0.3.bed
-bedtools intersect -wo -a m.TSI.top816.f0.3.bed -b m.GBR.top816.f0.3.bed > m.GBRandTSI.top816.f0.3.bed
+grep protein_coding m.YRI.top816f0.5.intersect.gencode.bed |awk '{print $8}'|sort|uniq > YRI.f0.5.genes.txt
+grep pseudogenes m.YRI.top816f0.5.intersect.gencode.bed |awk '{print $8}'|sort|uniq > YRI.f0.5.pseudogenes.txt
+
+bedtools intersect -wo -a m.YRI.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed > m.YRI.top816f0.4.intersect.gencode.bed
+
+grep protein_coding m.YRI.top816f0.4.intersect.gencode.bed |awk '{print $8}'|sort|uniq > YRI.f0.4.genes.txt
+grep pseudogenes m.YRI.top816f0.4.intersect.gencode.bed |awk '{print $8}'|sort|uniq > YRI.f0.4.pseudogenes.txt
+
+bedtools intersect -wo -a m.YRI.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed > m.YRI.top816f0.4.intersect.gencode.bed
+
+grep protein_coding m.YRI.top816f0.3.intersect.gencode.bed |awk '{print $8}'|sort|uniq > YRI.f0.3.genes.txt
+grep pseudogenes m.YRI.top816f0.3.intersect.gencode.bed |awk '{print $8}'|sort|uniq > YRI.f0.3.pseudogenes.txt
+
+#LWK
+
+bedtools intersect -wo -a m.LWK.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed > m.LWK.top816f0.5.intersect.gencode.bed
+bedtools intersect -wo -a m.LWK.top816.f0.5.bed -b ../scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed > m.LWK.top816f0.5.intersect.ensembl.bed
+grep protein_coding m.LWK.top816f0.5.intersect.gencode.bed |awk '{print $8}'|sort|uniq > LWK.f0.5.genes.txt
+grep pseudogenes m.LWK.top816f0.5.intersect.gencode.bed |awk '{print $8}'|sort|uniq > LWK.f0.5.pseudogenes.txt
+bedtools intersect -wo -a m.LWK.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed > m.LWK.top816f0.4.intersect.gencode.bed
+grep protein_coding m.LWK.top816f0.4.intersect.gencode.bed |awk '{print $8}'|sort|uniq > LWK.f0.4.genes.txt
+grep pseudogenes m.LWK.top816f0.4.intersect.gencode.bed |awk '{print $8}'|sort|uniq > LWK.f0.4.pseudogenes.txt
+bedtools intersect -wo -a m.LWK.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed > m.LWK.top816f0.4.intersect.gencode.bed
+grep protein_coding m.LWK.top816f0.3.intersect.gencode.bed |awk '{print $8}'|sort|uniq > LWK.f0.3.genes.txt
+grep pseudogenes m.LWK.top816f0.3.intersect.gencode.bed |awk '{print $8}'|sort|uniq > LWK.f0.3.pseudogenes.txt
+
+#GBR
+bedtools intersect -wo -a m.GBR.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed > m.GBR.top816f0.5.intersect.gencode.bed
+bedtools intersect -wo -a m.GBR.top816.f0.5.bed -b ../scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed > m.GBR.top816f0.5.intersect.ensembl.bed
+grep protein_coding m.GBR.top816f0.5.intersect.gencode.bed |awk '{print $8}'|sort|uniq > GBR.f0.5.genes.txt
+grep pseudogenes m.GBR.top816f0.5.intersect.gencode.bed |awk '{print $8}'|sort|uniq > GBR.f0.5.pseudogenes.txt
+bedtools intersect -wo -a m.GBR.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed > m.GBR.top816f0.4.intersect.gencode.bed
+grep protein_coding m.GBR.top816f0.4.intersect.gencode.bed |awk '{print $8}'|sort|uniq > GBR.f0.4.genes.txt
+grep pseudogenes m.GBR.top816f0.4.intersect.gencode.bed |awk '{print $8}'|sort|uniq > GBR.f0.4.pseudogenes.txt
+bedtools intersect -wo -a m.GBR.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed > m.GBR.top816f0.4.intersect.gencode.bed
+grep protein_coding m.GBR.top816f0.3.intersect.gencode.bed |awk '{print $8}'|sort|uniq > GBR.f0.3.genes.txt
+grep pseudogenes m.GBR.top816f0.3.intersect.gencode.bed |awk '{print $8}'|sort|uniq > GBR.f0.3.pseudogenes.txt
+
+
+#TSI
+
+bedtools intersect -wo -a m.TSI.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed > m.TSI.top816f0.5.intersect.gencode.bed
+bedtools intersect -wo -a m.TSI.top816.f0.5.bed -b ../scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed > m.TSI.top816f0.5.intersect.ensembl.bed
+grep protein_coding m.TSI.top816f0.5.intersect.gencode.bed |awk '{print $8}'|sort|uniq > TSI.f0.5.genes.txt
+grep pseudogenes m.TSI.top816f0.5.intersect.gencode.bed |awk '{print $8}'|sort|uniq > TSI.f0.5.pseudogenes.txt
+bedtools intersect -wo -a m.TSI.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed > m.TSI.top816f0.4.intersect.gencode.bed
+grep protein_coding m.TSI.top816f0.4.intersect.gencode.bed |awk '{print $8}'|sort|uniq > TSI.f0.4.genes.txt
+grep pseudogenes m.TSI.top816f0.4.intersect.gencode.bed |awk '{print $8}'|sort|uniq > TSI.f0.4.pseudogenes.txt
+bedtools intersect -wo -a m.TSI.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed > m.TSI.top816f0.4.intersect.gencode.bed
+grep protein_coding m.TSI.top816f0.3.intersect.gencode.bed |awk '{print $8}'|sort|uniq > TSI.f0.3.genes.txt
+grep pseudogenes m.TSI.top816f0.3.intersect.gencode.bed |awk '{print $8}'|sort|uniq > TSI.f0.3.pseudogenes.txt
+
+
+#GENCODE of ENSEMBL: no difference, so I jsut used GENCODE.
+
+
+#combined (before I was using -wo, and then after I was intersecting that with GENCODE, and was getting wrong results.)
+
+sort -V -k1,1 -k2,2 <(bedtools intersect  -a m.YRI.top816.f0.5.bed -b m.LWK.top816.f0.5.bed) > m.YRIandLWK.top816.f0.5.bed
+sort -V -k1,1 -k2,2 <(bedtools intersect  -a m.TSI.top816.f0.5.bed -b m.GBR.top816.f0.5.bed) > m.GBRandTSI.top816.f0.5.bed
+
+sort -V -k1,1 -k2,2 <(bedtools intersect -a m.YRI.top816.f0.4.bed -b m.LWK.top816.f0.4.bed) > m.YRIandLWK.top816.f0.4.bed
+sort -V -k1,1 -k2,2 <(bedtools intersect -a m.TSI.top816.f0.4.bed -b m.GBR.top816.f0.4.bed) > m.GBRandTSI.top816.f0.4.bed
+
+sort -V -k1,1 -k2,2 <(bedtools intersect -a m.YRI.top816.f0.3.bed -b m.LWK.top816.f0.3.bed) > m.YRIandLWK.top816.f0.3.bed
+sort -V -k1,1 -k2,2 <(bedtools intersect -a m.TSI.top816.f0.3.bed -b m.GBR.top816.f0.3.bed) > m.GBRandTSI.top816.f0.3.bed
 
 #merge
 mergeBed -i m.YRIandLWK.top816.f0.5.bed -nms > merged.YRIandLWK.top816.f0.5.bed
@@ -56,9 +120,9 @@ mergeBed -i m.GBRandTSI.top816.f0.4.bed -nms > merged.GBRandTSI.top816.f0.4.bed
 mergeBed -i m.YRIandLWK.top816.f0.3.bed -nms > merged.YRIandLWK.top816.f0.3.bed
 mergeBed -i m.GBRandTSI.top816.f0.3.bed -nms > merged.GBRandTSI.top816.f0.3.bed
 
-bedtools intersect -wo -a merged.YRIandLWK.top816.f0.5.bed  -b merged.GBRandTSI.top816.f0.5.bed > m.YRIandLWKandGBRandTSI.top816.f0.5.bed
-bedtools intersect -wo -a merged.YRIandLWK.top816.f0.4.bed  -b merged.GBRandTSI.top816.f0.4.bed > m.YRIandLWKandGBRandTSI.top816.f0.4.bed
-bedtools intersect -wo -a merged.YRIandLWK.top816.f0.3.bed  -b merged.GBRandTSI.top816.f0.3.bed > m.YRIandLWKandGBRandTSI.top816.f0.3.bed
+sort -V -k1,1 -k2,2 <(bedtools intersect -a merged.YRIandLWK.top816.f0.5.bed  -b merged.GBRandTSI.top816.f0.5.bed) > m.YRIandLWKandGBRandTSI.top816.f0.5.bed
+sort -V -k1,1 -k2,2 <(bedtools intersect -a merged.YRIandLWK.top816.f0.4.bed  -b merged.GBRandTSI.top816.f0.4.bed) > m.YRIandLWKandGBRandTSI.top816.f0.4.bed
+sort -V -k1,1 -k2,2 <(bedtools intersect -a merged.YRIandLWK.top816.f0.3.bed  -b merged.GBRandTSI.top816.f0.3.bed) > m.YRIandLWKandGBRandTSI.top816.f0.3.bed
 
 
 
@@ -68,14 +132,35 @@ mergeBed -i m.YRIandLWKandGBRandTSI.top816.f0.4.bed -nms > merged.ALL.top816.f0.
 mergeBed -i m.YRIandLWKandGBRandTSI.top816.f0.3.bed -nms > merged.ALL.top816.f0.3.bed
 
 
-#
+################
+#Get intersections
 
-#annotations form ENSEMBL
+bedtools intersect -wo -a merged.YRIandLWK.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed > m.YRIandLWKf0.5.intersect.gencode.bed
+grep protein_coding m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.5.genes.txt  #90
 
-bedtools intersect -wo -a merged.ALL.top816.f0.5.bed -b ../scan_may_2014/10000_sims_per_bin/ensembl_hg19.bed|awk '{print $9}'|sort|uniq -c
+
+bedtools intersect -wo -a merged.YRIandLWK.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed > m.YRIandLWKf0.4.intersect.gencode.bed
+grep protein_coding m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.4.genes.txt  #83
 
 
-#gencode
+bedtools intersect -wo -a merged.YRIandLWK.top816.f0.3.bed -b ../scan_may_2014/final_encode.bed > m.YRIandLWKf0.3.intersect.gencode.bed
+grep protein_coding m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.3.genes.txt #75
+
+#Eur
+
+bedtools intersect -wo -a merged.GBRandTSI.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed > m.GBRandTSIf0.5.intersect.gencode.bed
+grep protein_coding m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.5.genes.txt  #94
+
+
+bedtools intersect -wo -a merged.GBRandTSI.top816.f0.4.bed -b ../scan_may_2014/final_encode.bed > m.GBRandTSIf0.4.intersect.gencode.bed
+grep protein_coding m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.4.genes.txt  #90
+
+
+bedtools intersect -wo -a merged.GBRandTSI.top816.f0.3.bed -b ../scan_may_2014/final_encode.bed > m.GBRandTSIf0.3.intersect.gencode.bed
+grep protein_coding m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.3.genes.txt #76
+
+
+
 bedtools intersect -wo -a m.YRIandLWKandGBRandTSI.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed > top816.ALL.f0.5.annotated.gencode.bed
 
 
@@ -84,9 +169,56 @@ bedtools intersect -wo -a m.YRIandLWKandGBRandTSI.top816.f0.4.bed -b ../scan_may
 bedtools intersect -wo -a m.YRIandLWKandGBRandTSI.top816.f0.3.bed -b ../scan_may_2014/final_encode.bed > top816.ALL.f0.3.annotated.gencode.bed
 
 
-#just checking
-grep protein_coding top816.ALL.f0.5.annotated.gencode.bed |awk '{print $13}' |sort|uniq > ALL.genes.f0.5.txt
-#     37      37     263
+#
+
+##############
+#Get UNIONs
+
+##############
+
+ bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.YRI.top816.f0.5.bed m.LWK.top816.f0.5.bed)) -nms) -b ../scan_may_2014/final_encode.bed |grep protein_coding|awk '{print $8}'|sort|uniq|wc #187
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.GBR.top816.f0.5.bed m.TSI.top816.f0.5.bed)) -nms) -b ../scan_may_2014/final_encode.bed |grep protein_coding|awk '{print $8}'|sort|uniq|wc #166
+
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.YRI.top816.f0.4.bed m.LWK.top816.f0.4.bed)) -nms) -b ../scan_may_2014/final_encode.bed |grep protein_coding|awk '{print $8}'|sort|uniq|wc #166
+
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.GBR.top816.f0.4.bed m.TSI.top816.f0.4.bed)) -nms) -b ../scan_may_2014/final_encode.bed |grep protein_coding|awk '{print $8}'|sort|uniq|wc #145
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.YRI.top816.f0.3.bed m.LWK.top816.f0.3.bed)) -nms) -b ../scan_may_2014/final_encode.bed |grep protein_coding|awk '{print $8}'|sort|uniq|wc #175
+
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.GBR.top816.f0.3.bed m.TSI.top816.f0.3.bed)) -nms) -b ../scan_may_2014/final_encode.bed |grep protein_coding|awk '{print $8}'|sort|uniq|wc #147
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.YRI.top816.f0.5.bed m.LWK.top816.f0.5.bed m.GBR.top816.f0.5.bed m.TSI.top816.f0.5.bed)) -nms) -b ../scan_may_2014/final_encode.bed|grep protein_coding|awk '{print $8}'|sort|uniq|wc #268 genes (all pops, feq=0.5, UNION)
+
+
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.YRI.top816.f0.5.bed m.YRI.top816.f0.4.bed m.YRI.top816.f0.3.bed)) -nms) -b ../scan_may_2014/final_encode.bed|grep protein_coding|awk '{print $8}'|sort|uniq|wc #187 (all feq, YRI, UNION)
+
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.LWK.top816.f0.5.bed m.LWK.top816.f0.4.bed m.LWK.top816.f0.3.bed)) -nms) -b ../scan_may_2014/final_encode.bed|grep protein_coding|awk '{print $8}'|sort|uniq|wc #202
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.LWK.top816.f0.5.bed m.LWK.top816.f0.4.bed m.LWK.top816.f0.3.bed m.YRI.top816.f0.5.bed m.YRI.top816.f0.4.bed m.YRI.top816.f0.3.bed)) -nms) -b ../scan_may_2014/final_encode.bed|grep protein_coding|awk '{print $8}'|sort|uniq|wc #249
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.GBR.top816.f0.5.bed m.GBR.top816.f0.4.bed m.GBR.top816.f0.3.bed m.TSI.top816.f0.5.bed m.TSI.top816.f0.4.bed m.TSI.top816.f0.3.bed)) -nms) -b ../scan_may_2014/final_encode.bed|grep protein_coding|awk '{print $8}'|sort|uniq|wc #220
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.GBR.top816.f0.5.bed m.GBR.top816.f0.4.bed m.GBR.top816.f0.3.bed)) -nms) -b ../scan_may_2014/final_encode.bed|grep protein_coding|awk '{print $8}'|sort|uniq|wc #172
+
+
+bedtools intersect -wb -a <(mergeBed -i <(sort -V -k1,1 -k2,2 <(cat m.TSI.top816.f0.5.bed m.TSI.top816.f0.4.bed m.TSI.top816.f0.3.bed)) -nms) -b ../scan_may_2014/final_encode.bed|grep protein_coding|awk '{print $8}'|sort|uniq|wc #189
+
+
+
+
+
+
+#gencode
+
+just checking
+grep protein_coding top816.ALL.f0.5.annotated.gencode.bed |awk '{print $8' |sort|uniq > ALL.genes.f0.5.txt
+#     36      37     263
 
 
 bedtools intersect -wo -a m.YRI.top816.f0.5.bed -b ../scan_may_2014/final_encode.bed > m.YRI.top816f0.5.intersect.gencode.bed
@@ -127,36 +259,64 @@ bedtools intersect -wo -a  m.GBRandTSI.top816.f0.3.bed -b ../scan_may_2014/final
 
 #gene names
 
-grep protein_coding m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.5.genes.txt 
-grep protein_coding m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.5.genes.txt 
-grep protein_coding m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.4.genes.txt
-grep protein_coding m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.4.genes.txt    
-grep protein_coding m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.3.genes.txt
+grep protein_coding m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.5.genes.txt 
+grep protein_coding m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.5.genes.txt 
+grep protein_coding m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.4.genes.txt
+grep protein_coding m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.4.genes.txt    
+grep protein_coding m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.3.genes.txt
 grep protein_coding m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.3.genes.txt    
 
-grep pseudogene m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.5.pseudogenes.txt
-grep pseudogene m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.5.pseudogenes.txt
-grep pseudogene m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.4.pseudogenes.txt
-grep pseudogene m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.4.pseudogenes.txt
-grep pseudogene m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uniq > GBRandTSIf0.3.pseudogenes.txt
-grep pseudogene m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $13}'|sort|uniq > YRIandLWKf0.3.pseudogenes.txt
+grep pseudogene m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.5.pseudogenes.txt
+grep pseudogene m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.5.pseudogenes.txt
+grep pseudogene m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.4.pseudogenes.txt
+grep pseudogene m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.4.pseudogenes.txt
+grep pseudogene m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.3.pseudogenes.txt
+grep pseudogene m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.3.pseudogenes.txt
 
 
 
-grep protein_coding m.YRI.top816f0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRI.f0.5.genes.txt
-grep protein_coding m.LWK.top816f0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > LWK.f0.5.genes.txt
-grep protein_coding m.GBR.top816f0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBR.f0.5.genes.txt
-grep protein_coding m.TSI.top816f0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > TSI.f0.5.genes.txt
+grep snRNA m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.5.snRNA.txt
+grep snRNA m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.5.snRNA.txt
+grep snRNA m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.4.snRNA.txt
+grep snRNA m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.4.snRNA.txt
+grep snRNA m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.3.snRNA.txt
+grep snRNA m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.3.snRNA.txt
 
-grep protein_coding m.YRI.top816f0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRI.f0.4.genes.txt
-grep protein_coding m.LWK.top816f0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > LWK.f0.4.genes.txt
-grep protein_coding m.GBR.top816f0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBR.f0.4.genes.txt
-grep protein_coding m.TSI.top816f0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > TSI.f0.4.genes.txt
+grep miRNA m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.5.miRNA.txt
+grep miRNA m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.5.miRNA.txt
+grep miRNA m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.4.miRNA.txt
+grep miRNA m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.4.miRNA.txt
+grep miRNA m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.3.miRNA.txt
+grep miRNA m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.3.miRNA.txt
 
-grep protein_coding m.YRI.top816f0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRI.f0.3.genes.txt
-grep protein_coding m.LWK.top816f0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > LWK.f0.3.genes.txt
-grep protein_coding m.GBR.top816f0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBR.f0.3.genes.txt
-grep protein_coding m.TSI.top816f0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > TSI.f0.3.genes.txt
+
+
+grep processed_transcript m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.5.processed_transcript.txt
+grep processed_transcript m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.5.processed_transcript.txt
+grep processed_transcript m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.4.processed_transcript.txt
+grep processed_transcript m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.4.processed_transcript.txt
+grep processed_transcript m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.3.processed_transcript.txt
+grep processed_transcript m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.3.processed_transcript.txt
+
+
+grep lincRNA m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.5.processed_transcript.txt
+grep lincRNA m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.5.processed_transcript.txt
+grep lincRNA m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.4.processed_transcript.txt
+grep lincRNA m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.4.processed_transcript.txt
+grep lincRNA m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.3.processed_transcript.txt
+grep lincRNA m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.3.processed_transcript.txt
+
+
+
+grep antisense m.GBRandTSIf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.5.processed_transcript.txt
+grep antisense m.YRIandLWKf0.5.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.5.processed_transcript.txt
+grep antisense m.GBRandTSIf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.4.processed_transcript.txt
+grep antisense m.YRIandLWKf0.4.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.4.processed_transcript.txt
+grep antisense m.GBRandTSIf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > GBRandTSIf0.3.processed_transcript.txt
+grep antisense m.YRIandLWKf0.3.intersect.gencode.bed|awk '{print $8}'|sort|uniq > YRIandLWKf0.3.processed_transcript.txt
+
+
+###########################################################################################################################
 
 #some ENCODE annotations
 
