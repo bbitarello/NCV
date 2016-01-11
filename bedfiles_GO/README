@@ -362,3 +362,66 @@ sort -V -k1,1 -k2,2 <(bedtools intersect -wo -a all_haplotypes_populations.bed.a
 #an alternative, the other map of introgression
 
 http://genetics.med.harvard.edu/reich/Reich_Lab/Datasets_-_Neandertal_Introgression.html
+
+
+
+
+
+
+#Immune Database etc analyses
+
+
+#from this website I downloaded file gene_names.txt
+
+http://www.genenames.org
+
+
+
+
+
+###############################################3
+
+##
+#January 11th 2016
+
+#Produce UNION of candidate windows for Joao
+
+
+mergeBed -i <(sort -V -k1,1 -k2,2 <(cat <(awk 'OFS="\t"{print $1,$2,$3}' m.YRI.top816.f0.5.bed) <(awk 'OFS="\t"{print $1,$2,$3}' m.YRI.top816.f0.4.bed) <(cat <(awk 'OFS="\t"{print $1,$2,$3}' m.YRI.top816.f0.3.bed)))) > YRI.union.ALLfeqs.top816q
+
+
+
+
+mergeBed -i <(sort -V -k1,1 -k2,2 <(cat <(awk 'OFS="\t"{print $1,$2,$3}' m.LWK.top816.f0.5.bed) <(awk 'OFS="\t"{print $1,$2,$3}' m.LWK.top816.f0.4.bed) <(cat <(awk 'OFS="\t"{print $1,$2,$3}' m.LWK.top816.f0.3.bed)))) > LWK.union.ALLfeqs.top816
+
+mergeBed -i <(sort -V -k1,1 -k2,2 <(cat <(awk 'OFS="\t"{print $1,$2,$3}' m.GBR.top816.f0.5.bed) <(awk 'OFS="\t"{print $1,$2,$3}' m.GBR.top816.f0.4.bed) <(cat <(awk 'OFS="\t"{print $1,$2,$3}' m.GBR.top816.f0.3.bed)))) > GBR.union.ALLfeqs.to
+p816
+
+
+mergeBed -i <(sort -V -k1,1 -k2,2 <(cat <(awk 'OFS="\t"{print $1,$2,$3}' m.TSI.top816.f0.5.bed) <(awk 'OFS="\t"{print $1,$2,$3}' m.TSI.top816.f0.4.bed) <(cat <(awk 'OFS="\t"{print $1,$2,$3}' m.TSI.top816.f0.3.bed)))) > TSI.union.ALLfeqs.top816
+
+
+
+#CANDIDATE WINDOWS
+
+
+mergeBed -i <(sort -V -k1,1 -k2,2 <(cat <(awk 'OFS="\t"{print $1,$2,$3}' YRI.candf0.5.bed) <(awk 'OFS="\t"{print $1,$2,$3}' YRI.candf0.4.bed) <(cat <(awk 'OFS="\t"{print $1,$2,$3}' YRI.candf0.3.bed)))) > YRI.union.ALLfeqs.cand
+
+
+mergeBed -i <(sort -V -k1,1 -k2,2 <(cat <(awk 'OFS="\t"{print $1,$2,$3}' LWK.candf0.5.bed) <(awk 'OFS="\t"{print $1,$2,$3}' LWK.candf0.4.bed) <(cat <(awk 'OFS="\t"{print $1,$2,$3}' LWK.candf0.3.bed)))) > LWK.union.ALLfeqs.cand
+
+mergeBed -i <(sort -V -k1,1 -k2,2 <(cat <(awk 'OFS="\t"{print $1,$2,$3}' GBR.candf0.5.bed) <(awk 'OFS="\t"{print $1,$2,$3}' GBR.candf0.4.bed) <(cat <(awk 'OFS="\t"{print $1,$2,$3}' GBR.candf0.3.bed)))) > GBR.union.ALLfeqs.cand
+
+
+mergeBed -i <(sort -V -k1,1 -k2,2 <(cat <(awk 'OFS="\t"{print $1,$2,$3}' TSI.candf0.5.bed) <(awk 'OFS="\t"{print $1,$2,$3}' TSI.candf0.4.bed) <(cat <(awk 'OFS="\t"{print $1,$2,$3}' TSI.candf0.3.bed)))) > TSI.union.ALLfeqs.cand
+
+
+#All Fwqs and Pops
+
+
+mergeBed -i <(sort -V -k1,1 -k2,2 <(cat YRI.union.ALLfeqs.top816 LWK.union.ALLfeqs.top816 GBR.union.ALLfeqs.top816 TSI.union.ALLfeqs.top816)) > AllPops.AllFeqs.top816.union.bed
+
+mergeBed -i <(sort -V -k1,1 -k2,2 <(cat YRI.union.ALLfeqs.cand LWK.union.ALLfeqs.cand GBR.union.ALLfeqs.cand TSI.union.ALLfeqs.cand)) > AllPops.AllFeqs.cand.union.bed
+
+
+
