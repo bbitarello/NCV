@@ -2,7 +2,7 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 9.12.2015
+#	Last modified: 12.01.2016
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #                          Last comment: I am currently trying to fix an issue between lines 158 and 176 (all.coding/ALL.CODING)
@@ -15,6 +15,7 @@ library(parallel)  #parallelize functions
 library(SOAR)  #store objects from workspace
 library(ggplot2)  #pretty plots
 library(plyr)  #big data frames
+library(dplyr) #bid data frames
 library(qqman)  #manhattan plot
 library(VennDiagram)  
 Sys.setenv(R_LOCAL_CACHE="estsession")  #this is for 'SOAR'
@@ -157,7 +158,7 @@ read.table('/mnt/sequencedb/PopGen/cesare/hg19/bedfiles/ensembl_genes_hg19.bed.g
 names(hg19.coding.coords.bed)<-c('chr', 'beg', 'end','name', 'type')
 
 #lapply(1:22, function(x) subset(prd.bed, chr==x))-> prot.cod.bed.list
-lapply(1:22, function(x) subset(hg19.coding.coords.bed, chr==x))-> coding.per.chr.list #in total thi has 42849, which is less than hg19.coding.coords, because we get rid of ' MT', 'X', and 'Y'.
+mclapply(1:22, function(x) subset(hg19.coding.coords.bed, chr==x))-> coding.per.chr.list #in total thi has 42849, which is less than hg19.coding.coords, because we get rid of ' MT', 'X', and 'Y'.
 
 mclapply(coding.per.chr.list, function(x) subset(x, type=='protein_coding'))->prot.cod.per.chr.list # 19,430 prot.cod genes in hg19 which are in chr 1-22
 mclapply(coding.per.chr.list, function(x) subset(x, type=='pseudogene'))->pseudog.cod.per.chr.list #12,745
@@ -218,6 +219,10 @@ mclapply(ALL.CODING, function(x) mclapply(x, function(y) rownames(y)))-> all.row
 #9 seconds
 
 mclapply(1:22, function(x) paste0(subset(hg19.coding.coords.bed, chr==x)[,4], '.', subset(hg19.coding.coords.bed, chr==x)[,5]))->names.all.coding
+
+for (i in 1;22){
+names(ALL.CODING[[i]])<- names.all.coding[[i]]}
+Store(ALL.CODING)
 
 #This is also done for all.coding, so I will comment to avoid problems.
 
@@ -546,6 +551,72 @@ legend('topleft', c('Genomic', 'Simulation-based', 'Empirical cutoff', 'feq=0.5'
 #generate bed files for collapsing candidate windows
 #set directory
 BED.PATH<-'/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/bedfiles/'
+
+#doing this after the talk from 12.1.2016 at the lab meeting
+
+mclapply(1:7, function(x) with(CANDf0.5[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID
+
+mclapply(1:7, function(x) with(CANDf0.4[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.4
+mclapply(1:7, function(x) with(CANDf0.3[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.3
+
+
+
+for(i in 1:7){
+
+cbind(CANDf0.5[[i]], Win.ID=Win.ID[[i]])-> CANDf0.5[[i]]
+cbind(CANDf0.4[[i]], Win.ID=Win.ID.4[[i]])-> CANDf0.4[[i]]
+cbind(CANDf0.3[[i]], Win.ID=Win.ID.3[[i]])-> CANDf0.3[[i]]}
+
+Store(CANDf0.5, CANDf0.4, CANDf0.3)
+
+
+
+mclapply(1:7, function(x) rbind(CANDf0.5[[x]], CANDf0.4[[x]], CANDf0.3[[x]])[-(which(duplicated(rbind(CANDf0.5[[x]], CANDf0.4[[x]], CANDf0.3[[x]])))),])-> Union.CANDf0.5_0.4_0.3
+
+
+
+test.col<-vector('list', 7)
+for(i in 1:7){
+lapply(1:nrow(Union.CANDf0.5_0.4_0.3[[i]]),  function(y) colnames(select(Union.CANDf0.5_0.4_0.3[[i]][y,], Z.f0.5.P.val:Z.f0.2.P.val))[which(sapply(1:4, function(x) select(Union.CANDf0.5_0.4_0.3[[i]][y,], Z.f0.5.P.val:Z.f0.2.P.val)[,x] ==min(select(Union.CANDf0.5_0.4_0.3[[i]][y,], Z.f0.5.P.val:Z.f0.2.P.val))))])-> test.col[[i]]
+which(unlist(lapply(test.col[[i]], function(x) length(x)==2)))-> repl2
+for(j in 1: length(repl2)){
+paste0(test.col[[i]][[repl2[j]]][1], "|", test.col[[i]][[repl2[j]]][2])-> test.col[[i]][[repl2[j]]]}
+which(unlist(lapply(test.col[[i]], function(x) length(x)==3)))-> repl3
+if(length(repl3)>=1){
+for(j in 1: length(repl3)){
+paste0(test.col[[i]][[repl3[j]]][1], "|", test.col[[i]][[repl3[j]]][2])-> test.col[[i]][[repl3[j]]]}}
+which(unlist(lapply(test.col[[i]], function(x) length(x)==4)))-> repl4
+if(length(repl4)>=1){
+for(j in 1: length(repl4)){
+paste0(test.col[[i]][[repl4[j]]][1], "|", test.col[[i]][[repl4[j]]][2])-> test.col[[i]][[repl4[j]]]}}
+which(unlist(lapply(test.col[[i]], function(x) length(x)==5)))-> repl5
+if(length(repl5)>=1){
+for(j in 1: length(repl5)){
+paste0(test.col[[i]][[repl5[j]]][1], "|", test.col[[i]][[repl5[j]]][2])-> test.col[[i]][[repl5[j]]]}}
+}
+
+
+
+mclapply(1:7, function(x) gsub(".P.val","", gsub("Z.f", "", unlist(test.col[[x]]))))-> extra.col
+
+rbind(table(as.numeric(extra.col[[1]])), table(as.numeric(extra.col[[2]])), table(as.numeric(extra.col[[3]])), table(as.numeric(extra.col[[4]])), table(as.numeric(extra.col[[5]])), table(as.numeric(extra.col[[6]])), table(as.numeric(extra.col[[7]])))
+
+for (i in 1:7){
+
+cbind(Union.CANDf0.5_0.4_0.3[[i]], Min.ZPval.Feq=extra.col[[i]])-> Union.CANDf0.5_0.4_0.3[[i]]}
+
+Store(Union.CANDf0.5_0.4_0.3)
+
+
+
+write.table(filter(Union.CANDf0.5_0.4_0.3[[3]], Min.ZPval.Feq=="0.5" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.5_YRI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(filter(Union.CANDf0.5_0.4_0.3[[3]], Min.ZPval.Feq=="0.4" | Min.ZPval.Feq=="0.4|0.3" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.4_YRI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+write.table(filter(Union.CANDf0.5_0.4_0.3[[3]], Min.ZPval.Feq=="0.3" | Min.ZPval.Feq=="0.3|0.2"|  Min.ZPval.Feq=="0.4|0.3")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.3_YRI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+
+
+write.table(Union.CANDf0.5_0.4_0.3[[3]][,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"Union.CANDf0.5_0.4_0.3_YRI.bed"), quote=F, sep="\t", col.names=F, row.names=F) 
 
 #generate a background bed file (all scanned genes)
 
