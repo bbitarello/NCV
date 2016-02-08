@@ -2,7 +2,7 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 12.01.2016
+#	Last modified: 08.02.2016
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #                          Last comment: I am currently trying to fix an issue between lines 158 and 176 (all.coding/ALL.CODING)
@@ -42,7 +42,7 @@ return(list(query_subset=QUERY.SUBSET, query_pos=QUERY.POS, GENE=name))
 #
 Objects()
 ###################################################################################################
-############################################## Part I #############################################
+############################################## Part I ############################################
 #This part is where I added info into the object list.SCAN. At the end of this part I stores this object, so 
 #it can be skipped (go to 'Part II')
 #RANK candidate windows
@@ -132,27 +132,65 @@ Store(list.SCAN)
 # Sometimes it is necessary to store some stuff, otherwise the session crashes.
 #####################################################
 Objects()
+
+mclapply(1:7, function(x) with(list.SCAN[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.scan
+
+for(i in 1:7){
+cbind(list.SCAN[[i]], Win.ID=Win.ID.scan[[i]])-> list.SCAN[[i]]}
+
+
 lapply(list.SCAN, function(x) cbind(arrange(x, Dist.NCV.f0.5),Z.f0.5.P.val=seq(1:nrow(x))/nrow(x)))-> tmp5
 lapply(1:7, function(x) cbind(arrange(tmp5[[x]],Dist.NCV.f0.4), Z.f0.4.P.val=seq(1:nrow(tmp5[[x]]))/nrow(tmp5[[x]])))->tmp4
 remove(tmp5)
+gc()
 lapply(1:7, function(x) cbind(arrange(tmp4[[x]],Dist.NCV.f0.3), Z.f0.3.P.val=seq(1:nrow(tmp4[[x]]))/nrow(tmp4[[x]])))->tmp3
 remove(tmp4)
+gc()
 lapply(1:7, function(x) cbind(arrange(tmp3[[x]],Dist.NCV.f0.2), Z.f0.2.P.val=seq(1:nrow(tmp3[[x]]))/nrow(tmp3[[x]])))->tmp2
 remove(tmp3)
+gc()
 lapply(1:7, function(x) cbind(arrange(tmp2[[x]],Dist.NCV.f0.1), Z.f0.1.P.val=seq(1:nrow(tmp2[[x]]))/nrow(tmp2[[x]])))->list.SCAN
+gc()
 remove(tmp2)
+gc()
+
+
+Store(list.SCAN)
+
+lapply(list.SCAN, function(x) x %>% select(Chr:Dist.NCV.f0.1, Z.f0.5.P.val:Z.f0.1.P.val, Win.ID))-> ll.SCAN
+ll.SCAN-> list.SCAN
+remove(ll.SCAN)
+gc()
 
 #take simulation-based candidate windows.
-mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.5<(1/nsims)),])-> CANDf0.5
-mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.4<(1/nsims)),])-> CANDf0.4
-mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.3<(1/nsims)),])-> CANDf0.3
-mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.2<(1/nsims)),])-> CANDf0.2
-mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.1<(1/nsims)),])-> CANDf0.1
+lapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.5<(1/nsims)),])-> CANDf0.5
+lapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.4<(1/nsims)),])-> CANDf0.4
+lapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.3<(1/nsims)),])-> CANDf0.3
+lapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.2<(1/nsims)),])-> CANDf0.2
+lapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.1<(1/nsims)),])-> CANDf0.1
 Store(CANDf0.5); Store(CANDf0.4); Store(CANDf0.3); Store(CANDf0.2); Store(CANDf0.1)
 Store(list.SCAN) #now list.SCAN has everything I need.
 #In  the next part we can start exploring these windows.
 #
-#
+
+
+#top817 and top100
+
+#top100
+top100f0.5<-lapply(list.SCAN, function(x) arrange(x, Z.f0.5.P.val)[1:100,]) #top 100 windows ranked by feq=0.5
+top100f0.4<-lapply(list.SCAN, function(x) arrange(x, Z.f0.4.P.val)[1:100,]) #top 100 windows ranked by feq=0.4
+top100f0.3<-lapply(list.SCAN, function(x) arrange(x, Z.f0.3.P.val)[1:100,]) #top 100 windows ranked by feq=0.3
+top100f0.2<-lapply(list.SCAN, function(x) arrange(x, Z.f0.2.P.val)[1:100,]) #top 100 windows ranked by feq=0.2
+top816f0.5<-lapply(list.SCAN, function(x) arrange(x, Z.f0.5.P.val)[1:816,]) #top 816 windows ranked by feq=0.5
+top816f0.4<-lapply(list.SCAN, function(x) arrange(x, Z.f0.4.P.val)[1:816,]) #top 816 windows ranked by feq=0.4
+top816f0.3<-lapply(list.SCAN, function(x) arrange(x, Z.f0.3.P.val)[1:816,]) #top 816 windows ranked by feq=0.3
+top816f0.2<-lapply(list.SCAN, function(x) arrange(x, Z.f0.2.P.val)[1:816,]) #top 816 windows ranked by feq=0.2
+
+
+Store(top100f0.5,top100f0.4,top100f0.3, top100f0.2)
+Store(top816f0.2,top816f0.3,top816f0.4,top816f0.5)
+
+#######################################################################################################################
 
 read.table('/mnt/sequencedb/PopGen/cesare/hg19/bedfiles/ensembl_genes_hg19.bed.gz')->hg19.coding.coords.bed
 names(hg19.coding.coords.bed)<-c('chr', 'beg', 'end','name', 'type')
@@ -462,38 +500,6 @@ legend('topleft', c('Genomic', 'NCV<all sims', 'Top100.Z.score'), lty=c(1,2,2), 
 dev.off()
 #
 pdf('figures/NCV.candidates.NCVf0.4.YRI.pdf')
-plot(density(list.SCAN[[3]]$NCVf4), col='gray', lty=2, main='Outliers defined based on NCV (0.4)', xlab='NCV (0.4)')
-lines(density(CANDf0.4[[3]]$NCVf4), col='red')
-lines(density(arrange(CANDf0.4[[3]], Z.f0.4.P.val)[1:100,]$NCVf4), col='magenta', lty=2)
-legend('topleft', c('Genomic', 'NCV<all sims', 'Top100.Z.score'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
-dev.off()
-#
-pdf('figures/NCV.candidates.NCVf0.3.YRI.pdf')
-plot(density(list.SCAN[[3]]$NCVf3), col='gray', lty=2, main='Outliers defined based on NCV (0.3)', xlab='NCV (0.3)')
-lines(density(CANDf0.3[[3]]$NCVf3), col='red')
-lines(density(arrange(CANDf0.3[[3]], Z.f0.3.P.val)[1:100,]$NCVf3), col='magenta', lty=2)
-legend('topleft', c('Genomic', 'NCV<all sims', 'Top100.Z.score'), lty=c(1,2,2), col=c('gray', 'red', 'magenta'))
-dev.off()
-
-
-#
-pdf('figures/Z_feq_allfeqs_genomic_cand_top816.pdf')
-
-
-plot(density(list.SCAN[[3]]$Dist.NCV.f0.5), col='cornflowerblue', xlab=expression("Z"[feq]), bty='l',main="")
-lines(density(list.SCAN[[3]]$Dist.NCV.f0.4), col='sienna1')
-lines(density(list.SCAN[[3]]$Dist.NCV.f0.3), col='violetred1')
-lines(density(CANDf0.4[[3]]$Dist.NCV.f0.4), col='sienna1', lty=2)
-lines(density(CANDf0.3[[3]]$Dist.NCV.f0.3), col='violetred1', lty=2)
-lines(density(CANDf0.5[[3]]$Dist.NCV.f0.5), col='cornflowerblue', lty=2)
-lines(density(top816f0.5[[3]]$Dist.NCV.f0.5), col='cornflowerblue', lty=3, lwd=2)
-lines(density(top816f0.4[[3]]$Dist.NCV.f0.4), col='sienna1', lty=3, lwd=2)
-lines(density(top816f0.3[[3]]$Dist.NCV.f0.3), col='violetred1', lty=3, lwd=2)
-legend('topleft', c('Genomic', 'Simulation-based', 'Empirical cutoff', 'feq=0.5', 'feq=0.4','feq=0.3'), lty=c(1,2,3,1,1), lwd=c(1,1,2,2,2),col=c('black', 'black', 'black', 'cornflowerblue', 'sienna1','violetred1'), bty="n")
-dev.off()
-
-pdf('NCV_allfeqs_genomic_simbases_top816.pdf')
-plot(density(list.SCAN[[3]]$NCVf3), col='violetred1', xlab=expression("NCV"[feq]), bty='l',main="", xlim=c(0.05,0.5), ylim=c(0,38))
 lines(density(list.SCAN[[3]]$NCVf4), col='sienna1')
 lines(density(list.SCAN[[3]]$NCVf5), col='cornflowerblue')
 lines(density(CANDf0.4[[3]]$NCVf4), col='sienna1', lty=2)
@@ -553,27 +559,48 @@ legend('topleft', c('Genomic', 'Simulation-based', 'Empirical cutoff', 'feq=0.5'
 BED.PATH<-'/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/bedfiles/'
 
 #doing this after the talk from 12.1.2016 at the lab meeting
+#mclapply(1:7, function(x) with(list.SCAN[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.scan
+#mclapply(1:7, function(x) with(CANDf0.5[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID
+#mclapply(1:7, function(x) with(top816f0.5[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.top
 
-mclapply(1:7, function(x) with(CANDf0.5[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID
+#mclapply(1:7, function(x) with(CANDf0.4[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.4
+#mclapply(1:7, function(x) with(top816f0.4[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.4.top
 
-mclapply(1:7, function(x) with(CANDf0.4[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.4
-mclapply(1:7, function(x) with(CANDf0.3[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.3
-
-
-
-for(i in 1:7){
-
-cbind(CANDf0.5[[i]], Win.ID=Win.ID[[i]])-> CANDf0.5[[i]]
-cbind(CANDf0.4[[i]], Win.ID=Win.ID.4[[i]])-> CANDf0.4[[i]]
-cbind(CANDf0.3[[i]], Win.ID=Win.ID.3[[i]])-> CANDf0.3[[i]]}
-
-Store(CANDf0.5, CANDf0.4, CANDf0.3)
+#mclapply(1:7, function(x) with(CANDf0.3[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.3
+#mclapply(1:7, function(x) with(top816f0.3[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.3.top
 
 
+#SKIP
+
+#for(i in 1:7){
+#cbind(list.SCAN[[3]], Win.ID=Win.ID.scan[[i]])-> list.SCAN[[3]]}
+
+#Store(list.SCAN)
+
+#for(i in 1:7){
+
+#cbind(CANDf0.5[[i]], Win.ID=Win.ID[[i]])-> CANDf0.5[[i]]
+
+#cbind(CANDf0.4[[i]], Win.ID=Win.ID.4[[i]])-> CANDf0.4[[i]]
+#cbind(CANDf0.3[[i]], Win.ID=Win.ID.3[[i]])-> CANDf0.3[[i]]
+
+#cbind(top816f0.5[[i]], Win.ID=Win.ID.top[[i]])-> top816f0.5[[i]]
+
+#cbind(top816f0.4[[i]], Win.ID=Win.ID.4.top[[i]])-> top816f0.4[[i]]
+#cbind(top816f0.3[[i]], Win.ID=Win.ID.3.top[[i]])-> top816f0.3[[i]]}
+
+#Store(CANDf0.5, CANDf0.4, CANDf0.3)
+
+#Store(top816f0.5, top816f0.4, top816f0.3)
+
+####################################################################################
 
 mclapply(1:7, function(x) rbind(CANDf0.5[[x]], CANDf0.4[[x]], CANDf0.3[[x]])[-(which(duplicated(rbind(CANDf0.5[[x]], CANDf0.4[[x]], CANDf0.3[[x]])))),])-> Union.CANDf0.5_0.4_0.3
 
+mclapply(1:7, function(x) rbind(top816f0.5[[x]], top816f0.4[[x]], top816f0.3[[x]])[-(which(duplicated(rbind(top816f0.5[[x]], top816f0.4[[x]], top816f0.3[[x]])))),])-> Union.top0.5_0.4_0.3
 
+Store(Union.CANDf0.5_0.4_0.3)
+Store(Union.top0.5_0.4_0.3)
 
 test.col<-vector('list', 7)
 for(i in 1:7){
@@ -595,17 +622,79 @@ for(j in 1: length(repl5)){
 paste0(test.col[[i]][[repl5[j]]][1], "|", test.col[[i]][[repl5[j]]][2])-> test.col[[i]][[repl5[j]]]}}
 }
 
+test.col2<-vector('list', 7)
+for(i in 1:7){
+lapply(1:nrow(Union.top0.5_0.4_0.3[[i]]),  function(y) colnames(select(Union.top0.5_0.4_0.3[[i]][y,], Z.f0.5.P.val:Z.f0.2.P.val))[which(sapply(1:4, function(x) select(Union.top0.5_0.4_0.3[[i]][y,], Z.f0.5.P.val:Z.f0.2.P.val)[,x] ==min(select(Union.top0.5_0.4_0.3[[i]][y,], Z.f0.5.P.val:Z.f0.2.P.val))))])-> test.col2[[i]]
+which(unlist(lapply(test.col2[[i]], function(x) length(x)==2)))-> repl2
+for(j in 1: length(repl2)){
+paste0(test.col2[[i]][[repl2[j]]][1], "|", test.col2[[i]][[repl2[j]]][2])-> test.col2[[i]][[repl2[j]]]}
+which(unlist(lapply(test.col2[[i]], function(x) length(x)==3)))-> repl3
+if(length(repl3)>=1){
+for(j in 1: length(repl3)){
+paste0(test.col2[[i]][[repl3[j]]][1], "|", test.col2[[i]][[repl3[j]]][2])-> test.col2[[i]][[repl3[j]]]}}
+which(unlist(lapply(test.col2[[i]], function(x) length(x)==4)))-> repl4
+if(length(repl4)>=1){
+for(j in 1: length(repl4)){
+paste0(test.col2[[i]][[repl4[j]]][1], "|", test.col2[[i]][[repl4[j]]][2])-> test.col2[[i]][[repl4[j]]]}}
+which(unlist(lapply(test.col2[[i]], function(x) length(x)==5)))-> repl5
+if(length(repl5)>=1){
+for(j in 1: length(repl5)){
+paste0(test.col[[i]][[repl2[j]]][1], "|", test.col[[i]][[repl2[j]]][2])-> test.col[[i]][[repl2[j]]]}
+which(unlist(lapply(test.col[[i]], function(x) length(x)==3)))-> repl3
+if(length(repl3)>=1){
+for(j in 1: length(repl3)){
+paste0(test.col[[i]][[repl3[j]]][1], "|", test.col[[i]][[repl3[j]]][2])-> test.col[[i]][[repl3[j]]]}}
+which(unlist(lapply(test.col[[i]], function(x) length(x)==4)))-> repl4
+if(length(repl4)>=1){
+for(j in 1: length(repl4)){
+paste0(test.col[[i]][[repl4[j]]][1], "|", test.col[[i]][[repl4[j]]][2])-> test.col[[i]][[repl4[j]]]}}
+which(unlist(lapply(test.col[[i]], function(x) length(x)==5)))-> repl5
+if(length(repl5)>=1){
+for(j in 1: length(repl5)){
+paste0(test.col[[i]][[repl5[j]]][1], "|", test.col[[i]][[repl5[j]]][2])-> test.col[[i]][[repl5[j]]]}}
+}
 
+test.col2<-vector('list', 7)
+for(i in 1:7){
+lapply(1:nrow(Union.top0.5_0.4_0.3[[i]]),  function(y) colnames(select(Union.top0.5_0.4_0.3[[i]][y,], Z.f0.5.P.val:Z.f0.2.P.val))[which(sapply(1:4, function(x) select(Union.top0.5_0.4_0.3[[i]][y,], Z.f0.5.P.val:Z.f0.2.P.val)[,x] ==min(select(Union.top0.5_0.4_0.3[[i]][y,], Z.f0.5.P.val:Z.f0.2.P.val))))])-> test.col2[[i]]
+which(unlist(lapply(test.col2[[i]], function(x) length(x)==2)))-> repl2
+for(j in 1: length(repl2)){
+paste0(test.col2[[i]][[repl2[j]]][1], "|", test.col2[[i]][[repl2[j]]][2])-> test.col2[[i]][[repl2[j]]]}
+which(unlist(lapply(test.col2[[i]], function(x) length(x)==3)))-> repl3
+if(length(repl3)>=1){
+for(j in 1: length(repl3)){
+paste0(test.col2[[i]][[repl3[j]]][1], "|", test.col2[[i]][[repl3[j]]][2])-> test.col2[[i]][[repl3[j]]]}}
+which(unlist(lapply(test.col2[[i]], function(x) length(x)==4)))-> repl4
+if(length(repl4)>=1){
+for(j in 1: length(repl4)){
+paste0(test.col2[[i]][[repl4[j]]][1], "|", test.col2[[i]][[repl4[j]]][2])-> test.col2[[i]][[repl4[j]]]}}
+which(unlist(lapply(test.col2[[i]], function(x) length(x)==5)))-> repl5
+if(length(repl5)>=1){
+for(j in 1: length(repl5)){
+paste0(test.col2[[i]][[repl4[j]]][1], "|", test.col2[[i]][[repl4[j]]][2])-> test.col2[[i]][[repl4[j]]]}}
+which(unlist(lapply(test.col2[[i]], function(x) length(x)==5)))-> repl5
+if(length(repl5)>=1){
+for(j in 1: length(repl5)){
+paste0(test.col2[[i]][[repl5[j]]][1], "|", test.col2[[i]][[repl5[j]]][2])-> test.col2[[i]][[repl5[j]]]}}
+}
+
+Store(test.col, test.col2)
 
 mclapply(1:7, function(x) gsub(".P.val","", gsub("Z.f", "", unlist(test.col[[x]]))))-> extra.col
+
+mclapply(1:7, function(x) gsub(".P.val","", gsub("Z.f", "", unlist(test.col2[[x]]))))-> extra.col.top
+
 
 rbind(table(as.numeric(extra.col[[1]])), table(as.numeric(extra.col[[2]])), table(as.numeric(extra.col[[3]])), table(as.numeric(extra.col[[4]])), table(as.numeric(extra.col[[5]])), table(as.numeric(extra.col[[6]])), table(as.numeric(extra.col[[7]])))
 
 for (i in 1:7){
 
-cbind(Union.CANDf0.5_0.4_0.3[[i]], Min.ZPval.Feq=extra.col[[i]])-> Union.CANDf0.5_0.4_0.3[[i]]}
+cbind(Union.CANDf0.5_0.4_0.3[[i]], Min.ZPval.Feq=extra.col[[i]])-> Union.CANDf0.5_0.4_0.3[[i]]
+cbind(Union.top0.5_0.4_0.3[[i]],  Min.ZPval.Feq=extra.col.top[[i]])-> Union.top0.5_0.4_0.3[[i]]}
+
 
 Store(Union.CANDf0.5_0.4_0.3)
+Store(Union.top0.5_0.4_0.4)
 
 
 
@@ -614,9 +703,76 @@ write.table(filter(Union.CANDf0.5_0.4_0.3[[3]], Min.ZPval.Feq=="0.5" | Min.ZPval
 write.table(filter(Union.CANDf0.5_0.4_0.3[[3]], Min.ZPval.Feq=="0.4" | Min.ZPval.Feq=="0.4|0.3" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.4_YRI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
 write.table(filter(Union.CANDf0.5_0.4_0.3[[3]], Min.ZPval.Feq=="0.3" | Min.ZPval.Feq=="0.3|0.2"|  Min.ZPval.Feq=="0.4|0.3")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.3_YRI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
 
+#LWK
+
+write.table(filter(Union.CANDf0.5_0.4_0.3[[2]], Min.ZPval.Feq=="0.5" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.5_LWK.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(filter(Union.CANDf0.5_0.4_0.3[[2]], Min.ZPval.Feq=="0.4" | Min.ZPval.Feq=="0.4|0.3" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.4_LWK.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+write.table(filter(Union.CANDf0.5_0.4_0.3[[2]], Min.ZPval.Feq=="0.3" | Min.ZPval.Feq=="0.3|0.2"|  Min.ZPval.Feq=="0.4|0.3")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.3_LWK.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+
+#GBR
+
+write.table(filter(Union.CANDf0.5_0.4_0.3[[6]], Min.ZPval.Feq=="0.5" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.5_GBR.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(filter(Union.CANDf0.5_0.4_0.3[[6]], Min.ZPval.Feq=="0.4" | Min.ZPval.Feq=="0.4|0.3" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.4_GBR.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+write.table(filter(Union.CANDf0.5_0.4_0.3[[6]], Min.ZPval.Feq=="0.3" | Min.ZPval.Feq=="0.3|0.2"|  Min.ZPval.Feq=="0.4|0.3")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.3_GBR.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+#TSI
+
+write.table(filter(Union.CANDf0.5_0.4_0.3[[7]], Min.ZPval.Feq=="0.5" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.5_TSI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(filter(Union.CANDf0.5_0.4_0.3[[7]], Min.ZPval.Feq=="0.4" | Min.ZPval.Feq=="0.4|0.3" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.4_TSI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+write.table(filter(Union.CANDf0.5_0.4_0.3[[7]], Min.ZPval.Feq=="0.3" | Min.ZPval.Feq=="0.3|0.2"|  Min.ZPval.Feq=="0.4|0.3")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.3_TSI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+
 
 
 write.table(Union.CANDf0.5_0.4_0.3[[3]][,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"Union.CANDf0.5_0.4_0.3_YRI.bed"), quote=F, sep="\t", col.names=F, row.names=F) 
+
+write.table(Union.CANDf0.5_0.4_0.3[[2]][,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"Union.CANDf0.5_0.4_0.3_LWK.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(Union.CANDf0.5_0.4_0.3[[6]][,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"Union.CANDf0.5_0.4_0.3_GBR.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(Union.CANDf0.5_0.4_0.3[[7]][,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"Union.CANDf0.5_0.4_0.3_TSI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+
+
+
+write.table(Union.top0.5_0.4_0.3[[3]][,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"Union.top816.0.5_0.4_0.3_YRI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(Union.top0.5_0.4_0.3[[2]][,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"Union.top816.0.5_0.4_0.3_LWK.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(Union.top0.5_0.4_0.3[[6]][,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"Union.top816.0.5_0.4_0.3_GBR.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(Union.top0.5_0.4_0.3[[7]][,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"Union.top816.0.5_0.4_0.3_TSI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+
+write.table(filter(Union.top0.5_0.4_0.3[[3]], Min.ZPval.Feq=="0.5" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.5_top816_YRI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(filter(Union.top0.5_0.4_0.3[[3]], Min.ZPval.Feq=="0.4" | Min.ZPval.Feq=="0.4|0.3" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.4_top816_YRI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+write.table(filter(Union.top0.5_0.4_0.3[[3]], Min.ZPval.Feq=="0.3" | Min.ZPval.Feq=="0.3|0.2"|  Min.ZPval.Feq=="0.4|0.3")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.3_YRI_top816.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+#LWK
+
+write.table(filter(Union.top0.5_0.4_0.3[[2]], Min.ZPval.Feq=="0.5" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.5_top816_LWK.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(filter(Union.top0.5_0.4_0.3[[2]], Min.ZPval.Feq=="0.4" | Min.ZPval.Feq=="0.4|0.3" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.4_top816_LWK.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+write.table(filter(Union.top0.5_0.4_0.3[[2]], Min.ZPval.Feq=="0.3" | Min.ZPval.Feq=="0.3|0.2"|  Min.ZPval.Feq=="0.4|0.3")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.3_top816_LWK.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+
+write.table(filter(Union.top0.5_0.4_0.3[[6]], Min.ZPval.Feq=="0.5" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.5_top816_GBR.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(filter(Union.top0.5_0.4_0.3[[6]], Min.ZPval.Feq=="0.4" | Min.ZPval.Feq=="0.4|0.3" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.4_top816_GBR.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+write.table(filter(Union.top0.5_0.4_0.3[[6]], Min.ZPval.Feq=="0.3" | Min.ZPval.Feq=="0.3|0.2"|  Min.ZPval.Feq=="0.4|0.3")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.3_top816_GBR.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+#TSI
+
+write.table(filter(Union.top0.5_0.4_0.3[[7]], Min.ZPval.Feq=="0.5" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.5_top816_TSI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
+write.table(filter(Union.top0.5_0.4_0.3[[7]], Min.ZPval.Feq=="0.4" | Min.ZPval.Feq=="0.4|0.3" | Min.ZPval.Feq=="0.5|0.4")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.4_top816_TSI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+write.table(filter(Union.top0.5_0.4_0.3[[7]], Min.ZPval.Feq=="0.3" | Min.ZPval.Feq=="0.3|0.2"|  Min.ZPval.Feq=="0.4|0.3")[,  c(seq(1:3), 31)], options(scipen=1), file=paste0(BED.PATH,"MinNCfeq0.3_top816_TSI.bed"), quote=F, sep="\t", col.names=F, row.names=F)
+
 
 #generate a background bed file (all scanned genes)
 
@@ -667,16 +823,6 @@ type=='protein_coding')$name)))),  file=paste0(BED.PATH,'background.all','.gene.
 #there are other possible combinations, but I will only do then if and when needed.
 #Stopped here 31.04.2015 bionc03 (fixed files for GO analyses).
 ##########                           
-#top817 and top100
-#top100
-top100f0.5<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.5.P.val)[1:100,]) #top 100 windows ranked by feq=0.5
-top100f0.4<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.4.P.val)[1:100,]) #top 100 windows ranked by feq=0.4
-top100f0.3<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.3.P.val)[1:100,]) #top 100 windows ranked by feq=0.3
-top816f0.2<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.2.P.val)[1:100,]) #top 100 windows ranked by feq=0.2
-top816f0.5<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.5.P.val)[1:816,]) #top 816 windows ranked by feq=0.5
-top816f0.4<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.4.P.val)[1:816,]) #top 816 windows ranked by feq=0.4
-top816f0.3<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.3.P.val)[1:816,]) #top 816 windows ranked by feq=0.3
-top816f0.2<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.2.P.val)[1:816,]) #top 816 windows ranked by feq=0.2
 #sorting for merge and intersect bed
 sort.top100f0.5<-mclapply(top100f0.5, function(x) arrange(x, Chr, Beg.Win))
 sort.top100f0.4<-mclapply(top100f0.4, function(x) arrange(x, Chr, Beg.Win))
@@ -825,54 +971,4 @@ highlight2=as.character(top816f0.3[[3]]$BP),suggestiveline=-log10(6.129810e-05),
 dev.off()
 
 pdf('bedfiles/top100.my.man.test.pdf')
-
-
-
-
-###################################################
-#use the intersect function to check overlaps
-intsc(intersect(top100intsc[[1]][[1]], top100intsc[[1]][[2]]), top100intsc[[1]][[3]])
-
-
-#############
-
-#mclapply(list.SCAN, function(x) dim(x[which(x$P.val.NCVf0.5<(1/nsims)),]))-> candidate.windows
-
-#check if NCV in bins is normally distributed
-
-#pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/figures/march.2015.qqplot.AFR.pdf')
-#sapply(1:211, function(x) {qqnorm(l.bin.vec1[[x]]$ncvFD_f0.5); qqline(l.bin.vec1[[x]]$ncvFD_f0.5))
-#dev.off()
-
-#pdf('/mnt/sequencedb/PopGen/barbara/scan_may_2014/march.2015.figures/march.2015.Nr.IS.Genomic.VS.outliers.pdf')
-#par(mfrow=c(4,2));
-#lapply(1:7, function(x) {hist(list.SCAN[[x]]$Nr.IS, col='lightgray', border='gray', nclass=100, lty=2, main=names(list.SCAN)[x], freq=F, xlab="Number of Informative Sites per Window");lines(density(candidate.windows[[x]]$Nr.IS),col='sienna1')})
-#l.bin.vec1[[i]]$ncvFD_f0.2)-> sd2.bin
-#dev.off()
-
-
-setwd('/mnt/sequencedb/PopGen/barbara/scan_may_2014/10000_sims_per_bin/figures')
-#sapply(seq(1:7), function(x) venn.diagram(list(NCVf0.5=rownames(subset(list.SCAN[[x]],P.val.NCVf0.5<(1/nsims))), NCVf0.4=rownames(subset(list.SCAN[[x]],P.val.NCVf0.4<(1/nsims))), NCVf0.3=rownames(subset(list.SCAN[[x]],P.val.NCVf0.3<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename =paste0(names(list.SCAN)[x], '.venn.pdf')))
-
-
-#one pops, feq=0.5:
-#this 
-venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),TSI=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.5.venn.tiff')
-
-
-#all pops, feq=0.4
-venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5,0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.4.venn.tiff')
-
-#all pops, feq=0.3
-#feq, all pops:
-
-venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","slateblue","turquoise3","sienna1", "violetred1", "violetred4","tomato4"),alpha = c(0.5,0.5,0.5,0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename='allpops.f0.3.venn.tiff')
-
-
-venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),LWK=rownames(subset(list.SCAN[[2]],P.val.NCVf0.5<(1/nsims))),YRI=rownames(subset(list.SCAN[[3]],P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1"),alpha = c(0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Africa.f0.5.venn.tiff')
-
-
-venn.diagram(list(CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1", "orange"),alpha = c(0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Europe.f0.5.venn.tiff')
-
-
 
