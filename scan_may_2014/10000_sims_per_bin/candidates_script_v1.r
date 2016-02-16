@@ -147,6 +147,12 @@ mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.4<(1/nsims)),])-> CANDf0.4
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.3<(1/nsims)),])-> CANDf0.3
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.2<(1/nsims)),])-> CANDf0.2
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.1<(1/nsims)),])-> CANDf0.1
+
+names(CANDf0.5)<-pops[1:7]
+names(CANDf0.4)<-pops[1:7]
+names(CANDf0.3)<-pops[1:7]
+names(CANDf0.2)<-pops[1:7]
+names(CANDf0.1)<-pops[1:7]
 Store(CANDf0.5); Store(CANDf0.4); Store(CANDf0.3); Store(CANDf0.2); Store(CANDf0.1)
 Store(list.SCAN) #now list.SCAN has everything I need.
 #In  the next part we can start exploring these windows.
@@ -606,6 +612,16 @@ top816f0.5<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.5.P.val)[1:816,]) #t
 top816f0.4<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.4.P.val)[1:816,]) #top 816 windows ranked by feq=0.4
 top816f0.3<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.3.P.val)[1:816,]) #top 816 windows ranked by feq=0.3
 top816f0.2<-mclapply(list.SCAN, function(x) arrange(x, Z.f0.2.P.val)[1:816,]) #top 816 windows ranked by feq=0.2
+
+
+names(top816f0.5)<- pops[1:7]
+names(top816f0.4)<- pops[1:7]
+names(top816f0.3)<- pops[1:7]
+names(top816f0.2)<- pops[1:7]
+
+
+Store(top816f0.5, top816f0.4, top816f0.3, top816f0.2)
+
 #sorting for merge and intersect bed
 sort.top100f0.5<-mclapply(top100f0.5, function(x) arrange(x, Chr, Beg.Win))
 sort.top100f0.4<-mclapply(top100f0.4, function(x) arrange(x, Chr, Beg.Win))
@@ -803,5 +819,133 @@ venn.diagram(list(AWS=rownames(subset(list.SCAN[[1]], P.val.NCVf0.5<(1/nsims))),
 
 venn.diagram(list(CEU=rownames(subset(list.SCAN[[4]], P.val.NCVf0.5<(1/nsims))),FIN=rownames(subset(list.SCAN[[5]],P.val.NCVf0.5<(1/nsims))),GBR=rownames(subset(list.SCAN[[6]],P.val.NCVf0.5<(1/nsims))),CEU=rownames(subset(list.SCAN[[7]], P.val.NCVf0.5<(1/nsims)))), fill=c("cornflowerblue","sienna1", "violetred1", "orange"),alpha = c(0.5,0.5, 0.5, 0.5), cex = 2,cat.fontface = 4,lty =2, fontfamily =3,filename ='march.2015.Europe.f0.5.venn.tiff')
 
+
+
+
+
+
+#PtoD
+library(grDevices)
+for.plot<-c(list.SCAN[[2]]$PtoD[which(list.SCAN[[2]]$PtoD<=10)], rep(11, sum(list.SCAN[[2]]$PtoD>10)))
+
+for.plot2<-c(Union.CANDf0.5_0.4_0.3[[2]]$PtoD[which(Union.CANDf0.5_0.4_0.3[[2]]$PtoD<=10)], rep(11, sum(Union.CANDf0.5_0.4_0.3[[2]]$PtoD>10)))
+h1<-hist(for.plot, plot=F)
+hist(for.plot2,nclass=22, plot=F)-> h1
+
+pdf('figures/PtoD.for.paper.LWK.pdf')
+adjustcolor('darkgray', alpha.f=0.50)-> coor_transparent
+adjustcolor('cornflowerblue', alpha.f=0.5)-> coor_transparent2
+barplot((h$counts/length(for.plot)),col=coor_transparent,space=1, border=F, ylim=c(0, 0.60))->bp
+
+barplot((h1$counts/length(for.plot2)),col=coor_transparent2,border=F,space=1,  add=T)->bp2
+
+axis(1,at=c(bp),labels=h$mids)
+title(ylab="Relative Frequency",xlab="P/(FD+1)", main="LWK")
+
+legend('topright', c("Background", "Significant Windows"), col=c(coor_transparent, coor_transparent2), pch=c(22,22), fill=c(coor_transparent, coor_transparent2),bty="n")
+
+dev.off()
+
+
+
+
+
+for.plot.GBR<-c(list.SCAN[[6]]$PtoD[which(list.SCAN[[6]]$PtoD<=10)], rep(11, sum(list.SCAN[[6]]$PtoD>10)))
+
+for.plot2.GBR<-c(Union.CANDf0.5_0.4_0.3[[6]]$PtoD[which(Union.CANDf0.5_0.4_0.3[[6]]$PtoD<=10)], rep(11, sum(Union.CANDf0.5_0.4_0.3[[6]]$PtoD>10)))
+h1GBR<-hist(for.plot2.GBR, plot=F,nclass=22 )
+
+hGBR<-hist(for.plot.GBR, plot=F)
+
+pdf('figures/PtoD.for.paper.GBR.pdf')
+adjustcolor('darkgray', alpha.f=0.50)-> coL1
+adjustcolor('sienna1', alpha.f=0.5)-> coL2
+barplot((hGBR$counts/length(for.plot)),col=coL1,space=1, border=F, ylim=c(0, 0.6))->bp
+
+barplot((h1GBR$counts/length(for.plot2)),col=coL2,border=F,space=1,  add=T)->bp2
+
+axis(1,at=c(bp),labels=hGBR$mids)
+title(ylab="Relative Frequency",xlab="P/(FD+1)", main="GBR")
+
+legend('topright', c("Background", "Significant Windows"), col=c(coL1, coL2), pch=c(22,22), fill=c(coL1, coL2),bty="n")
+
+dev.off()
+
+
+
+
+
+
+
+
+
+##############
+
+
+
+#bedtools in R
+
+
+
+bedTools.2in<-function(functionstring="bedtools intersect -wo",bed1,bed2,opt.string="")
+
+{
+  #create temp files
+  a.file=tempfile()
+  b.file=tempfile()
+  out   =tempfile()
+  options(scipen =99) # not to use scientific notation when writing out
+  #write bed formatted dataframes to tempfile
+  write.table(bed1,file=a.file,quote=F,sep="\t",col.names=F,row.names=F)
+  write.table(bed2,file=b.file,quote=F,sep="\t",col.names=F,row.names=F)
+  # create the command string and call the command using system()
+  command=paste(functionstring,"-a",a.file,"-b",b.file,opt.string,">",out,sep=" ")
+  cat(command,"\n")
+  try(system(command))
+  res=read.table(out,header=F)
+  unlink(a.file);unlink(b.file);unlink(out);
+  return(res)
+}
+ 
+
+
+bedTools.merge<-function(functionstring="mergeBed",bed1, opt.string="")
+{
+
+a.file=tempfile()
+ out   =tempfile()
+  options(scipen =99) # not to use scientific notation when writing out
+
+  #write bed formatted dataframes to tempfile
+  write.table(bed1,file=a.file,quote=F,sep="\t",col.names=F,row.names=F)
+command=paste(functionstring, "-i", a.file, "-nms", opt.string,">",out,sep=" ")
+  cat(command,"\n")
+  try(system(command))
+
+  res=read.table(out,header=F)
+  unlink(a.file)
+return(res)
+}
+
+##test
+
+bedTools.merge(bed1=arrange(top816f0.5[[3]][,c(1:3,31)],Chr, Beg.Win))-> A
+
+
+read.table('/mnt/sequencedb/PopGen/barbara/scan_may_2014/final_encode.bed')-> bed2
+
+mclapply(1:7, function(x) bedTools.merge(bed1=arrange(top816f0.5[[x]][,c(1:3, 31)], Chr, Beg.Win)))-> merge.top816f0.5
+
+paste0("chr", merge.top816f0.5[[1]][,1])-> merge.top816f0.5[[1]][,1]
+paste0("chr", merge.top816f0.5[[2]][,1])-> merge.top816f0.5[[2]][,1]
+paste0("chr", merge.top816f0.5[[3]][,1])-> merge.top816f0.5[[3]][,1]
+paste0("chr", merge.top816f0.5[[4]][,1])-> merge.top816f0.5[[4]][,1]
+paste0("chr", merge.top816f0.5[[5]][,1])-> merge.top816f0.5[[5]][,1]
+paste0("chr", merge.top816f0.5[[6]][,1])-> merge.top816f0.5[[6]][,1]
+paste0("chr", merge.top816f0.5[[7]][,1])-> merge.top816f0.5[[7]][,1]
+
+mclapply(1:7, function(x) bedTools.2in(bed1=merge.top816f0.5[[x]], bed2=bed2))-> intersect.top816f0.5
+
+mclapply(1:7, function(x) unique(sort(as.character(subset(intersect.top816f0.5[[x]], V11=="protein_coding")$V8))))-> prot.cod.top816f0.5
 
 
