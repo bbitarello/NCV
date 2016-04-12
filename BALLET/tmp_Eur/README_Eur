@@ -1,0 +1,41 @@
+README T1/T2 for Eur
+
+#make input files for T1/T2
+barbara_sims_T1_T2_Europe.R #check with Cesare if the correct Ne is 7,310, regardless if we are using Africa or Europe
+
+# run ballet?
+
+#in tmp_Eur directory
+
+
+#DivFile
+./mnt/sequencedb/PopGen/barbara/BALLET -inter_coal_time CombinedSNPFile_neu 15000000 0.000731 DivFile_neu
+#we are using 7310 as Ne for both Afr and Eur, because it is long term Ne, but in the sims Eur has all the specific parameters.
+
+#coalescence time is greater for BS, so so far it looks better
+
+#PolySub
+/mnt/sequencedb/PopGen/barbara/BALLET/BALLET -poly_sub CombinedSNPFile_neu PolySubFile_neu
+
+
+
+#Spect
+/mnt/sequencedb/PopGen/barbara/BALLET/BALLET -spect CombinedSNPFile_neu SpectFile_neu
+
+
+
+# run 4 jobs (t1 /t2 , neu, bs)
+
+qsub -o ballet_T1_neu_Eur.log run_ballet_T1_neu_Eur.sge 
+qsub -o ballet_T1_bs_Eur.log run_ballet_T1_bs_Eur.sge 
+qsub -o ballet_T2_bs_Eur.log run_ballet_T2_bs_Eur.sge 
+qsub -o ballet_T2_neu_Eur.log run_ballet_T2_neu_Eur.sge 
+
+#after running ballet, take highest T1/T2 values from each simulation.
+
+bash_script_ballet.sh #save the output to tmp_Eur
+
+
+
+
+

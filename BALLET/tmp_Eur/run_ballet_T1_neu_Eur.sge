@@ -1,0 +1,29 @@
+#!/bin/bash
+# Cesare de Filippo, MPI-EVA
+# modified on 12-August-2013 
+#$ -S /bin/bash
+#$ -cwd
+#$ -q all.q
+# load personal profile
+#$ -V
+#$ -R y
+#$ -M barbara_domingues@eva.mpg.de
+#$ -m e
+#$ -l h_vmem=1G,s_vmem=1G
+
+
+for i in {1..1000};
+
+do
+
+
+
+/mnt/sequencedb/PopGen/barbara/BALLET/BALLET -T1 100 DivFile_neu PolySubFile_neu  /mnt/sequencedb/PopGen/barbara/BALLET/tmp_Eur/neuSNPFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp_Eur/neuRecFile$i /mnt/sequencedb/PopGen/barbara/BALLET/tmp_Eur/OutFile_T1_neu_$i
+
+
+
+
+done
+
+#this is definitely wrong, because I onyl get negative values for T2...
+#read mike's emails again.
