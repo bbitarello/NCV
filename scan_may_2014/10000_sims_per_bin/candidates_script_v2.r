@@ -18,6 +18,8 @@ library(plyr)  #big data frames
 library(dplyr)
 library(qqman)  #manhattan plot
 library(VennDiagram)  
+require(mgcv)
+
 Sys.setenv(R_LOCAL_CACHE="estsession")  #this is for 'SOAR'
 pops<-c("AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "CLM","PUR") #pops from 1000G phase I.
 nsims<-10000 #number of simulations per bin. Used a lot.
@@ -40,6 +42,14 @@ df[[chr]][[QUERY.POS]]-> QUERY.SUBSET
 return(list(query_subset=QUERY.SUBSET, query_pos=QUERY.POS, GENE=name))
 }  #currently this gives me correct results for all.coding, but not for the ALL.POPS.AF datasets. I am trying to fix this.
 #
+
+
+my.function.improved<-function(B, E, df=XX, chr=6){
+rbind(subset(df, Chr==chr & End.Win > B & End.Win < E), subset(df, Chr==chr & Beg.Win > B & Beg.Win < E), subset(df, Chr==chr & Beg.Win<B & End.Win>E))->res
+df[rownames(res[!duplicated(res),]),]-> res2
+return(res2)
+}
+
 #take a data frame with NCD results and assign the ft (0.3, 0.4, 0.5) for each window overlapping a gene, and one for the gene
 assign.ft<-function(df){
 nrow(df)-> n
@@ -154,6 +164,7 @@ remove(tmp3)
 lapply(1:7, function(x) cbind(arrange(tmp2[[x]],Dist.NCV.f0.1), Z.f0.1.P.val=seq(1:nrow(tmp2[[x]]))/nrow(tmp2[[x]])))->list.SCAN
 remove(tmp2)
 
+mclapply(1:7, function(x) with(list.SCAN[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.scan
 #take simulation-based candidate windows.
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.5<(1/nsims)),])-> CANDf0.5
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.4<(1/nsims)),])-> CANDf0.4
@@ -161,7 +172,6 @@ mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.3<(1/nsims)),])-> CANDf0.3
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.2<(1/nsims)),])-> CANDf0.2
 mclapply(list.SCAN, function(x) x[which(x$P.val.NCVf0.1<(1/nsims)),])-> CANDf0.1
 
-mclapply(1:7, function(x) with(list.SCAN[[x]], paste0(Chr, "|", Beg.Win, "|", End.Win)))-> Win.ID.scan
 
 names(CANDf0.5)<-pops[1:7]
 names(CANDf0.4)<-pops[1:7]
@@ -231,16 +241,24 @@ function(y)(my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list
 
 ALL.CODING<-mclapply(ALL.CODING, function(x) mclapply(x, function(y) try(cbind(y, Win.ID=with(y, paste0(Chr,'|', Beg.Win,'|', End.Win))))))
 
+
+mclapply(1:22, function(x) paste0(subset(hg19.coding.coords.bed, chr==x)[,4], ':', subset(hg19.coding.coords.bed, chr==x)[,5]))->names.all.coding
+Store(names.all.coding)
+
+for(i in 1:22){
+
+names.all.coding[[i]]-> names(ALL.CODING[[i]])}
+
+#I notice some problems with my.function (whn the gene is completely within the windows, so  i amde my.function.improved
+
+my.function.improved(df=list.SCAN[[3]], chr=14, B=coding.per.chr.list[[14]][339,2], E=coding.per.chr.list[[14]][339,3])-> ALL.CODING[[14]][[339]]
+
 mclapply(ALL.CODING, function(x)x[grep("protein_coding",names(x))])-> ALL.PROT.CODING #YRI
 
 
-sum(sapply(1:22, function(y) sum(unlist(sapply(1:length(ALL.PROT.CODING[[y]]), function(x) nrow(ALL.PROT.CODING[[y]][[x]])>0))))) #18,307 scannes genes
+sum(sapply(1:22, function(y) sum(unlist(sapply(1:length(ALL.PROT.CODING[[y]]), function(x) nrow(ALL.PROT.CODING[[y]][[x]])>0))))) #18,308 scannes genes
 
-mclapply(ALL.PROT.CODING, function(x)  do.call(rbind, x))-> ALL.PROT.CODING.2
 
-do.call(rbind, ALL.PROT.CODING.2)-> ALL.PROT.CODING.3
-
-remove(ALL.PROT.CODING.2)
 gc()
 	
 Store(all.coding);Store(ALL.CODING) ; Store(ALL.PROT.CODING)
@@ -256,11 +274,48 @@ mclapply(1:22,
 function(x) mclapply(1:length(ALL.PROT.CODING[[x]]), 
 function(y) try(select(ALL.PROT.CODING[[x]][[y]], Win.ID))))-> all.win.IDs
 
-mclapply(1:22, function(x) paste0(subset(hg19.coding.coords.bed, chr==x)[,4], ':', subset(hg19.coding.coords.bed, chr==x)[,5]))->names.all.coding
 
-for(i in 1:22){
+GBR.prot.cod<-vector('list', 22)
 
-names.all.coding[[i]]-> names(ALL.CODING[[i]])}
+system.time(
+for (y in 1:22){
+
+lapply(1: length(all.win.IDs[[y]]), function(x) list.SCAN[[6]][which(as.character(list.SCAN[[6]]$Win.ID) %in% try(as.character(all.win.IDs[[y]][[x]][,1]))),])-> GBR.prot.cod[[y]]
+names(GBR.prot.cod[[y]])<-names(ALL.PROT.CODING[[y]])
+gc()
+print('chr')
+print(y)
+print('done')
+}
+)
+save(GBR.prot.cod, file="GBR.prot.cod.RData")
+
+
+object.size(GBR.prot.cod)
+for (y in 1:22){
+lapply(1: length(all.win.IDs[[y]]), function(x) try(select(GBR.prot.cod[[y]][[x]], c(Chr:Nr.FDs,Nr.IS:P.val.NCVf0.2, Dist.NCV.f0.5:Dist.NCV.f0.2, Z.f0.5.P.val:Z.f0.2.P.val, Win.ID))))-> GBR.prot.cod[[y]]
+}
+
+for (i in 1:22){
+
+names(GBR.prot.cod[[i]])<-unlist(lapply(1:length(GBR.prot.cod[[i]]), function(x) strsplit(names(ALL.PROT.CODING[[i]][x]), ":", fixed=T)[[1]][[1]]))
+}
+
+test.GBR<-unlist(GBR.prot.cod, recursive=F)
+
+LWK.prot.cod<-vector('list', 22)
+
+system.time(
+for (y in 1:22){
+
+lapply(1: length(all.win.IDs[[y]]), function(x) list.SCAN[[2]][which(as.character(list.SCAN[[2]]$Win.ID) %in% try(as.character(all.win.IDs[[y]][[x]][,1]))),])-> LWK.prot.cod[[y]]
+names(LWK.prot.cod[[y]])<-names(ALL.PROT.CODING[[y]])
+gc()
+print('chr')
+print(y)
+print('done')
+}
+)
 
 #mclapply(1:22, function(x) names.all.coding[[x]][grep("protein_coding", names.all.coding[[x]])])-> names.prot.coding
 #This is also done for all.coding, so I will comment to avoid problems.
@@ -366,7 +421,16 @@ system.time(mclapply(1:nrow(all.prot.cod), function(x) try(find.gene(ALL.CODING,
 
 names(ALL.PROT.COD.QUERY)<-all.prot.cod$Name
 find.gene(ALL.CODING, chr=15, name="RP11-96O20.4")-> ALL.PROT.COD.QUERY[["RP11-96O20.4"]]
+ALL.PROT.COD.QUERY[['OR6J1']][[1]]<-ALL.CODING[[14]][[339]]
+ALL.PROT.COD.QUERY[['OR6J1']][[1]]<-ALL.CODING[[14]][[339]]
+my.function.improved(df=list.SCAN[[2]], chr=14, B=coding.per.chr.list[[14]][339,2], E=coding.per.chr.list[[14]][339,3])-> test.GBR[['OR6J1']]
 
+find.gene(ALL.CODING, chr=12, name="AC121757.1")-> ALL.PROT.COD.QUERY[["AC121757.1"]]
+
+find.gene(ALL.CODING, chr=6, name="AL590867.1")-> ALL.PROT.COD.QUERY[["AL590867.1"]]
+
+
+Store(ALL.PROT.COD.QUERY)
 system.time(mclapply(1:length(paper.genes), function(x) ALL.PROT.COD.QUERY[[paper.genes[x]]])-> paper.genes.RES)
 names(paper.genes.RES)<-paper.genes
 
