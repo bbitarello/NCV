@@ -2,10 +2,12 @@
 #	Barbara D. Bitarello
 #
 #	Last modified: 06.12.2015
-#
+#                15.04.2016
 ##########################################
 
 library(SOAR)
+library(doMC)
+doMC::registerDoMC(cores=8)
 
 #load simulation results from Cesare
 load('Results.all.ROC1.RData')
@@ -39,39 +41,39 @@ load('/mnt/sequencedb/PopGen/barbara/simulations/clone_cee_sims/testf0.4/Results
 #}
 
 
-PATH3='/mnt/sequencedb/PopGen/barbara/BALLET/tmp_Eur'
+PATH3='/mnt/sequencedb/PopGen/barbara/BALLET/tmp_Eur/'
 
 list.power.III<-vector('list', 12)
 
 
-for (i  in 1:12){read.table(paste0(PATH2,'tmp_neu_T1.txt'))-> list.power.II[[1]];
+for (i  in 1:12){read.table(paste0(PATH3,'tmp_neu_T1.txt'))-> list.power.III[[1]];
 
-read.table(paste0(PATH2,'tmp_neu_T2.txt'))-> list.power.II[[2]];
-read.table(paste0(PATH2,'tmp_f0.1_bs_T1.txt'))-> list.power.II[[3]];
-read.table(paste0(PATH2,'tmp_f0.2_bs_T1.txt'))-> list.power.II[[4]];
-read.table(paste0(PATH2,'tmp_f0.3_bs_T1.txt'))-> list.power.II[[5]];
-read.table(paste0(PATH2,'tmp_f0.4_bs_T1.txt'))-> list.power.II[[6]];
-read.table(paste0(PATH2,'tmp_f0.5_bs_T1.txt'))-> list.power.II[[7]];
+read.table(paste0(PATH3,'tmp_neu_T2.txt'))-> list.power.III[[2]];
+#read.table(paste0(PATH3,'tmp_f0.1_bs_T1.txt'))-> list.power.III[[3]];
+#read.table(paste0(PATH3,'tmp_f0.2_bs_T1.txt'))-> list.power.III[[4]];
+read.table(paste0(PATH3,'tmp_f0.3_bs_T1.txt'))-> list.power.III[[5]];
+read.table(paste0(PATH3,'tmp_f0.4_bs_T1.txt'))-> list.power.III[[6]];
+read.table(paste0(PATH3,'tmp_f0.5_bs_T1.txt'))-> list.power.III[[7]];
 
-read.table(paste0(PATH2,'tmp_f0.1_bs_T2.txt'))-> list.power.II[[8]];
-read.table(paste0(PATH2,'tmp_f0.2_bs_T2.txt'))-> list.power.II[[9]];
-read.table(paste0(PATH2,'tmp_f0.3_bs_T2.txt'))-> list.power.II[[10]];
-read.table(paste0(PATH2,'tmp_f0.4_bs_T2.txt'))-> list.power.II[[11]];
-read.table(paste0(PATH2,'tmp_f0.5_bs_T2.txt'))-> list.power.II[[12]];
+#read.table(paste0(PATH3,'tmp_f0.1_bs_T2.txt'))-> list.power.III[[8]];
+#read.table(paste0(PATH3,'tmp_f0.2_bs_T2.txt'))-> list.power.III[[9]];
+read.table(paste0(PATH3,'tmp_f0.3_bs_T2.txt'))-> list.power.III[[10]];
+read.table(paste0(PATH3,'tmp_f0.4_bs_T2.txt'))-> list.power.III[[11]];
+read.table(paste0(PATH3,'tmp_f0.5_bs_T2.txt'))-> list.power.III[[12]];
 
 }
 
 
 
 FPR <- round((0:1000)/1000,3) # False Positive rate for the single tests
-TPR.T2.f0.5<- sapply(FPR, function(x) sum(list.power.II[[12]][,1] > quantile(list.power.II[[2]][,1], prob=1-x))/length(list.power.II[[12]][,1]))
-TPR.T2.f0.4<-sapply(FPR, function(x) sum(list.power.II[[11]][,1] > quantile(list.power.II[[2]][,1], prob=1-x))/length(list.power.II[[11]][,1]))
-TPR.T2.f0.3<-sapply(FPR, function(x) sum(list.power.II[[10]][,1] > quantile(list.power.II[[2]][,1], prob=1-x))/length(list.power.II[[10]][,1]))
+TPR.T2.f0.5<- sapply(FPR, function(x) sum(list.power.III[[12]][,1] > quantile(list.power.III[[2]][,1], prob=1-x))/length(list.power.III[[12]][,1]))
+TPR.T2.f0.4<-sapply(FPR, function(x) sum(list.power.III[[11]][,1] > quantile(list.power.III[[2]][,1], prob=1-x))/length(list.power.III[[11]][,1]))
+TPR.T2.f0.3<-sapply(FPR, function(x) sum(list.power.III[[10]][,1] > quantile(list.power.III[[2]][,1], prob=1-x))/length(list.power.III[[10]][,1]))
 
 
-TPR.T1.f0.5<- sapply(FPR, function(x) sum(list.power.II[[7]][,1] > quantile(list.power.II[[1]][,1], prob=1-x))/length(list.power.II[[7]][,1]))
-TPR.T1.f0.4<-sapply(FPR, function(x) sum(list.power.II[[6]][,1] > quantile(list.power.II[[1]][,1], prob=1-x))/length(list.power.II[[6]][,1]))
-TPR.T1.f0.3<-sapply(FPR, function(x) sum(list.power.II[[5]][,1] > quantile(list.power.II[[1]][,1], prob=1-x))/length(list.power.II[[5]][,1]))
+TPR.T1.f0.5<- sapply(FPR, function(x) sum(list.power.III[[7]][,1] > quantile(list.power.III[[1]][,1], prob=1-x))/length(list.power.III[[7]][,1]))
+TPR.T1.f0.4<-sapply(FPR, function(x) sum(list.power.III[[6]][,1] > quantile(list.power.III[[1]][,1], prob=1-x))/length(list.power.III[[6]][,1]))
+TPR.T1.f0.3<-sapply(FPR, function(x) sum(list.power.III[[5]][,1] > quantile(list.power.III[[1]][,1], prob=1-x))/length(list.power.III[[5]][,1]))
 
 TPR.T2.T1.EUR.Tbs5<-list(T1=cbind(FPR,TPR.T1.f0.5, TPR.T1.f0.4, TPR.T1.f0.3), T2=cbind(FPR,TPR.T2.f0.5, TPR.T2.f0.4, TPR.T2.f0.3))
 lapply(1:2, function(x) as.data.frame(TPR.T2.T1.AFR.Tbs5[[x]]))-> TPR.T2.T1.EUR.Tbs5
@@ -121,19 +123,19 @@ dev.off()
 
 ###same for Europe
 
-pdf('ROCS_for_paper/ROC_all_stats_EUR_3000bp_Tbs5_feq0.5.pdf')
+pdf('ROCS_for_paper/ROC_all_stats_EUR_3000bp_Tbs5_feq0.5_v2.pdf')
 
-plot(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']]$ncvFD[,'FPR'],y=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']]$ncvFD[,'EUR_5s'],col='cornflowerblue', lwd=3, lty=1, xlim=c(0, 0.05), ylim=c(0,1), type='l', ylab="", xlab="", bty='l')
-lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']]$ncv.ROC[,'FPR'], y=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']]$ncv.ROC[,'EUR_5s'], lty=1, lwd=2, col='cornflowerblue')
+plot(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']]$ncvFD[,'FPR'],y=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']]$ncvFD[,'EUR_5s'],col='cornflowerblue', lwd=4, lty=1, xlim=c(0, 0.05), ylim=c(0,1), type='l', ylab="", xlab="", bty='l')
+lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']]$ncv.ROC[,'FPR'], y=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']]$ncv.ROC[,'EUR_5s'], lty=1, lwd=3, col='darkblue')
 
-lines(x=TPR.T2.T1.EUR.Tbs5[[2]][,'FPR'], y=TPR.T2.T1.AFR.Tbs5[[2]][,'TPR.f0.5'], lwd=3, col='darkgray',lty=2)
-lines(x=TPR.T2.T1.EUR.Tbs5[[1]][,'FPR'], y=TPR.T2.T1.AFR.Tbs5[[1]][,'TPR.f0.5'], lwd=2, col='darkgray',lty=2)
+lines(x=TPR.T2.T1.EUR.Tbs5[[2]][,'FPR'], y=TPR.T2.T1.EUR.Tbs5[[2]][,'TPR.f0.5'], lwd=3, col='darkgray',lty=2)
+lines(x=TPR.T2.T1.EUR.Tbs5[[1]][,'FPR'], y=TPR.T2.T1.EUR.Tbs5[[1]][,'TPR.f0.5'], lwd=3, col='lightgray',lty=2)
 
-lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['taj.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['taj.ROC']][, 'EUR_5s'], lwd=2, col='darkgray', lty=3)
-lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['hka.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['hka.ROC']][, 'EUR_5s'], lwd=3, col='darkgray', lty=3)
-legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','Taj', 'HKA'),col=c('cornflowerblue','cornflowerblue','cornflowerblue','darkgray','darkgray','darkgray','darkgray'), lty=c(1,1,2,3,3), lwd=c(3,2,2,3,3,2,3), bty='n',pch=c(19,19,19,19), xpd=F, horiz=F, cex=0.9)
+lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['taj.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['taj.ROC']][, 'EUR_5s'], lwd=2, col='black', lty=5)
+lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['hka.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['hka.ROC']][, 'EUR_5s'], lwd=2, col='violetred4', lty=5)
+legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=0.9)
 
-lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.5"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.5"]][["ncv_hka.ROC"]][,'EUR_5s'], col='cornflowerblue', lty=2, lwd=2)
+lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.5"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.5"]][["ncv_hka.ROC"]][,'EUR_5s'], col='steelblue', lty=1, lwd=3)
 
 title(main="", sub="", xlab="FPR", ylab="TPR", cex.lab=1.5)
 dev.off()
@@ -164,20 +166,20 @@ dev.off()
 ########################
 #same for europe
 
-pdf('ROCS_for_paper/ROC_all_stats_EUR_3000bp_Tbs5_feq0.4_ft0.4.pdf')
+pdf('ROCS_for_paper/ROC_all_stats_EUR_3000bp_Tbs5_feq0.4_ft0.4_v2.pdf')
 
-plot(x=Results.ROC.N_feq0.4_100[['Tbs5']][['bp3000']][['fEq0.4']]$ncvFD[,'FPR'],y=Results.ROC.N_feq0.4_100[['Tbs5']][['bp3000']][['fEq0.4']]$ncvFD[,'EUR_5s'],col='sienna1', lwd=3, lty=1, xlim=c(0, 0.05), ylim=c(0,1), type='l', ylab="", xlab="", bty='l')
-lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']]$ncv.ROC[,'FPR'], y=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']]$ncv.ROC[,'EUR_5s'], lty=1, lwd=2, col='sienna1')
+plot(x=Results.ROC.N_feq0.4_100[['Tbs5']][['bp3000']][['fEq0.4']]$ncvFD[,'FPR'],y=Results.ROC.N_feq0.4_100[['Tbs5']][['bp3000']][['fEq0.4']]$ncvFD[,'EUR_5s'],col='cornflowerblue', lwd=4, lty=1, xlim=c(0, 0.05), ylim=c(0,1), type='l', ylab="", xlab="", bty='l')
+lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']]$ncv.ROC[,'FPR'], y=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']]$ncv.ROC[,'EUR_5s'], lty=1, lwd=3, col='darkblue')
 
 lines(x=TPR.T2.T1.EUR.Tbs5[[2]][,'FPR'], y=TPR.T2.T1.EUR.Tbs5[[2]][,'TPR.f0.4'], lwd=3, col='darkgray',lty=2)
-lines(x=TPR.T2.T1.EUR.Tbs5[[1]][,'FPR'], y=TPR.T2.T1.EUR.Tbs5[[1]][,'TPR.f0.4'], lwd=2, col='darkgray',lty=2)
+lines(x=TPR.T2.T1.EUR.Tbs5[[1]][,'FPR'], y=TPR.T2.T1.EUR.Tbs5[[1]][,'TPR.f0.4'], lwd=3, col='lightgray',lty=2)
 
-lines(x=Results.ROC.N_feq0.4_100[['Tbs5']][['bp3000']][['fEq0.4']][['taj.ROC']][, 'FPR'], y= Results.ROC.N_feq0.4_100[['Tbs5']][['bp3000']][['fEq0.4']][['taj.ROC']][, 'EUR_5s'], lwd=2, col='darkgray', lty=3)
-lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']][['hka.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']][['hka.ROC']][, 'EUR_5s'], lwd=3, col='darkgray', lty=3)
+lines(x=Results.ROC.N_feq0.4_100[['Tbs5']][['bp3000']][['fEq0.4']][['taj.ROC']][, 'FPR'], y= Results.ROC.N_feq0.4_100[['Tbs5']][['bp3000']][['fEq0.4']][['taj.ROC']][, 'EUR_5s'], lwd=2, col='black', lty=5)
+lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']][['hka.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']][['hka.ROC']][, 'EUR_5s'], lwd=2, col='violetred4', lty=5)
 
-legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','Taj', 'HKA'),col=c('cornflowerblue','cornflowerblue','cornflowerblue','darkgray','darkgray','darkgray','darkgray'), lty=c(1,1,2,3,3), lwd=c(3,2,2,3,3,2,3), bty='n',pch=c(19,19,19,19), xpd=F, horiz=F, cex=0.9)
+legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=0.9)
 
-lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.4"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.4"]][["ncv_hka.ROC"]][,'EUR_5s'], col='sienna1', lty=2, lwd=2)
+lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.4"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.4"]][["ncv_hka.ROC"]][,'EUR_5s'], col='steelblue', lty=1, lwd=3)
 
 title(main="", sub="", xlab="FPR", ylab="TPR", cex.lab=1.5)
 
@@ -210,20 +212,20 @@ dev.off()
 
 #################
 #same for Europe
-pdf('ROCS_for_paper/ROC_all_stats_EUR_3000bp_Tbs5_feq0.3_ft0.3.pdf')
+pdf('ROCS_for_paper/ROC_all_stats_EUR_3000bp_Tbs5_feq0.3_ft0.3_v2.pdf')
 
-plot(x=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncvFD[,'FPR'],y=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncvFD[,'EUR_5s'],col='violetred1', lwd=3, lty=1, xlim=c(0, 0.05), ylim=c(0,1), type='l', ylab="", xlab="", bty='l')
-lines(x=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncv.ROC[,'FPR'], y=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncv.ROC[,'EUR_5s'], lty=1, lwd=2, col='violetred1')
+plot(x=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncvFD[,'FPR'],y=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncvFD[,'EUR_5s'],col='cornflowerblue', lwd=4, lty=1, xlim=c(0, 0.05), ylim=c(0,1), type='l', ylab="", xlab="", bty='l')
+lines(x=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncv.ROC[,'FPR'], y=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncv.ROC[,'EUR_5s'], lty=1, lwd=4, col='darkblue')
 
 lines(x=TPR.T2.T1.EUR.Tbs5[[2]][,'FPR'], y=TPR.T2.T1.EUR.Tbs5[[2]][,'TPR.f0.3'], lwd=3, col='darkgray',lty=2)
-lines(x=TPR.T2.T1.EUR.Tbs5[[1]][,'FPR'], y=TPR.T2.T1.EUR.Tbs5[[1]][,'TPR.f0.3'], lwd=2, col='darkgray',lty=2)
+lines(x=TPR.T2.T1.EUR.Tbs5[[1]][,'FPR'], y=TPR.T2.T1.EUR.Tbs5[[1]][,'TPR.f0.3'], lwd=3, col='lightgray',lty=2)
 
-lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['taj.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['taj.ROC']][, 'EUR_5s'], lwd=2, col='darkgray', lty=3)
-lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['hka.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['hka.ROC']][, 'EUR_5s'], lwd=3, col='darkgray', lty=3)
-legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','Taj', 'HKA'),col=c('cornflowerblue','cornflowerblue','cornflowerblue','darkgray','darkgray','darkgray','darkgray'), lty=c(1,1,2,3,3), lwd=c(3,2,2,3,3,2,3), bty='n',pch=c(19,19,19,19), xpd=F, horiz=F, cex=0.9)
+lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['taj.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['taj.ROC']][, 'EUR_5s'], lwd=2, col='black', lty=5)
+lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['hka.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['hka.ROC']][, 'EUR_5s'], lwd=2, col='violetred4', lty=5)
 
 
-lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.3"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.3"]][["ncv_hka.ROC"]][,'EUR_5s'], col='violetred1', lty=2, lwd=2)
+lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.3"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.3"]][["ncv_hka.ROC"]][,'EUR_5s'], col='steelblue', lty=1, lwd=4)
+legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=0.9)
 
 title(main="", sub="", xlab="FPR", ylab="TPR", cex.lab=1.5)
 
