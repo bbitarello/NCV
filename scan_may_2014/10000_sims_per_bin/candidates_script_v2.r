@@ -2,7 +2,7 @@
 #
 #	Barbara D Bitarello
 #
-#	Last modified: 16.02.2015
+#	Last modified: 15.4.2015
 #
 #	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
 #                          Last comment: I am currently trying to fix an issue between lines 158 and 176 (all.coding/ALL.CODING)
