@@ -112,7 +112,7 @@ lines(x=TPR.T2.T1.AFR.Tbs5[[1]][,'FPR'], y=TPR.T2.T1.AFR.Tbs5[[1]][,'TPR.f0.5'],
 
 lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['taj.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['taj.ROC']][, 'AFR_5s'], lwd=2, col='black', lty=5)
 lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['hka.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['hka.ROC']][, 'AFR_5s'], lwd=2, col='violetred4', lty=5)
-legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=0.9)
+legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=1.3)
 
 lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.5"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.5"]][["ncv_hka.ROC"]][,'AFR_5s'], col='steelblue', lty=1, lwd=3)
 
@@ -133,7 +133,7 @@ lines(x=TPR.T2.T1.EUR.Tbs5[[1]][,'FPR'], y=TPR.T2.T1.EUR.Tbs5[[1]][,'TPR.f0.5'],
 
 lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['taj.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['taj.ROC']][, 'EUR_5s'], lwd=2, col='black', lty=5)
 lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['hka.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.5']][['hka.ROC']][, 'EUR_5s'], lwd=2, col='violetred4', lty=5)
-legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=0.9)
+legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=1.3)
 
 lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.5"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.5"]][["ncv_hka.ROC"]][,'EUR_5s'], col='steelblue', lty=1, lwd=3)
 
@@ -154,7 +154,7 @@ lines(x=TPR.T2.T1.AFR.Tbs5[[1]][,'FPR'], y=TPR.T2.T1.AFR.Tbs5[[1]][,'TPR.f0.4'],
 
 lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']][['taj.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']][['taj.ROC']][, 'AFR_5s'], lwd=2, col='black', lty=5)
 lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']][['hka.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']][['hka.ROC']][, 'AFR_5s'], lwd=2, col='violetred4', lty=5)
-legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=0.9)
+legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=1.3)
 
 lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.4"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.4"]][["ncv_hka.ROC"]][,'AFR_5s'], col='steelblue', lty=1, lwd=3)
 
@@ -177,7 +177,7 @@ lines(x=TPR.T2.T1.EUR.Tbs5[[1]][,'FPR'], y=TPR.T2.T1.EUR.Tbs5[[1]][,'TPR.f0.4'],
 lines(x=Results.ROC.N_feq0.4_100[['Tbs5']][['bp3000']][['fEq0.4']][['taj.ROC']][, 'FPR'], y= Results.ROC.N_feq0.4_100[['Tbs5']][['bp3000']][['fEq0.4']][['taj.ROC']][, 'EUR_5s'], lwd=2, col='black', lty=5)
 lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']][['hka.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.4']][['hka.ROC']][, 'EUR_5s'], lwd=2, col='violetred4', lty=5)
 
-legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=0.9)
+legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=1.3)
 
 lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.4"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.4"]][["ncv_hka.ROC"]][,'EUR_5s'], col='steelblue', lty=1, lwd=3)
 
@@ -201,7 +201,7 @@ lines(x=TPR.T2.T1.AFR.Tbs5[[1]][,'FPR'], y=TPR.T2.T1.AFR.Tbs5[[1]][,'TPR.f0.3'],
 
 lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['taj.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['taj.ROC']][, 'AFR_5s'], lwd=2, col='black', lty=5)
 lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['hka.ROC']][, 'FPR'], y= Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['hka.ROC']][, 'AFR_5s'], lwd=3, col='violetred4', lty=5)
-legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=0.9)
+legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=1.3)
 
 lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.3"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.3"]][["ncv_hka.ROC"]][,'AFR_5s'], col='steelblue', lty=1, lwd=3)
 
@@ -212,7 +212,7 @@ dev.off()
 
 #################
 #same for Europe
-pdf('ROCS_for_paper/ROC_all_stats_EUR_3000bp_Tbs5_feq0.3_ft0.3_v2.pdf')
+  pdf('ROCS_for_paper/ROC_all_stats_EUR_3000bp_Tbs5_feq0.3_ft0.3_v2.pdf')
 
 plot(x=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncvFD[,'FPR'],y=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncvFD[,'EUR_5s'],col='cornflowerblue', lwd=4, lty=1, xlim=c(0, 0.05), ylim=c(0,1), type='l', ylab="", xlab="", bty='l')
 lines(x=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncv.ROC[,'FPR'], y=Results.ROC.N_feq0.3_100[['Tbs5']][['bp3000']][['fEq0.3']]$ncv.ROC[,'EUR_5s'], lty=1, lwd=4, col='darkblue')
@@ -225,7 +225,7 @@ lines(x=Results.ROC.N100[['Tbs5']][['bp3000']][['fEq0.3']][['hka.ROC']][, 'FPR']
 
 
 lines(x=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.3"]][["ncv_hka.ROC"]][,'FPR.AFR_5s'], y=Results.ROC.N100[["Tbs5"]][["bp3000"]][["fEq0.3"]][["ncv_hka.ROC"]][,'EUR_5s'], col='steelblue', lty=1, lwd=4)
-legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=0.9)
+legend('bottomright', c('NCD2', 'NCD1', 'NCD1+HKA','T2','T1','TajD', 'HKA'),col=c('cornflowerblue','darkblue','steelblue','darkgray','lightgray','black','violetred4'), lty=c(1,1,1,2,2,5,5), lwd=c(4,3,3,3,3,2,2), bty='n',pch=c(19,19,19,19,19,19,19), xpd=F, horiz=F, cex=1.3)
 
 title(main="", sub="", xlab="FPR", ylab="TPR", cex.lab=1.5)
 
