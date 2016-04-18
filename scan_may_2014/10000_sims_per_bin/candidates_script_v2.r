@@ -19,6 +19,7 @@ library(dplyr)
 library(qqman)  #manhattan plot
 library(VennDiagram)  
 require(mgcv)
+library(data.table)
 
 Sys.setenv(R_LOCAL_CACHE="estsession")  #this is for 'SOAR'
 pops<-c("AWS","LWK","YRI","CEU", "FIN","GBR","TSI", "CHB","CHS" ,"JPT","MXL", "CLM","PUR") #pops from 1000G phase I.
@@ -269,6 +270,14 @@ Objects()
 mclapply(ALL.CODING, function(x) mclapply(x, function(y) rownames(y)))-> all.row.names
 #9 seconds
 
+data.table(list.SCAN[[6]])-> list.SCAN[[6]]
+data.table(list.SCAN[[7]])-> list.SCAN[[7]]
+data.table(list.SCAN[[3]])-> list.SCAN[[3]]
+data.table(list.SCAN[[2]])-> list.SCAN[[2]]
+data.table(list.SCAN[[1]])-> list.SCAN[[1]]
+data.table(list.SCAN[[4]])-> list.SCAN[[4]]
+data.table(list.SCAN[[5]])-> list.SCAN[[5]]
+
 
 mclapply(1:22, 
 function(x) mclapply(1:length(ALL.PROT.CODING[[x]]), 
@@ -288,10 +297,28 @@ print(y)
 print('done')
 }
 )
-save(GBR.prot.cod, file="GBR.prot.cod.RData")
+Store(GBR.prot.cod)
+
+#save(GBR.prot.cod, file="GBR.prot.cod.RData")
+
+#STOPPED HERE 18.04.2016
+
+TSI.prot.cod<-vector('list', 22)
+
+system.time(
+for (y in 1:22){
+
+lapply(1: length(all.win.IDs[[y]]), function(x) list.SCAN[[7]][which(as.character(list.SCAN[[7]]$Win.ID) %in% try(as.character(all.win.IDs[[y]][[x]][,1]))),])-> TSI.prot.cod[[y]]
+names(TSI.prot.cod[[y]])<-names(ALL.PROT.CODING[[y]])
+gc()
+print('chr')
+print(y)
+print('done')
+}
+)
+Store(TSI.prot.cod)
 
 
-object.size(GBR.prot.cod)
 for (y in 1:22){
 lapply(1: length(all.win.IDs[[y]]), function(x) try(select(GBR.prot.cod[[y]][[x]], c(Chr:Nr.FDs,Nr.IS:P.val.NCVf0.2, Dist.NCV.f0.5:Dist.NCV.f0.2, Z.f0.5.P.val:Z.f0.2.P.val, Win.ID))))-> GBR.prot.cod[[y]]
 }
