@@ -491,8 +491,29 @@ try(assign.ft(paper.genes.RES.TSI[[i]]))-> paper.genes.RES.assigned.ft.TSI[[i]]
 print(i)
 gc()}
 
+names(paper.genes.RES.assigned.ft)<- paper.genes2
+names(paper.genes.RES.assigned.ft.LWK)<- paper.genes2
+names(paper.genes.RES.assigned.ft.GBR)<- paper.genes2
+names(paper.genes.RES.assigned.ft.TSI)<- paper.genes2
 #test this.
 
+table7<-vector('list', 213)
+for (i in 1:213){
+tmp2<-paper.genes.RES.assigned.ft[[paper.genes2[[i]]]]$assigned.p.gene
+tmp1<-gsub(".P.val","",gsub("Z.f", "",paper.genes.RES.assigned.ft[[paper.genes2[[i]]]]$assigned.ft.per.gene))
+tmp4<-paper.genes.RES.assigned.ft.LWK[[paper.genes2[[i]]]]$assigned.p.gene
+tmp3<-gsub(".P.val","",gsub("Z.f", "",paper.genes.RES.assigned.ft.LWK[[paper.genes2[[i]]]]$assigned.ft.per.gene))
+tmp6<-paper.genes.RES.assigned.ft.GBR[[paper.genes2[[i]]]]$assigned.p.gene
+tmp5<-gsub(".P.val","",gsub("Z.f", "",paper.genes.RES.assigned.ft.GBR[[paper.genes2[[i]]]]$assigned.ft.per.gene))
+tmp8<-paper.genes.RES.assigned.ft.TSI[[paper.genes2[[i]]]]$assigned.p.gene
+tmp7<-gsub(".P.val","",gsub("Z.f", "",paper.genes.RES.assigned.ft.TSI[[paper.genes2[[i]]]]$assigned.ft.per.gene))
+tmp9<-select(paper.genes.RES[[i]][[1]],Chr)[1,1]
+table7[[i]]<-data.frame(Chr=tmp9,Gene=paper.genes2[[i]],tf.YRI=tmp1, Pval.YRI=tmp2, tf.LWK=tmp3, Pval.LWK=tmp4, tf.GBR=tmp5, Pval.GBR=tmp6, tf.TSI=tmp7, Pval.TSI=tmp8)
+
+print(i)
+}
+
+write.table(do.call(rbind,table7), sep=",", quote=F, row.names=T, col.names=T, file="table7.csv")
 ################obsolete###########################
 #system.time(mclapply(1:2, function(x) mclapply(1:ll1[[x]], function(y) my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list[[x]]$end[y], chr=x, df=list.SCAN[[3]])))->TEST.NESTED.LAPPLY)
 #around 6 hours
