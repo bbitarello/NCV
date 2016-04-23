@@ -4,7 +4,7 @@
 #
 #	Last modified: 15.4.2015
 #
-#	A script to analyse the candidates according to the function between NCV and Informative Sites from neutral simulations
+#	A script to analyse the candidates aaccording to the function between NCV and Informative Sites from neutral simulations
 #                          Last comment: I am currently trying to fix an issue between lines 158 and 176 (all.coding/ALL.CODING)
 #################################################################################################################################
 #Recommendations: use TMUX and save objects periodically with Store() from SOAR package, to avoiding the crashing of
@@ -462,16 +462,36 @@ system.time(mclapply(1:length(paper.genes), function(x) ALL.PROT.COD.QUERY[[pape
 names(paper.genes.RES)<-paper.genes
 
 
-
 gc()
-paper.genes.RES.assigned.ft<-vector('list', 202)
 
-for  (i in 1:201){
-
-try(assign.ft(paper.genes.RES[[i]][[1]]))-> paper.genes.RES.assigned.ft[[i]]
+find.gene(ALL.CODING, chr=9, name="ABO")-> ALL.PROT.COD.QUERY[["ABO"]] #add this to the other pops as well.
+ALL.PROT.COD.QUERY[["ABO"]]-> paper.genes.RES[['ABO']]
+paper.genes.RES.assigned.ft<-vector('list', 213)
+paper.genes.RES.LWK<- vector('list', 213)
+paper.genes.RES.GBR<- vector('list', 213)
+paper.genes.RES.TSI<- vector('list', 213)
+paper.genes.RES.assigned.ft.LWK<-vector('list', 213)
+paper.genes.RES.assigned.ft.GBR<-vector('list', 213)
+paper.genes.RES.assigned.ft.TSI<-vector('list', 213)
+for (i in 1:213){
+try(select(paper.genes.RES[[i]][[1]], Chr)[1,1])-> chr.tmp
+as.character(try(select(paper.genes.RES[[i]][[1]], Win.ID))[,1])-> Win.ID.tmp
+try(dplyr::filter(list.SCAN[[2]], Chr==chr.tmp, Win.ID %in% Win.ID.tmp))-> paper.genes.RES.LWK[[i]]
+try(dplyr::filter(list.SCAN[[6]], Chr==chr.tmp, Win.ID %in% Win.ID.tmp))-> paper.genes.RES.GBR[[i]]
+try(dplyr::filter(list.SCAN[[7]], Chr==chr.tmp, Win.ID %in% Win.ID.tmp))-> paper.genes.RES.TSI[[i]]
 print(i)
-}
 gc()
+}
+
+for  (i in 1:213){
+try(assign.ft(paper.genes.RES[[i]][[1]]))-> paper.genes.RES.assigned.ft[[i]]
+try(assign.ft(paper.genes.RES.LWK[[i]]))-> paper.genes.RES.assigned.ft.LWK[[i]]
+try(assign.ft(paper.genes.RES.GBR[[i]]))-> paper.genes.RES.assigned.ft.GBR[[i]]
+try(assign.ft(paper.genes.RES.TSI[[i]]))-> paper.genes.RES.assigned.ft.TSI[[i]]
+print(i)
+gc()}
+
+#test this.
 
 ################obsolete###########################
 #system.time(mclapply(1:2, function(x) mclapply(1:ll1[[x]], function(y) my.function(B=coding.per.chr.list[[x]]$beg[y], E=coding.per.chr.list[[x]]$end[y], chr=x, df=list.SCAN[[3]])))->TEST.NESTED.LAPPLY)
